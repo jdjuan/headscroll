@@ -17,7 +17,8 @@ export enum Classes {
 export class AppComponent {
   @ViewChild('canvas') canvas: ElementRef;
   @ViewChild('iframeWrapper') iframeWrapper: ElementRef;
-  readonly MODEL_URL = 'https://teachablemachine.withgoogle.com/models/l5fbLAKJu/';
+  readonly MODEL_URL = 'https://teachablemachine.withgoogle.com/models/l5fbLAKJu/model.json';
+  readonly METADATA_URL = 'https://teachablemachine.withgoogle.com/models/l5fbLAKJu/metadata.json';
   readonly CAMERA_SIZE = 300;
   readonly SCROLL_SPEED = 7;
   readonly FORECAST_CONFIDENCE = 0.95;
@@ -26,28 +27,30 @@ export class AppComponent {
   ctx: CanvasRenderingContext2D;
   maxPredictions: number;
   webcam: tmPose.Webcam;
+  isLoadingCamera = true;
   forecast: Classes;
   source: SafeResourceUrl;
-  iframeHeight = 100; // TODO: Calculate screen height
+  iframeHeight = 100; // 100%
 
   constructor(sanitizer: DomSanitizer) {
     // More API functions here:
     // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/pose
-    this.initCanvas();
+    this.initForecast();
     this.source = sanitizer.bypassSecurityTrustResourceUrl(
       'https://tabs.ultimate-guitar.com/tab/foo-fighters/times-like-these-chords-1211863'
     );
   }
 
-  async initCanvas(): Promise<void> {
-    const modelURL = this.MODEL_URL + 'model.json';
-    const metadataURL = this.MODEL_URL + 'metadata.json';
-    this.model = await tmPose.load(modelURL, metadataURL);
-    this.maxPredictions = this.model.getTotalClasses();
-    this.setupWebCam();
+  initForecast(): void {
+    tmPose.load(this.MODEL_URL, this.METADATA_URL).then((model: tmPose.CustomPoseNet) => {
+      this.model = model;
+      this.setCanvasContext();
+      this.setupWebCam();
+    });
+  }
+
+  setCanvasContext(): void {
     const canvas = this.canvas.nativeElement as HTMLCanvasElement;
-    canvas.width = this.CAMERA_SIZE;
-    canvas.height = this.CAMERA_SIZE;
     this.ctx = canvas.getContext('2d');
   }
 
@@ -56,6 +59,7 @@ export class AppComponent {
     this.webcam = new tmPose.Webcam(this.CAMERA_SIZE, this.CAMERA_SIZE, flip);
     await this.webcam.setup(); // request access to the webcam
     await this.webcam.play();
+    this.isLoadingCamera = false;
     window.requestAnimationFrame(this.loop);
   }
 

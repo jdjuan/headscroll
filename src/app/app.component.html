@@ -1,5 +1,6 @@
 <div class="camera">
-  <canvas #canvas class="canvas"></canvas>
+  <mat-spinner class="spinner" *ngIf="isLoadingCamera"></mat-spinner>
+  <canvas #canvas class="canvas" [width]="this.CAMERA_SIZE" [height]="this.CAMERA_SIZE"></canvas>
   <div class="emoji down" *ngIf="hasTiltedLeft()">👇</div>
   <div class="emoji up" *ngIf="hasTiltedRight()">👆</div>
 </div>

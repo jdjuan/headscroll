@@ -3,8 +3,15 @@
   bottom: 1rem;
   right: 1rem;
   z-index: 10;
+  .spinner {
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%,-50%);
+  }
   .canvas {
     border-radius: 1rem;
+    background-color: aquamarine;
   }
   .emoji {
     z-index: 20;
