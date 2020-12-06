@@ -34,7 +34,7 @@ export class AppComponent {
   iframeHeight = 100;
   zoomLevel = 1;
   availableCameras: MediaDeviceInfo[] = [];
-  selectedCamera: string;
+  showSkeleton = true;
 
   constructor(sanitizer: DomSanitizer) {
     // More API functions here:
@@ -47,7 +47,6 @@ export class AppComponent {
 
   async init(): Promise<void> {
     const deviceId = await this.getAvailableCameras();
-    console.log(deviceId);
     this.model = await tmPose.load(this.MODEL_URL, this.METADATA_URL);
     this.setCanvasContext();
     this.setupWebCam(deviceId);
@@ -57,8 +56,7 @@ export class AppComponent {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const cameras = devices.filter((device) => device.kind === 'videoinput');
     this.availableCameras = cameras;
-    this.selectedCamera = cameras[0].deviceId;
-    return this.selectedCamera;
+    return cameras[0].deviceId;
   }
 
   setCanvasContext(): void {
@@ -134,14 +132,14 @@ export class AppComponent {
     return `scale(${this.zoomLevel})`;
   }
 
-  changeCamera(): void {
-    this.setupWebCam(this.selectedCamera);
+  changeCamera(deviceId: string): void {
+    this.setupWebCam(deviceId);
   }
 
   drawPose(pose: { keypoints: Keypoint[] }): void {
     if (this.webcam.canvas) {
       this.ctx.drawImage(this.webcam.canvas, 0, 0);
-      if (pose) {
+      if (pose && this.showSkeleton) {
         const minPartConfidence = 0.5;
         tmPose.drawKeypoints(pose.keypoints, minPartConfidence, this.ctx);
         tmPose.drawSkeleton(pose.keypoints, minPartConfidence, this.ctx);

@@ -1,3 +1,6 @@
+@import "~@angular/material/theming";
+$app-primary: mat-palette($mat-indigo);
+
 .camera {
   position: absolute;
   bottom: 1rem;
@@ -9,9 +12,17 @@
     position: absolute;
     transform: translate(-50%,-50%);
   }
+  .options {
+    height: 3rem;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    width: 100%;
+    position: relative;
+  }
   .canvas {
-    border-radius: 1rem;
-    background-color: aquamarine;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    background-color: mat-color($app-primary);
   }
   .emoji {
     z-index: 20;

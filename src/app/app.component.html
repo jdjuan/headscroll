@@ -10,11 +10,11 @@
   <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
     <mat-icon>share</mat-icon>
   </button> -->
-  <mat-form-field appearance="fill">
+  <!-- <mat-form-field appearance="fill">
     <mat-select (selectionChange)="changeCamera()" [(value)]="selectedCamera">
       <mat-option [value]="cam.deviceId" *ngFor="let cam of availableCameras">{{ cam.label }}</mat-option>
     </mat-select>
-  </mat-form-field>
+  </mat-form-field> -->
   <button mat-icon-button (click)="zoomIn()" aria-label="Zoom in">
     <mat-icon>zoom_in</mat-icon>
   </button>
@@ -23,7 +23,22 @@
   </button>
 </mat-toolbar>
 <div class="camera">
-  <mat-spinner class="spinner" *ngIf="isLoadingCamera"></mat-spinner>
+  <mat-spinner class="spinner" color="accent" *ngIf="isLoadingCamera"></mat-spinner>
+  <mat-toolbar color="primary" class="options">
+    <button *ngIf="!isLoadingCamera" class="switch-camera" mat-icon-button aria-label="Camera switcher" [matMenuTriggerFor]="menu">
+      <mat-icon>videocam</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button (click)="changeCamera(cam.deviceId)" *ngFor="let cam of availableCameras" mat-menu-item>
+        {{ cam.label }}
+      </button>
+    </mat-menu>
+    <span class="spacer"></span>
+    <button mat-icon-button *ngIf="!isLoadingCamera" (click)="showSkeleton = !showSkeleton" aria-label="Show or hide skeleton">
+      <mat-icon *ngIf="showSkeleton">visibility</mat-icon>
+      <mat-icon *ngIf="!showSkeleton">visibility_off</mat-icon>
+    </button>
+  </mat-toolbar>
   <canvas #canvas class="canvas" [width]="this.CAMERA_SIZE" [height]="this.CAMERA_SIZE"></canvas>
   <div class="emoji down" *ngIf="hasTiltedLeft()">👇</div>
   <div class="emoji up" *ngIf="hasTiltedRight()">👆</div>
