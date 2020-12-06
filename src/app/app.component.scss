@@ -1,0 +1,26 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+.iframe-wrapper {
+  border-style: inset;
+  border-color: grey;
+  overflow: scroll;
+  height: 90vh;
+  width: 90%;
+}
+
+#iframe {
+  width: 100%;
+
+  transform: scale(2);
+  transform-origin: 0 0;
+  height: 1000%; /* 10x the div height to embrace the whole page */
+}
+
+
+.emoji {
+    font-size: 10rem;
+    text-align: center;
+}
