@@ -1,20 +1,8 @@
-<!-- <button type="button" onclick="init()">Start</button> -->
-<!-- <div id="label-container"></div> -->
-
-<!-- <button (click)="checkIFrame()">CHECK</button> -->
-
-<div class="container">
-  <div>
-    <canvas id="canvas"></canvas>
-    <div class="emoji" *ngIf="forecast === classes.Left">👇</div>
-    <div class="emoji" *ngIf="forecast === classes.Right">👆</div>
-  </div>
-  <div id="iframe-wrapper" class="iframe-wrapper">
-    <iframe
-      id="iframe"
-      src="https://tabs.ultimate-guitar.com/tab/foo-fighters/times-like-these-chords-1211863"
-      width="100%"
-      height="400"
-    ></iframe>
-  </div>
+<div class="camera">
+  <canvas #canvas class="canvas"></canvas>
+  <div class="emoji down" *ngIf="hasTiltedLeft()">👇</div>
+  <div class="emoji up" *ngIf="hasTiltedRight()">👆</div>
+</div>
+<div #iframeWrapper class="iframe-wrapper">
+  <iframe class="iframe" #iframe [src]="source" [style.height.%]="iframeHeight"></iframe>
 </div>
