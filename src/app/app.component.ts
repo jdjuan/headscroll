@@ -26,8 +26,8 @@ export class AppComponent implements OnDestroy {
   readonly SCROLL_SPEED = 8;
   readonly SCROLL_SPEED_MOBILE_MULTIPLIER = 4;
   readonly FORECAST_CONFIDENCE = 0.95;
-  readonly SCROLL_BUFFER = 1000;
-  readonly ZOOM_SPEED = 0.1;
+  readonly SCROLL_BUFFER = 200; // buffer added when the user reaches the iframe bottom
+  readonly ZOOM_SPEED = 0.3;
   model: tmPose.CustomPoseNet;
   ctx: CanvasRenderingContext2D;
   maxPredictions: number;
@@ -35,7 +35,7 @@ export class AppComponent implements OnDestroy {
   isLoadingCamera = true;
   forecast: Classes;
   source: SafeResourceUrl;
-  iframeHeight = 1500;
+  iframeHeight = 1500; // initial iframe height
   zoomLevel = 1;
   availableCameras: MediaDeviceInfo[] = [];
   showSkeleton = true;
@@ -113,8 +113,10 @@ export class AppComponent implements OnDestroy {
 
   scrollDown(): void {
     const { scrollTop, scrollHeight, clientHeight } = this.iframeWrapper.nativeElement;
-    const height = scrollHeight - clientHeight;
-    if (height <= scrollTop) {
+    const additionalBuffer = 200; // to avoid reaching the bottom
+    const iframeHeight = scrollHeight - clientHeight - additionalBuffer;
+    const currentScroll = scrollTop * this.zoomLevel; // current position accounting for the current scroll
+    if (currentScroll >= iframeHeight) {
       this.iframeHeight += this.SCROLL_BUFFER;
     }
     this.performScroll(this.SCROLL_SPEED);
