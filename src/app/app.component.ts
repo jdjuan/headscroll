@@ -1,7 +1,10 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import * as tmPose from '@teachablemachine/pose';
 import { Keypoint } from '@tensorflow-models/posenet';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { LayoutService } from './layout.service';
 
 export enum Classes {
   Left = 'Left',
@@ -14,15 +17,16 @@ export enum Classes {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
   @ViewChild('canvas') canvas: ElementRef;
   @ViewChild('iframeWrapper') iframeWrapper: ElementRef;
   readonly MODEL_URL = 'https://teachablemachine.withgoogle.com/models/l5fbLAKJu/model.json';
   readonly METADATA_URL = 'https://teachablemachine.withgoogle.com/models/l5fbLAKJu/metadata.json';
   readonly CAMERA_SIZE = 300;
-  readonly SCROLL_SPEED = 7;
+  readonly SCROLL_SPEED = 8;
+  readonly SCROLL_SPEED_MOBILE_MULTIPLIER = 4;
   readonly FORECAST_CONFIDENCE = 0.95;
-  readonly SCROLL_BUFFER = 1.5;
+  readonly SCROLL_BUFFER = 1000;
   readonly ZOOM_SPEED = 0.1;
   model: tmPose.CustomPoseNet;
   ctx: CanvasRenderingContext2D;
@@ -31,18 +35,23 @@ export class AppComponent {
   isLoadingCamera = true;
   forecast: Classes;
   source: SafeResourceUrl;
-  iframeHeight = 100;
+  iframeHeight = 1500;
   zoomLevel = 1;
   availableCameras: MediaDeviceInfo[] = [];
   showSkeleton = true;
+  unsubscribe = new Subject();
+  isMobile: boolean;
 
-  constructor(sanitizer: DomSanitizer) {
+  constructor(sanitizer: DomSanitizer, layoutService: LayoutService) {
     // More API functions here:
     // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/pose
     this.init();
     this.source = sanitizer.bypassSecurityTrustResourceUrl(
       'https://tabs.ultimate-guitar.com/tab/foo-fighters/times-like-these-chords-1211863'
     );
+    layoutService.isMobile.pipe(takeUntil(this.unsubscribe)).subscribe((isMobile: boolean) => {
+      this.isMobile = isMobile;
+    });
   }
 
   async init(): Promise<void> {
@@ -105,13 +114,24 @@ export class AppComponent {
   scrollDown(): void {
     const { scrollTop, scrollHeight, clientHeight } = this.iframeWrapper.nativeElement;
     const height = scrollHeight - clientHeight;
-    if (height === scrollTop) {
-      this.iframeHeight *= this.SCROLL_BUFFER;
+    if (height <= scrollTop) {
+      this.iframeHeight += this.SCROLL_BUFFER;
     }
-    this.iframeWrapper.nativeElement.scrollBy(0, this.SCROLL_SPEED);
+    this.performScroll(this.SCROLL_SPEED);
   }
   scrollUp(): void {
-    this.iframeWrapper.nativeElement.scrollBy(0, -this.SCROLL_SPEED);
+    this.performScroll(-this.SCROLL_SPEED);
+  }
+
+  performScroll(speed: number): void {
+    if (this.isMobile) {
+      speed *= this.SCROLL_SPEED_MOBILE_MULTIPLIER;
+    }
+    try {
+      this.iframeWrapper.nativeElement.scrollBy({ top: speed, left: 0, behavior: 'smooth' });
+    } catch (error) {
+      this.iframeWrapper.nativeElement.scrollBy(0, speed);
+    }
   }
 
   hasTiltedLeft(): boolean {
@@ -145,5 +165,10 @@ export class AppComponent {
         tmPose.drawSkeleton(pose.keypoints, minPartConfidence, this.ctx);
       }
     }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 }

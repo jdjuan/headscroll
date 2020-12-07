@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "scroll-wtih-head": {
+    "headscroll": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/scroll-wtih-head",
+            "outputPath": "dist/headscroll",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -65,18 +65,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "scroll-wtih-head:build"
+            "browserTarget": "headscroll:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "scroll-wtih-head:build:production"
+              "browserTarget": "headscroll:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "scroll-wtih-head:build"
+            "browserTarget": "headscroll:build"
           }
         },
         "test": {
@@ -113,15 +113,15 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "scroll-wtih-head:serve"
+            "devServerTarget": "headscroll:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "scroll-wtih-head:serve:production"
+              "devServerTarget": "headscroll:serve:production"
             }
           }
         }
       }
     }},
-  "defaultProject": "scroll-wtih-head"
+  "defaultProject": "headscroll"
 }

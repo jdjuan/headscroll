@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 const modules = [
   MatProgressSpinnerModule,
@@ -15,6 +16,7 @@ const modules = [
   MatFormFieldModule,
   MatSelectModule,
   MatMenuModule,
+  MatTooltipModule,
 ];
 
 @NgModule({

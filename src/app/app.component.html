@@ -15,17 +15,24 @@
       <mat-option [value]="cam.deviceId" *ngFor="let cam of availableCameras">{{ cam.label }}</mat-option>
     </mat-select>
   </mat-form-field> -->
-  <button mat-icon-button (click)="zoomIn()" aria-label="Zoom in">
+  <button mat-icon-button (click)="zoomIn()" aria-label="Zoom in" matTooltip="Zoom in">
     <mat-icon>zoom_in</mat-icon>
   </button>
-  <button mat-icon-button (click)="zoomOut()" aria-label="Zoom out">
+  <button mat-icon-button (click)="zoomOut()" aria-label="Zoom out" matTooltip="Zoom out">
     <mat-icon>zoom_out</mat-icon>
   </button>
 </mat-toolbar>
 <div class="camera">
   <mat-spinner class="spinner" color="accent" *ngIf="isLoadingCamera"></mat-spinner>
   <mat-toolbar color="primary" class="options">
-    <button *ngIf="!isLoadingCamera" class="switch-camera" mat-icon-button aria-label="Camera switcher" [matMenuTriggerFor]="menu">
+    <button
+      *ngIf="!isLoadingCamera"
+      class="switch-camera"
+      mat-icon-button
+      aria-label="Camera switcher"
+      [matMenuTriggerFor]="menu"
+      matTooltip="Switch camera"
+    >
       <mat-icon>videocam</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
@@ -34,7 +41,13 @@
       </button>
     </mat-menu>
     <span class="spacer"></span>
-    <button mat-icon-button *ngIf="!isLoadingCamera" (click)="showSkeleton = !showSkeleton" aria-label="Show or hide skeleton">
+    <button
+      mat-icon-button
+      *ngIf="!isLoadingCamera"
+      (click)="showSkeleton = !showSkeleton"
+      aria-label="Show or hide skeleton"
+      matTooltip="Toggle skeleton view"
+    >
       <mat-icon *ngIf="showSkeleton">visibility</mat-icon>
       <mat-icon *ngIf="!showSkeleton">visibility_off</mat-icon>
     </button>
@@ -44,5 +57,6 @@
   <div class="emoji up" *ngIf="hasTiltedRight()">👆</div>
 </div>
 <div #iframeWrapper class="iframe-wrapper">
-  <iframe class="iframe" [style.transform]="getZoom()" #iframe [src]="source" [style.height.%]="iframeHeight"></iframe>
+  <iframe class="iframe" [style.transform]="getZoom()" #iframe [src]="source" [height]="iframeHeight"></iframe>
+  <!-- <iframe class="iframe" [style.transform]="getZoom()" #iframe [src]="source" [style.height.%]="iframeHeight"></iframe> -->
 </div>
