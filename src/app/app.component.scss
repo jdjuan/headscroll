@@ -1,6 +1,12 @@
 @import "~@angular/material/theming";
 $app-primary: mat-palette($mat-indigo);
 
+.sidenav-menu {
+  padding: 2rem;
+  .menu-item {
+    margin-bottom: 1rem;
+  }
+}
 .camera {
   position: absolute;
   bottom: 1rem;
@@ -12,16 +18,8 @@ $app-primary: mat-palette($mat-indigo);
     position: absolute;
     transform: translate(-50%, -50%);
   }
-  .options {
-    height: 3rem;
-    border-top-left-radius: 1rem;
-    border-top-right-radius: 1rem;
-    width: 100%;
-    position: relative;
-  }
   .canvas {
-    border-bottom-left-radius: 1rem;
-    border-bottom-right-radius: 1rem;
+    border-radius: 1rem;
     background-color: mat-color($app-primary);
   }
   .emoji {
@@ -36,11 +34,24 @@ $app-primary: mat-palette($mat-indigo);
     &.up {
       right: 0.5rem;
     }
+    &.mobile {
+      font-size: 1rem;
+      bottom: 10px;
+      &.down {
+        left: 7px;
+      }
+      &.up {
+        right: 7px;
+      }
+    }
   }
 }
 .iframe-wrapper {
   overflow: scroll;
   height: calc(100vh - 64px);
+  &.mobile {
+    height: calc(94vh - 64px); // Weird bug on mobile phones
+  }
   .iframe {
     width: 100%;
     border: none;

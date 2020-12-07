@@ -3,7 +3,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import * as tmPose from '@teachablemachine/pose';
 import { Keypoint } from '@tensorflow-models/posenet';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { debounceTime, take, takeUntil } from 'rxjs/operators';
 import { LayoutService } from './layout.service';
 
 export enum Classes {
@@ -22,12 +22,14 @@ export class AppComponent implements OnDestroy {
   @ViewChild('iframeWrapper') iframeWrapper: ElementRef;
   readonly MODEL_URL = 'https://teachablemachine.withgoogle.com/models/l5fbLAKJu/model.json';
   readonly METADATA_URL = 'https://teachablemachine.withgoogle.com/models/l5fbLAKJu/metadata.json';
-  readonly CAMERA_SIZE = 300;
   readonly SCROLL_SPEED = 8;
   readonly SCROLL_SPEED_MOBILE_MULTIPLIER = 4;
   readonly FORECAST_CONFIDENCE = 0.95;
   readonly SCROLL_BUFFER = 200; // buffer added when the user reaches the iframe bottom
   readonly ZOOM_SPEED = 0.3;
+  readonly DEFAULT_CAMERA_SIZE = 300;
+  readonly SMALL_CAMERA_SIZE = 100;
+  cameraSize = this.DEFAULT_CAMERA_SIZE;
   model: tmPose.CustomPoseNet;
   ctx: CanvasRenderingContext2D;
   maxPredictions: number;
@@ -45,12 +47,16 @@ export class AppComponent implements OnDestroy {
   constructor(sanitizer: DomSanitizer, layoutService: LayoutService) {
     // More API functions here:
     // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/pose
-    this.init();
     this.source = sanitizer.bypassSecurityTrustResourceUrl(
       'https://tabs.ultimate-guitar.com/tab/foo-fighters/times-like-these-chords-1211863'
     );
-    layoutService.isMobile.pipe(takeUntil(this.unsubscribe)).subscribe((isMobile: boolean) => {
+    layoutService.isMobile.pipe(debounceTime(500), take(1)).subscribe((isMobile: boolean) => {
       this.isMobile = isMobile;
+      if (isMobile) {
+        this.cameraSize = this.SMALL_CAMERA_SIZE;
+        this.showSkeleton = false;
+      }
+      this.init();
     });
   }
 
@@ -75,7 +81,7 @@ export class AppComponent implements OnDestroy {
 
   async setupWebCam(deviceId: string): Promise<void> {
     const flip = true;
-    this.webcam = new tmPose.Webcam(this.CAMERA_SIZE, this.CAMERA_SIZE, flip);
+    this.webcam = new tmPose.Webcam(this.cameraSize, this.cameraSize, flip);
     await this.webcam.setup({ deviceId });
     await this.webcam.play();
     window.requestAnimationFrame(this.loop);
