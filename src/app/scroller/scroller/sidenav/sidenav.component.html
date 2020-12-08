@@ -1,0 +1,16 @@
+<div class="menu-item">
+  <button mat-raised-button [matMenuTriggerFor]="menu" matTooltip="Switch camera" color="primary">
+    <mat-icon>videocam</mat-icon> Switch Camera
+  </button>
+  <mat-menu #menu="matMenu">
+    <button (click)="onChangeCamera(cam.deviceId)" *ngFor="let cam of availableCameras" mat-menu-item>
+      {{ cam.label }}
+    </button>
+  </mat-menu>
+</div>
+<div class="menu-item">
+  <button mat-raised-button (click)="onToggleSkeleton()" matTooltip="Toggle skeleton view" color="primary">
+    <mat-icon *ngIf="showSkeleton">visibility</mat-icon>
+    <mat-icon *ngIf="!showSkeleton">visibility_off</mat-icon> Toggle Skeleton
+  </button>
+</div>
