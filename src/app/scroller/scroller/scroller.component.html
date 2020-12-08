@@ -6,11 +6,10 @@
   <span class="spacer"></span>
   <mat-form-field class="url-input">
     <mat-label>Website</mat-label>
-    <input matInput #websiteInput [value]="website">
+    <input matInput #websiteInput [value]="websiteTest">
   </mat-form-field>
   <button mat-raised-button class="search-button" (click)="renderWebsite(websiteInput.value)" matTooltip="Search website">
-    <mat-icon>wysiwyg</mat-icon> Display Website
-    <mat-icon>search</mat-icon> Render
+    <mat-icon>search</mat-icon> Search
   </button>
   <span class="spacer"></span>
   <button mat-icon-button (click)="zoomIn()" aria-label="Zoom in" matTooltip="Zoom in">

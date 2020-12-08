@@ -1,7 +1,7 @@
-import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { pluck, take } from 'rxjs/operators';
+import { pluck } from 'rxjs/operators';
 import { LayoutService } from './../services/layout.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -17,6 +17,7 @@ export class ScrollerComponent {
   readonly SCROLL_SPEED_MOBILE_MULTIPLIER = 4;
   readonly SCROLL_BUFFER = 200; // buffer added when the user reaches the iframe bottom
   readonly ZOOM_SPEED = 0.3;
+  websiteTest = 'https://tabs.ultimate-guitar.com/tab/avi-kaplan/change-on-the-rise-chords-2691219';
   website: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
   iframeHeight = 1500; // initial iframe height
   zoomLevel = 1;
@@ -24,11 +25,7 @@ export class ScrollerComponent {
 
   constructor(public sanitizer: DomSanitizer, layoutService: LayoutService, activatedRoute: ActivatedRoute) {
     activatedRoute.params.pipe(pluck('website'), untilDestroyed(this)).subscribe((website: string) => {
-      // this.website = website;
-      this.website = this.sanitizer.bypassSecurityTrustResourceUrl(
-        'https://tabs.ultimate-guitar.com/tab/avi-kaplan/change-on-the-rise-chords-2691219'
-      );
-      // this.website = sanitizer.bypassSecurityTrustResourceUrl(website);
+      this.website = this.sanitizer.bypassSecurityTrustResourceUrl(website);
     });
     layoutService.isMobileOnce$.subscribe((isMobile) => (this.isMobile = isMobile));
   }
@@ -73,4 +70,3 @@ export class ScrollerComponent {
     return `scale(${this.zoomLevel})`;
   }
 }
-

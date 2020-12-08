@@ -5,10 +5,19 @@ import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 import { AppRoutingModule } from './app-routing.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [CommonModule, BrowserModule, BrowserAnimationsModule, MaterialModule, AppRoutingModule],
+  imports: [
+    CommonModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    MaterialModule,
+    DashboardModule,
+    AppRoutingModule,
+    DashboardModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })
