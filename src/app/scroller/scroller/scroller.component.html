@@ -13,24 +13,10 @@
 </mat-toolbar>
 <mat-sidenav-container [hasBackdrop]="false">
   <mat-sidenav #sidenav mode="over" class="sidenav-menu">
-    <app-sidenav
-      [availableCameras]="availableCameras"
-      [showSkeleton]="showSkeleton"
-      (changeCamera)="onChangeCamera($event)"
-      (toggleSkeleton)="showSkeleton = !showSkeleton"
-    ></app-sidenav>
+    <app-sidenav></app-sidenav>
   </mat-sidenav>
   <mat-sidenav-content class="sidenav-content">
-    <app-camera
-      [availableCameras]="availableCameras"
-      [showSkeleton]="showSkeleton"
-      [selectedDeviceId]="selectedDeviceId"
-      [mobile]="isMobile"
-      (scrollDown)="scrollDown()"
-      (scrollUp)="scrollUp()"
-      (deviceId)="scrollUp()"
-      (deviceId)="scrollUp()"
-    ></app-camera>
+    <app-camera (scrollDown)="scrollDown()" (scrollUp)="scrollUp()"></app-camera>
     <div #iframeWrapper class="iframe-wrapper" [class.mobile]="isMobile">
       <iframe class="iframe" [style.transform]="getZoom()" #iframe [src]="source" [height]="iframeHeight"></iframe>
     </div>

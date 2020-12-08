@@ -1,6 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { debounceTime, take } from 'rxjs/operators';
 import { LayoutService } from './../services/layout.service';
 
 @Component({
@@ -17,25 +16,13 @@ export class ScrollerComponent {
   source: SafeResourceUrl;
   iframeHeight = 1500; // initial iframe height
   zoomLevel = 1;
-  availableCameras: MediaDeviceInfo[] = [];
-  showSkeleton = true;
   isMobile: boolean;
-  selectedDeviceId: string;
 
   constructor(sanitizer: DomSanitizer, layoutService: LayoutService) {
     this.source = sanitizer.bypassSecurityTrustResourceUrl(
       'https://tabs.ultimate-guitar.com/tab/foo-fighters/times-like-these-chords-1211863'
     );
-    this.getAvailableCameras().then((cameras) => (this.availableCameras = cameras));
-    layoutService.isMobile.pipe(debounceTime(500), take(1)).subscribe((isMobile: boolean) => {
-      this.isMobile = isMobile;
-    });
-  }
-
-  async getAvailableCameras(): Promise<MediaDeviceInfo[]> {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const cameras = devices.filter((device) => device.kind === 'videoinput');
-    return cameras;
+    layoutService.isMobile.toPromise().then((isMobile) => (this.isMobile = isMobile));
   }
 
   scrollDown(): void {
@@ -72,9 +59,5 @@ export class ScrollerComponent {
 
   getZoom(): string {
     return `scale(${this.zoomLevel})`;
-  }
-
-  onChangeCamera(deviceId: string): void {
-    this.selectedDeviceId = deviceId;
   }
 }

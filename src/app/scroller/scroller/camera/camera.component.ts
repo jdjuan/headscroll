@@ -1,6 +1,9 @@
-import { Component, OnInit, Input, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import * as tmPose from '@teachablemachine/pose';
 import { Keypoint } from '@tensorflow-models/posenet';
+import { take } from 'rxjs/operators';
+import { LayoutService } from '../../services/layout.service';
+import { CameraService } from '../../services/camera.service';
 
 export enum Classes {
   Left = 'Left',
@@ -20,34 +23,42 @@ export class CameraComponent implements OnInit {
   readonly SMALL_CAMERA_SIZE = 100;
   readonly FORECAST_CONFIDENCE = 0.95;
 
-  @Input() set selectedDeviceId(deviceId: string) {
-    this.setupWebCam(deviceId);
-  }
-  @Input() set mobile(isMobile: boolean) {
-    this.isMobile = isMobile;
-    this.init();
-  }
-  @Input() showSkeleton: boolean;
-  @Input() availableCameras: MediaDeviceInfo[] = [];
   @Output() scrollDown = new EventEmitter();
   @Output() scrollUp = new EventEmitter();
   @ViewChild('canvas') canvas: ElementRef;
-  isMobile: boolean;
   cameraSize = this.DEFAULT_CAMERA_SIZE;
-  forecast: Classes;
   isLoadingCamera = true;
+  showSkeleton: boolean;
+  isMobile: boolean;
+  forecast: Classes;
   webcam: tmPose.Webcam;
   model: tmPose.CustomPoseNet;
   ctx: CanvasRenderingContext2D;
 
+  constructor(layoutService: LayoutService, cameraService: CameraService) {
+    const cameras$ = cameraService.getAvailableCameras();
+    const isMobile$ = layoutService.isMobile.pipe(take(1)).toPromise();
+    Promise.all([cameras$, isMobile$]).then(([cameras, isMobile]) => {
+      const deviceId = cameras[0].deviceId;
+      console.log({ deviceId });
+      this.isMobile = isMobile;
+      this.init(deviceId);
+    });
+    cameraService.selectedCamera$.subscribe((deviceId) => {
+      this.setupWebCam(deviceId);
+    });
+    cameraService.showSkeleton$.subscribe((showSkeleton) => {
+      this.showSkeleton = showSkeleton;
+    });
+  }
+
   ngOnInit(): void {}
 
-  async init(): Promise<void> {
+  async init(deviceId: string): Promise<void> {
     if (this.isMobile) {
       this.cameraSize = this.SMALL_CAMERA_SIZE;
       this.showSkeleton = false;
     }
-    const deviceId = this.availableCameras[0].deviceId;
     this.model = await tmPose.load(this.MODEL_URL, this.METADATA_URL);
     this.setCanvasContext();
     this.setupWebCam(deviceId);

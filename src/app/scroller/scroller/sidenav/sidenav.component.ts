@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { CameraService } from '../../services/camera.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -8,19 +9,20 @@ import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter
 })
 export class SidenavComponent implements OnInit {
   @Input() availableCameras: MediaDeviceInfo[] = [];
-  @Input() showSkeleton: boolean;
-  @Output() changeCamera = new EventEmitter<string>();
-  @Output() toggleSkeleton = new EventEmitter<void>();
+  showSkeleton: boolean;
 
-  constructor() {}
+  constructor(private cameraService: CameraService) {
+    cameraService.getAvailableCameras().then((cameras) => (this.availableCameras = cameras));
+    this.cameraService.showSkeleton$.subscribe((showSkeleton) => (this.showSkeleton = showSkeleton));
+  }
 
   ngOnInit(): void {}
 
   onChangeCamera(deviceId: string): void {
-    this.changeCamera.emit(deviceId);
+    this.cameraService.changeCamera(deviceId);
   }
 
   onToggleSkeleton(): void {
-    this.toggleSkeleton.emit();
+    this.cameraService.toggleSkeleton(!this.showSkeleton);
   }
 }
