@@ -1,7 +1,11 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import { pluck, take } from 'rxjs/operators';
 import { LayoutService } from './../services/layout.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-scroller',
   templateUrl: './scroller.component.html',
@@ -13,16 +17,24 @@ export class ScrollerComponent {
   readonly SCROLL_SPEED_MOBILE_MULTIPLIER = 4;
   readonly SCROLL_BUFFER = 200; // buffer added when the user reaches the iframe bottom
   readonly ZOOM_SPEED = 0.3;
-  source: SafeResourceUrl;
+  website: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
   iframeHeight = 1500; // initial iframe height
   zoomLevel = 1;
   isMobile: boolean;
 
-  constructor(sanitizer: DomSanitizer, layoutService: LayoutService) {
-    this.source = sanitizer.bypassSecurityTrustResourceUrl(
-      'https://tabs.ultimate-guitar.com/tab/foo-fighters/times-like-these-chords-1211863'
-    );
-    layoutService.isMobile.toPromise().then((isMobile) => (this.isMobile = isMobile));
+  constructor(public sanitizer: DomSanitizer, layoutService: LayoutService, activatedRoute: ActivatedRoute) {
+    activatedRoute.params.pipe(pluck('website'), untilDestroyed(this)).subscribe((website: string) => {
+      // this.website = website;
+      this.website = this.sanitizer.bypassSecurityTrustResourceUrl(
+        'https://tabs.ultimate-guitar.com/tab/avi-kaplan/change-on-the-rise-chords-2691219'
+      );
+      // this.website = sanitizer.bypassSecurityTrustResourceUrl(website);
+    });
+    layoutService.isMobileOnce$.subscribe((isMobile) => (this.isMobile = isMobile));
+  }
+
+  renderWebsite(website: string): void {
+    this.website = this.sanitizer.bypassSecurityTrustResourceUrl(website);
   }
 
   scrollDown(): void {
@@ -61,3 +73,4 @@ export class ScrollerComponent {
     return `scale(${this.zoomLevel})`;
   }
 }
+

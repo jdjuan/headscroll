@@ -4,6 +4,7 @@ import { Keypoint } from '@tensorflow-models/posenet';
 import { take } from 'rxjs/operators';
 import { LayoutService } from '../../services/layout.service';
 import { CameraService } from '../../services/camera.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 export enum Classes {
   Left = 'Left',
@@ -11,6 +12,7 @@ export enum Classes {
   Neutral = 'Neutral',
 }
 
+@UntilDestroy()
 @Component({
   selector: 'app-camera',
   templateUrl: './camera.component.html',
@@ -37,17 +39,17 @@ export class CameraComponent implements OnInit {
 
   constructor(layoutService: LayoutService, cameraService: CameraService) {
     const cameras$ = cameraService.getAvailableCameras();
-    const isMobile$ = layoutService.isMobile.pipe(take(1)).toPromise();
+    const isMobile$ = layoutService.isMobileOnce$.toPromise();
     Promise.all([cameras$, isMobile$]).then(([cameras, isMobile]) => {
-      const deviceId = cameras[0].deviceId;
-      console.log({ deviceId });
+      const [firstCamera] = cameras;
+      const { deviceId } = firstCamera;
       this.isMobile = isMobile;
       this.init(deviceId);
     });
-    cameraService.selectedCamera$.subscribe((deviceId) => {
+    cameraService.selectedCamera$.pipe(untilDestroyed(this)).subscribe((deviceId) => {
       this.setupWebCam(deviceId);
     });
-    cameraService.showSkeleton$.subscribe((showSkeleton) => {
+    cameraService.showSkeleton$.pipe(untilDestroyed(this)).subscribe((showSkeleton) => {
       this.showSkeleton = showSkeleton;
     });
   }

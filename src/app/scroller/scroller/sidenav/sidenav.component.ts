@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { CameraService } from '../../services/camera.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
@@ -13,7 +15,9 @@ export class SidenavComponent implements OnInit {
 
   constructor(private cameraService: CameraService) {
     cameraService.getAvailableCameras().then((cameras) => (this.availableCameras = cameras));
-    this.cameraService.showSkeleton$.subscribe((showSkeleton) => (this.showSkeleton = showSkeleton));
+    this.cameraService.showSkeleton$
+      .pipe(untilDestroyed(this))
+      .subscribe((showSkeleton) => (this.showSkeleton = showSkeleton));
   }
 
   ngOnInit(): void {}
