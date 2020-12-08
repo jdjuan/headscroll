@@ -21,12 +21,16 @@
     ></app-sidenav>
   </mat-sidenav>
   <mat-sidenav-content class="sidenav-content">
-    <div class="camera" [class.mobile]="isMobile" [style.height.px]="cameraSize">
-      <mat-spinner class="spinner" color="accent" *ngIf="isLoadingCamera"></mat-spinner>
-      <canvas #canvas class="canvas" [width]="cameraSize" [height]="cameraSize"></canvas>
-      <div class="emoji down" [class.mobile]="isMobile" *ngIf="hasTiltedLeft()">👇</div>
-      <div class="emoji up" [class.mobile]="isMobile" *ngIf="hasTiltedRight()">👆</div>
-    </div>
+    <app-camera
+      [availableCameras]="availableCameras"
+      [showSkeleton]="showSkeleton"
+      [selectedDeviceId]="selectedDeviceId"
+      [mobile]="isMobile"
+      (scrollDown)="scrollDown()"
+      (scrollUp)="scrollUp()"
+      (deviceId)="scrollUp()"
+      (deviceId)="scrollUp()"
+    ></app-camera>
     <div #iframeWrapper class="iframe-wrapper" [class.mobile]="isMobile">
       <iframe class="iframe" [style.transform]="getZoom()" #iframe [src]="source" [height]="iframeHeight"></iframe>
     </div>
