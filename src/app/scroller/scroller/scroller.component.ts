@@ -1,9 +1,9 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
-import { pluck } from 'rxjs/operators';
 import { LayoutService } from './../services/layout.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ProxyService } from '../services/proxy.service';
+import { ActivatedRoute } from '@angular/router';
 
 @UntilDestroy()
 @Component({
@@ -11,27 +11,48 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   templateUrl: './scroller.component.html',
   styleUrls: ['./scroller.component.scss'],
 })
-export class ScrollerComponent {
+export class ScrollerComponent implements OnInit {
   @ViewChild('iframeWrapper') iframeWrapper: ElementRef;
   readonly SCROLL_SPEED = 11;
   readonly SCROLL_SPEED_MOBILE_MULTIPLIER = 4;
   readonly SCROLL_BUFFER = 200; // buffer added when the user reaches the iframe bottom
   readonly ZOOM_SPEED = 0.3;
-  websiteTest = 'https://tabs.ultimate-guitar.com/tab/avi-kaplan/change-on-the-rise-chords-2691219';
-  website: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
+  websiteSafeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
+  websiteUrl = '';
   iframeHeight = 1500; // initial iframe height
   zoomLevel = 1;
   isMobile: boolean;
+  // javascript: window.open('http://localhost:4200/' + encodeURIComponent(location.href));
 
-  constructor(public sanitizer: DomSanitizer, layoutService: LayoutService, activatedRoute: ActivatedRoute) {
-    activatedRoute.params.pipe(pluck('website'), untilDestroyed(this)).subscribe((website: string) => {
-      this.website = this.sanitizer.bypassSecurityTrustResourceUrl(website);
-    });
-    layoutService.isMobileOnce$.subscribe((isMobile) => (this.isMobile = isMobile));
+  constructor(
+    private sanitizer: DomSanitizer,
+    private activatedRoute: ActivatedRoute,
+    private proxyService: ProxyService,
+    private layoutService: LayoutService
+  ) {
+    this.layoutService.isMobileOnce$.subscribe((isMobile) => (this.isMobile = isMobile));
   }
 
-  renderWebsite(website: string): void {
-    this.website = this.sanitizer.bypassSecurityTrustResourceUrl(website);
+  ngOnInit(): void {
+    this.fetchWebsite();
+  }
+
+  fetchWebsite(): void {
+    this.proxyService
+      .getWebsiteUrl(this.activatedRoute.params)
+      .pipe(untilDestroyed(this))
+      .subscribe(({ isEmbeddable, websiteUrl }) => {
+        if (isEmbeddable) {
+          this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(websiteUrl);
+          this.websiteUrl = websiteUrl;
+        } else {
+          alert('Not embeddable');
+        }
+      });
+  }
+
+  renderWebsite(websiteUrl: string): void {
+    this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(websiteUrl);
   }
 
   scrollDown(): void {
@@ -44,6 +65,7 @@ export class ScrollerComponent {
     }
     this.performScroll(this.SCROLL_SPEED);
   }
+
   scrollUp(): void {
     this.performScroll(-this.SCROLL_SPEED);
   }

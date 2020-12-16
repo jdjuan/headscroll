@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
@@ -17,6 +18,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     DashboardModule,
     AppRoutingModule,
     DashboardModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
