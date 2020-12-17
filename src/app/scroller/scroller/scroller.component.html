@@ -4,20 +4,8 @@
   </button>
   <span>HeadScroll</span>
   <span class="spacer"></span>
-  <mat-form-field class="url-input">
-    <mat-label>Website</mat-label>
-    <input matInput #websiteInput [value]="websiteUrl">
-  </mat-form-field>
-  <button mat-raised-button class="search-button" (click)="renderWebsite(websiteInput.value)" matTooltip="Search website">
-    <mat-icon>search</mat-icon> Search
-  </button>
-  <span class="spacer"></span>
-  <button mat-icon-button (click)="zoomIn()" aria-label="Zoom in" matTooltip="Zoom in">
-    <mat-icon>zoom_in</mat-icon>
-  </button>
-  <button mat-icon-button (click)="zoomOut()" aria-label="Zoom out" matTooltip="Zoom out">
-    <mat-icon>zoom_out</mat-icon>
-  </button>
+  <p class="label">Website:</p>
+  <input class="url-input" (keydown.enter)="searchWebsite($event.target.value)" type="url" [value]="websiteUrl" />
 </mat-toolbar>
 <mat-sidenav-container [hasBackdrop]="false">
   <mat-sidenav #sidenav mode="over" class="sidenav-menu">
@@ -25,8 +13,8 @@
   </mat-sidenav>
   <mat-sidenav-content class="sidenav-content">
     <app-camera (scrollDown)="scrollDown()" (scrollUp)="scrollUp()"></app-camera>
-    <div #iframeWrapper class="iframe-wrapper" [class.mobile]="isMobile">
-      <iframe class="iframe" [style.transform]="getZoom()" [src]="websiteSafeUrl" [height]="iframeHeight"></iframe>
+    <div #iframeWrapper class="iframe-wrapper" (scroll)="print($event)" [class.mobile]="isMobile">
+      <iframe class="iframe" [src]="websiteSafeUrl" (scroll)="print($event)" [height]="iframeHeight" scrolling="yes"></iframe>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

@@ -13,14 +13,12 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ScrollerComponent implements OnInit {
   @ViewChild('iframeWrapper') iframeWrapper: ElementRef;
-  readonly SCROLL_SPEED = 11;
+  readonly SCROLL_SPEED = 5;
   readonly SCROLL_SPEED_MOBILE_MULTIPLIER = 4;
-  readonly SCROLL_BUFFER = 200; // buffer added when the user reaches the iframe bottom
-  readonly ZOOM_SPEED = 0.3;
+  readonly DEFAULT_IFRAME_HEIGHT = 2000;
   websiteSafeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
-  websiteUrl = '';
-  iframeHeight = 1500; // initial iframe height
-  zoomLevel = 1;
+  iframeHeight = this.DEFAULT_IFRAME_HEIGHT;
+  websiteUrl: string;
   isMobile: boolean;
   // javascript: window.open('http://localhost:4200/' + encodeURIComponent(location.href));
 
@@ -38,57 +36,48 @@ export class ScrollerComponent implements OnInit {
   }
 
   fetchWebsite(): void {
-    this.proxyService
-      .getWebsiteUrl(this.activatedRoute.params)
-      .pipe(untilDestroyed(this))
-      .subscribe(({ isEmbeddable, websiteUrl }) => {
-        if (isEmbeddable) {
-          this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(websiteUrl);
-          this.websiteUrl = websiteUrl;
-        } else {
-          alert('Not embeddable');
-        }
-      });
+    this.proxyService.getWebsiteUrl(this.activatedRoute.params).pipe(untilDestroyed(this)).subscribe(this.render);
   }
 
-  renderWebsite(websiteUrl: string): void {
-    this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(websiteUrl);
+  searchWebsite(websiteUrl: string): void {
+    this.iframeHeight = this.DEFAULT_IFRAME_HEIGHT;
+    this.proxyService.verifyWithProxy(websiteUrl).pipe(untilDestroyed(this)).subscribe(this.render);
+  }
+
+  render = ({ isEmbeddable, websiteUrl }) => {
+    if (isEmbeddable) {
+      this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(websiteUrl);
+      this.websiteUrl = websiteUrl;
+    } else {
+      alert('Not embeddable');
+    }
   }
 
   scrollDown(): void {
-    const { scrollTop, scrollHeight, clientHeight } = this.iframeWrapper.nativeElement;
+    // buffer added when the user reaches the iframe bottom
     const additionalBuffer = 200; // to avoid reaching the bottom
+    const { scrollTop, scrollHeight, clientHeight } = this.iframeWrapper.nativeElement;
     const iframeHeight = scrollHeight - clientHeight - additionalBuffer;
-    const currentScroll = scrollTop * this.zoomLevel; // current position accounting for the current scroll
+    const currentScroll = scrollTop;
     if (currentScroll >= iframeHeight) {
-      this.iframeHeight += this.SCROLL_BUFFER;
+      this.iframeHeight += additionalBuffer;
     }
-    this.performScroll(this.SCROLL_SPEED);
+    this.performScroll(true);
   }
 
   scrollUp(): void {
-    this.performScroll(-this.SCROLL_SPEED);
+    this.performScroll(false);
   }
 
-  performScroll(speed: number): void {
+  performScroll(scrollDown: boolean): void {
+    let speed = this.SCROLL_SPEED;
     if (this.isMobile) {
       speed *= this.SCROLL_SPEED_MOBILE_MULTIPLIER;
     }
-    try {
-      this.iframeWrapper.nativeElement.scrollBy({ top: speed, left: 0, behavior: 'smooth' });
-    } catch (error) {
-      this.iframeWrapper.nativeElement.scrollBy(0, speed);
+    if (!scrollDown) {
+      speed = -speed;
     }
-  }
 
-  zoomIn(): void {
-    this.zoomLevel += this.ZOOM_SPEED;
-  }
-  zoomOut(): void {
-    this.zoomLevel -= this.ZOOM_SPEED;
-  }
-
-  getZoom(): string {
-    return `scale(${this.zoomLevel})`;
+    this.iframeWrapper.nativeElement.scrollBy(0, speed);
   }
 }
