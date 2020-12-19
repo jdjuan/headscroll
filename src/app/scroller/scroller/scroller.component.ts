@@ -14,8 +14,8 @@ import { ActivatedRoute } from '@angular/router';
 export class ScrollerComponent implements OnInit {
   @ViewChild('iframeWrapper') iframeWrapper: ElementRef;
   readonly SCROLL_SPEED = 5;
-  readonly SCROLL_SPEED_MOBILE_MULTIPLIER = 4;
-  readonly DEFAULT_IFRAME_HEIGHT = 2000;
+  readonly SCROLL_SPEED_MOBILE_MULTIPLIER = 3;
+  readonly DEFAULT_IFRAME_HEIGHT = 1000;
   websiteSafeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
   iframeHeight = this.DEFAULT_IFRAME_HEIGHT;
   websiteUrl: string;

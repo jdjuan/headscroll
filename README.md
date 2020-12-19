@@ -8,4 +8,4 @@
 
 ## Known Issues
 
-1. In mobile, touch scrolling doesn't work
+1. In mobile, touch scrolling doesn't work on certain websites. By wrapping an iframe on a div, we have to make the iframe height sufficiently high so that wrapping div displays it correctly. But by doing so, some websites might stop working properly on mobile devices when the user attempts a touch scroll.

@@ -13,8 +13,8 @@
   </mat-sidenav>
   <mat-sidenav-content class="sidenav-content">
     <app-camera (scrollDown)="scrollDown()" (scrollUp)="scrollUp()"></app-camera>
-    <div #iframeWrapper class="iframe-wrapper" (scroll)="print($event)" [class.mobile]="isMobile">
-      <iframe class="iframe" [src]="websiteSafeUrl" (scroll)="print($event)" [height]="iframeHeight" scrolling="yes"></iframe>
+    <div #iframeWrapper class="iframe-wrapper" [class.mobile]="isMobile">
+      <iframe class="iframe" [src]="websiteSafeUrl" [height]="iframeHeight"></iframe>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
