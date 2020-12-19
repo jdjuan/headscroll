@@ -22,7 +22,8 @@
   }
 }
 .iframe-wrapper {
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
   height: calc(100vh - 64px);
   &.mobile {
     height: calc(94vh - 64px); // Weird bug on mobile phones

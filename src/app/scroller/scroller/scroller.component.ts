@@ -15,10 +15,10 @@ export class ScrollerComponent implements OnInit {
   @ViewChild('iframeWrapper') iframeWrapper: ElementRef;
   readonly SCROLL_SPEED = 5;
   readonly SCROLL_SPEED_MOBILE_MULTIPLIER = 3;
-  readonly DEFAULT_IFRAME_HEIGHT = 1000;
+  readonly DEFAULT_IFRAME_HEIGHT = 3500;
   websiteSafeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
   iframeHeight = this.DEFAULT_IFRAME_HEIGHT;
-  websiteUrl: string;
+  websiteUrl = 'Loading...';
   isMobile: boolean;
   // javascript: window.open('http://localhost:4200/' + encodeURIComponent(location.href));
 
