@@ -1,0 +1,52 @@
+@import "~bootstrap/scss/bootstrap";
+
+.menu {
+  margin-right: 20px;
+  vertical-align: text-bottom;
+}
+
+.logo {
+  margin: 20px 0;
+  font-size: 30px;
+  display: inline-block;
+}
+
+.header-right {
+  display: none;
+}
+
+.title {
+  margin-top: 10vw;
+  font-size: min(90px, 16vw);
+  margin-bottom: 10vw;
+}
+
+.step {
+  font-size: min(25px, 4vw);
+  margin-bottom: 4vw;
+}
+
+@include media-breakpoint-up(lg) {
+  .header-left {
+    text-align: left;
+    .menu {
+      display: none;
+    }
+    .logo {
+      font-size: 40px;
+    }
+  }
+  .header-right {
+    display: block;
+    text-align: right;
+  }
+  .title {
+    margin-top: 4vw;
+    font-size: 6vw;
+    margin-bottom: 4vw;
+  }
+  .step {
+    font-size: max(20px, 1.6vw);
+    margin-bottom: 2vw;
+  }
+}
