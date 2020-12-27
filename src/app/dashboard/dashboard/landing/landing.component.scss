@@ -18,15 +18,21 @@
 .title {
   margin-top: 10vw;
   font-size: min(90px, 16vw);
-  margin-bottom: 10vw;
+  margin-bottom: 5vw;
 }
 
-.step {
+.description {
+  font-size: max(14px, 1.1vw);
+  line-height: max(20px, 2vw);
+  margin-bottom: 8vw;
+}
+
+.call-to-action {
   font-size: min(25px, 4vw);
   margin-bottom: 4vw;
 }
 
-@include media-breakpoint-up(lg) {
+@include media-breakpoint-up(md) {
   .header-left {
     text-align: left;
     .menu {
@@ -45,7 +51,12 @@
     font-size: 6vw;
     margin-bottom: 4vw;
   }
-  .step {
+  .description {
+    font-size: max(14px, 1.1vw);
+    line-height: max(20px, 2vw);
+    margin-bottom: 4vw;
+  }
+  .call-to-action {
     font-size: max(20px, 1.6vw);
     margin-bottom: 2vw;
   }
