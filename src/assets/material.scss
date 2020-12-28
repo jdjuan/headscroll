@@ -11,8 +11,80 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$app-primary: mat-palette($mat-indigo);
-$app-accent: mat-palette($mat-pink, A200, A100, A400);
+
+/* For use in src/lib/core/theming/_palette.scss */
+/* For use in src/lib/core/theming/_palette.scss */
+$md-alpha: (
+  50: #ecebf4,
+  100: #d0cce4,
+  200: #b0aad3,
+  300: #9088c1,
+  400: #796fb3,
+  500: #6155a6,
+  600: #594e9e,
+  700: #4f4495,
+  800: #453b8b,
+  900: #332a7b,
+  A100: #c6c0ff,
+  A200: #988dff,
+  A400: #6b5aff,
+  A700: #5441ff,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #ffffff,
+    A700: #ffffff,
+  ),
+);
+
+/* For use in src/lib/core/theming/_palette.scss */
+$md-omega: (
+    50 : #fffcfc,
+    100 : #fff8f8,
+    200 : #fff3f3,
+    300 : #ffeeee,
+    400 : #ffeaea,
+    500 : #ffe6e6,
+    600 : #ffe3e3,
+    700 : #ffdfdf,
+    800 : #ffdbdb,
+    900 : #ffd5d5,
+    A100 : #ffffff,
+    A200 : #ffffff,
+    A400 : #ffffff,
+    A700 : #ffffff,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #000000,
+        600 : #000000,
+        700 : #000000,
+        800 : #000000,
+        900 : #000000,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+
+
+$app-primary: mat-palette($md-alpha);
+$app-accent: mat-palette($md-omega);
 
 // The warn palette is optional (defaults to red).
 $app-warn: mat-palette($mat-red);

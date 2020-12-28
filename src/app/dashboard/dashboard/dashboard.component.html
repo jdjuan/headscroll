@@ -1,9 +1,9 @@
-<mat-sidenav-container>
+<mat-sidenav-container class="sidenav-container">
   <mat-sidenav #sidenav>
     <button mat-button (click)="sidenav.close()">Close</button>
   </mat-sidenav>
 
-  <mat-sidenav-content>
+  <mat-sidenav-content cl>
     <div class="container-fluid">
       <app-landing [sidenav]="sidenav"></app-landing>
       <app-use-case></app-use-case>

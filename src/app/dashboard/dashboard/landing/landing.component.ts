@@ -8,6 +8,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation, Input } 
 })
 export class LandingComponent implements OnInit {
   @Input() sidenav: any;
+  isInputFocused: boolean;
 
   constructor() { }
 

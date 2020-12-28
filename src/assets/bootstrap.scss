@@ -1,0 +1,27 @@
+@import "variables";
+
+$theme-colors: (
+  "alpha": $alpha,
+  "beta": $beta,
+  "gamma": $gamma,
+  "omega": $omega,
+);
+
+$body-bg: $alpha;
+$body-color: $omega;
+$link-color: theme-color("omega");
+// $link-hover-decoration: underline !default;
+
+// $spacers: (
+//   0: 0,
+//   1: ($spacer * .25),
+//   2: ($spacer * .5),
+//   3: $spacer,
+//   4: ($spacer * 1.5),
+//   4s: ($spacer * 2),
+//   5: ($spacer * 3),
+// );
+
+$enable-responsive-font-sizes: true;
+
+@import "node_modules/bootstrap/scss/bootstrap";

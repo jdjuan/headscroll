@@ -1,4 +1,5 @@
 @import "~bootstrap/scss/bootstrap";
+@import "~src/assets/variables";
 
 .menu {
   margin-right: 20px;
@@ -6,6 +7,7 @@
 }
 
 .logo {
+  font-weight: 100;
   margin: 20px 0;
   font-size: 30px;
   display: inline-block;
@@ -16,7 +18,6 @@
 }
 
 .title {
-  margin-top: 10vw;
   font-size: min(90px, 16vw);
   margin-bottom: 5vw;
 }
@@ -30,6 +31,42 @@
 .call-to-action {
   font-size: min(25px, 4vw);
   margin-bottom: 4vw;
+}
+.url {
+  position: relative;
+  background-color: #fafafa;
+  box-shadow: 0px 0px 32px -14px rgba(0, 0, 0, 0.75);
+  border-radius: 10px;
+  .link-icon {
+    position: absolute;
+    left: 12px;
+    top: 14px;
+    font-size: 25px;
+    color: darkgray;
+    z-index: 1;
+    transform: rotate(-45deg);
+    &.focused {
+      color: darkturquoise;
+    }
+  }
+  input {
+    position: relative;
+    width: calc(100% - 3rem);
+    padding-left: 45px;
+    height: 3rem;
+    border: none;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+  }
+  button {
+    height: 3rem;
+    width: 3rem;
+    border: none;
+    background-color: aquamarine;
+    border-top-right-radius: 10px;
+    font-size: 15px;
+    border-bottom-right-radius: 10px;
+  }
 }
 
 @include media-breakpoint-up(md) {
@@ -47,7 +84,6 @@
     text-align: right;
   }
   .title {
-    margin-top: 4vw;
     font-size: 6vw;
     margin-bottom: 4vw;
   }
@@ -59,5 +95,13 @@
   .call-to-action {
     font-size: max(20px, 1.6vw);
     margin-bottom: 2vw;
+  }
+  .wave1 {
+    position: absolute;
+    width: 159rem;
+    transform: rotate(108deg);
+    top: -66rem;
+    left: -44rem;
+    z-index: -1;
   }
 }
