@@ -6,7 +6,7 @@
 .logo {
   font-weight: 100;
   margin: 20px 0;
-  font-size: 30px;
+  font-size: 25px;
   display: inline-block;
 }
 
@@ -14,67 +14,107 @@
   display: none;
 }
 
-.title {
-  font-size: min(90px, 16vw);
-  margin-bottom: 5vw;
-}
-
-.description {
-  font-size: max(14px, 1.1vw);
-  line-height: max(20px, 2vw);
-  margin-bottom: 8vw;
-}
-
-.call-to-action {
-  font-size: min(25px, 4vw);
-  margin-bottom: 4vw;
-}
-.url {
-  position: relative;
-  box-shadow: 0px 0px 32px -14px rgba(0, 0, 0, 0.75);
-  border-radius: 10px;
-  display: flex;
-  &:hover {
-    .link-icon {
-      color: $alpha;
-    }
-  }
-  .link-icon {
-    position: absolute;
-    left: 12px;
-    top: 6px;
-    font-size: 25px;
-    color: darkgray;
-    z-index: 10;
-    &.focused {
-      color: $alpha;
-    }
-  }
-  input {
+.content {
+  margin-top: 2vh;
+  .content-left {
     position: relative;
-    width: calc(100% - 3rem);
-    padding-left: 45px;
-    height: 3rem;
-    border: none;
-    border-bottom-left-radius: 10px;
-    border-top-left-radius: 10px;
-    outline-color: $alpha;
-    color: $alpha;
+    margin-bottom: 30vh;
   }
-  button {
-    height: 3rem;
-    width: 3rem;
-    border: none;
-    background-color: $beta;
-    color: $omega;
+  .content-right {
+    text-align: center;
+  }
+  .title {
+    font-size: min(80px, 9vh);
+    margin-bottom: 4vw;
+  }
+
+  .description {
+    margin-bottom: 5vh;
     font-weight: 200;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-    font-size: 26px;
-    border-bottom-right-radius: 10px;
-    height: 3rem;
+    font-size: 17px;
+  }
+
+  .call-to-action {
+    font-size: min(25px, 4vw);
+    margin-bottom: 1rem;
+    font-weight: 100;
+  }
+  .url {
+    position: relative;
+    box-shadow: 0px 0px 32px -14px rgba(0, 0, 0, 0.75);
+    border-radius: 10px;
+    display: flex;
     &:hover {
-      background-color: darken($beta, 5);
+      .link-icon {
+        color: $alpha;
+      }
+    }
+    .link-icon {
+      position: absolute;
+      left: 12px;
+      top: 6px;
+      font-size: 25px;
+      color: darkgray;
+      z-index: 10;
+      &.focused {
+        color: $alpha;
+      }
+    }
+    input {
+      position: relative;
+      width: calc(100% - 3rem);
+      padding-left: 45px;
+      height: 3rem;
+      border: none;
+      border-bottom-left-radius: 10px;
+      border-top-left-radius: 10px;
+      color: $alpha;
+      outline-color: $alpha;
+    }
+    button {
+      height: 3rem;
+      width: 3rem;
+      border: none;
+      background-color: $beta;
+      color: $omega;
+      font-weight: 200;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      font-size: 26px;
+      border-bottom-right-radius: 10px;
+      height: 3rem;
+      outline-color: $alpha;
+      &:hover {
+        background-color: darken($beta, 5);
+      }
+    }
+  }
+  .wave {
+    display: none;
+  }
+  .blob {
+    width: 200vw;
+    position: absolute;
+    left: -11rem;
+    top: -8rem;
+    transform: rotate(180deg);
+    z-index: -1;
+  }
+  .square {
+    width: 80vw;
+    height: 80vw;
+    background-color: white;
+    display: inline-block;
+  }
+}
+
+@include media-breakpoint-up(sm) {
+  .content {
+    .content-left {
+      margin-bottom: 15vh;
+    }
+    .blob {
+      display: none;
     }
   }
 }
@@ -90,33 +130,37 @@
     display: block;
     text-align: right;
   }
-  .title {
-    font-size: 6vw;
-    margin-bottom: 2rem;
-  }
-  .description {
-    font-size: max(14px, 1.1vw);
-    line-height: max(20px, 2vw);
-    margin-bottom: 9vw;
-    font-weight: 200;
-    font-size: 17px;
-  }
-  .call-to-action {
-    font-size: max(32px, 1.6vw);
-    margin-bottom: 1rem;
-    font-weight: 100;
-  }
-  .wave1 {
-    // position: absolute;
-    // width: 55rem;
-    // top: -11rem;
-    // left: -2rem;
-    // z-index: -1;
-    position: absolute;
-    width: 159rem;
-    transform: rotate(108deg);
-    top: -68rem;
-    left: -44rem;
-    z-index: -1;
+  .content {
+    margin-top: 3rem;
+    .content-right {
+      text-align: right;
+    }
+    .title {
+      font-size: 6vw;
+      margin-bottom: 2rem;
+    }
+    .description {
+      margin-bottom: 10rem;
+      line-height: 2rem;
+    }
+    .call-to-action {
+      font-size: max(32px, 1.6vw);
+    }
+    .wave {
+      display: block;
+      position: absolute;
+      width: 159rem;
+      transform: rotate(108deg);
+      top: -68rem;
+      left: -44rem;
+      z-index: -1;
+    }
+    .square {
+      width: 30vw;
+      height: 20vw;
+    }
+    .blob {
+      display: none;
+    }
   }
 }
