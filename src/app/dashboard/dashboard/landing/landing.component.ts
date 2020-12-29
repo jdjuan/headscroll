@@ -7,7 +7,6 @@ import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation, Input } 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LandingComponent implements OnInit {
-  @Input() sidenav: any;
   isInputFocused: boolean;
 
   constructor() { }
