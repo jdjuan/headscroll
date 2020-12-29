@@ -1,7 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
-import * as tmPose from '@teachablemachine/pose';
+import { Webcam, CustomPoseNet, load, drawKeypoints, drawSkeleton } from '@teachablemachine/pose';
 import { Keypoint } from '@tensorflow-models/posenet';
-import { take } from 'rxjs/operators';
 import { LayoutService } from '../../services/layout.service';
 import { CameraService } from '../../services/camera.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -33,8 +32,8 @@ export class CameraComponent implements OnInit {
   showSkeleton: boolean;
   isMobile: boolean;
   forecast: Classes;
-  webcam: tmPose.Webcam;
-  model: tmPose.CustomPoseNet;
+  webcam: Webcam;
+  model: CustomPoseNet;
   ctx: CanvasRenderingContext2D;
 
   constructor(layoutService: LayoutService, cameraService: CameraService) {
@@ -61,7 +60,7 @@ export class CameraComponent implements OnInit {
       this.cameraSize = this.SMALL_CAMERA_SIZE;
       this.showSkeleton = false;
     }
-    this.model = await tmPose.load(this.MODEL_URL, this.METADATA_URL);
+    this.model = await load(this.MODEL_URL, this.METADATA_URL);
     this.setCanvasContext();
     this.setupWebCam(deviceId);
   }
@@ -73,7 +72,7 @@ export class CameraComponent implements OnInit {
 
   async setupWebCam(deviceId: string): Promise<void> {
     const flip = true;
-    this.webcam = new tmPose.Webcam(this.cameraSize, this.cameraSize, flip);
+    this.webcam = new Webcam(this.cameraSize, this.cameraSize, flip);
     await this.webcam.setup({ deviceId });
     await this.webcam.play();
     window.requestAnimationFrame(this.loop);
@@ -121,8 +120,8 @@ export class CameraComponent implements OnInit {
       this.ctx.drawImage(this.webcam.canvas, 0, 0);
       if (pose && this.showSkeleton) {
         const minPartConfidence = 0.5;
-        tmPose.drawKeypoints(pose.keypoints, minPartConfidence, this.ctx);
-        tmPose.drawSkeleton(pose.keypoints, minPartConfidence, this.ctx);
+        drawKeypoints(pose.keypoints, minPartConfidence, this.ctx);
+        drawSkeleton(pose.keypoints, minPartConfidence, this.ctx);
       }
     }
   }
