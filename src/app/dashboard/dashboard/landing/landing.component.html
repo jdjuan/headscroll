@@ -1,17 +1,17 @@
 <div class="row slide">
   <div class="col">
     <div class="row header align-items-center">
-      <div class="col-md-6 header-left">
+      <div class="col-lg-6 header-left">
         <h1 class="logo">HeadScroll.io</h1>
       </div>
-      <div class="col-md-6 header-right">
+      <div class="col-lg-6 header-right">
         <a href="" class="text-alpha ml-5">Privacy</a>
         <a href="" class="text-alpha ml-5">FAQ</a>
         <a href="" class="text-alpha ml-5">About</a>
       </div>
     </div>
     <div class="row mt-5 content">
-      <div class="col-md-6">
+      <div class="col-lg-6">
         <h2 class="title ">Scroll websites with your head</h2>
         <p class="description ">
           Navigate websites up and down by simply tilting your head – perfect for playing an instrument or reading a recipe while cutting onions.
@@ -19,14 +19,13 @@
         <p class="call-to-action ">Enter a website below and click go:</p>
         <div class="url-field">
           <div class="url">
-            <mat-icon class="link-icon" [class.focused]="isInputFocused" aria-hidden="false" aria-label="link icon">insert_link</mat-icon>
+            <i class="bi bi-link-45deg link-icon" [class.focused]="isInputFocused" aria-hidden="false" aria-label="link icon"></i>
             <input type="text" (focus)="isInputFocused = true" (blur)="isInputFocused = false" />
             <button class="">Go</button>
           </div>
         </div>
-        <div><button>Fill for me</button></div>
       </div>
-      <div class="col-md-6 ">
+      <div class="col-lg-6 ">
         <!-- <img src="assets/wave.svg" class="wave1" alt=""> -->
         <img src="assets/wave.svg" class="wave1" alt="">
         <!-- <img src="assets/tilt.png" class="w-100" alt=""> -->

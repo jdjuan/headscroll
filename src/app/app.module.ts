@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from './material/material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { HttpClientModule } from '@angular/common/http';
@@ -14,7 +13,6 @@ import { HttpClientModule } from '@angular/common/http';
     CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
-    MaterialModule,
     DashboardModule,
     AppRoutingModule,
     DashboardModule,
