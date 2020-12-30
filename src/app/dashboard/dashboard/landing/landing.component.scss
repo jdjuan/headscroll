@@ -6,7 +6,7 @@
 .logo {
   font-weight: 100;
   margin: 20px 0;
-  font-size: 25px;
+  font-size: 30px;
   display: inline-block;
 }
 
@@ -15,7 +15,7 @@
 }
 
 .content {
-  margin-top: 2vh;
+  margin-top: 1.5vh;
   .content-left {
     position: relative;
     margin-bottom: 30vh;
@@ -31,7 +31,7 @@
   .description {
     margin-bottom: 5vh;
     font-weight: 200;
-    font-size: 17px;
+    font-size: 18px;
   }
 
   .call-to-action {
@@ -142,6 +142,7 @@
     .description {
       margin-bottom: 10rem;
       line-height: 2rem;
+      font-size: 20px;
     }
     .call-to-action {
       font-size: max(32px, 1.6vw);
@@ -164,3 +165,14 @@
     }
   }
 }
+// @include media-breakpoint-up(xl) {
+//   .content {
+//     .description {
+//       font-size: 24px;
+//     }
+//     .wave {
+//       width: 179rem;
+//       top: -71rem;
+//     }
+//   }
+// }
