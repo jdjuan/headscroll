@@ -20,15 +20,15 @@
 
 .content {
   margin-top: 1.5vh;
+  .content-right {
+    display: none;
+  }
   .square {
     width: 85vw;
     height: 55vw;
     background-color: white;
     display: inline-block;
     margin-bottom: 1rem;
-    &.desktop {
-      display: none;
-    }
   }
   .title {
     font-size: 13vw;
@@ -98,9 +98,6 @@
       }
     }
   }
-  .wave {
-    display: none;
-  }
 }
 
 @include media-breakpoint-up(lg) {
@@ -121,6 +118,7 @@
     margin-top: 3rem;
     margin-bottom: 10vh;
     .content-right {
+      display: block;
       text-align: right;
     }
     .title {
@@ -131,6 +129,8 @@
       margin-bottom: 10rem;
       line-height: 2rem;
       font-size: max(20px, 1vw);
+      // font-size: 2.5rem;
+      // font-weight: 100;
     }
     .call-to-action {
       font-size: max(32px, 1.6vw);
@@ -147,9 +147,6 @@
     .square {
       width: 30vw;
       height: 20vw;
-      &.desktop {
-        display: inline-block;
-      }
       &.mobile {
         display: none;
       }
