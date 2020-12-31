@@ -35,7 +35,7 @@
   }
 
   .call-to-action {
-    font-size: min(25px, 4vw);
+    font-size: min(30px, 6vw);
     margin-bottom: 1rem;
     font-weight: 100;
   }
@@ -142,7 +142,7 @@
     .description {
       margin-bottom: 10rem;
       line-height: 2rem;
-      font-size: 20px;
+      font-size: max(20px, 1vw);
     }
     .call-to-action {
       font-size: max(32px, 1.6vw);
@@ -150,11 +150,11 @@
     .wave {
       display: block;
       position: absolute;
-      width: 159rem;
       transform: rotate(108deg);
-      top: -68rem;
-      left: -44rem;
       z-index: -1;
+      width: 228vh;
+      left: -59vh;
+      top: -95vh;
     }
     .square {
       width: 30vw;
@@ -165,14 +165,3 @@
     }
   }
 }
-// @include media-breakpoint-up(xl) {
-//   .content {
-//     .description {
-//       font-size: 24px;
-//     }
-//     .wave {
-//       width: 179rem;
-//       top: -71rem;
-//     }
-//   }
-// }
