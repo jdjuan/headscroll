@@ -98,6 +98,18 @@
       }
     }
   }
+  .error {
+    margin-top: 7px;
+    background-color: $pi;
+    display: inline-block;
+    padding: 5px 10px;
+    font-weight: 300;
+    border-radius: 10px;
+    font-size: 20px;
+    .icon {
+      margin-right: 0.5rem;
+    }
+  }
 }
 
 @include media-breakpoint-up(lg) {

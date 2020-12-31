@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { LayoutService } from './../services/layout.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ProxyService } from '../services/proxy.service';
+import { ProxyService } from '../../core/proxy.service';
 import { ActivatedRoute } from '@angular/router';
 
 @UntilDestroy()

@@ -2,7 +2,7 @@
   <div class="col">
     <div class="row header align-items-center">
       <div class="col-lg-6 header-left">
-        <h1 class="logo">HeadScroll.io</h1>
+        <h1 class="logo">HeadScroll.io <b class="bg-beta rounded px-1">beta</b></h1>
       </div>
       <div class="col-lg-6 header-right">
         <a href="#privacy-section" class="text-alpha ml-5">Privacy</a>
@@ -14,20 +14,40 @@
       <div class="col-lg-6 content-left">
         <div class="square mobile"></div>
         <h2 class="title">Scroll websites with your head</h2>
-        <p class="description ">
-          Navigate websites up and down by simply tilting your head – perfect for playing an instrument or reading a recipe while cutting onions.
+        <p class="description">
+          Navigate websites up and down by simply tilting your head – perfect for playing an instrument or reading a recipe while cutting
+          onions.
         </p>
-        <p class="call-to-action ">Enter a website below and click go:</p>
+        <p class="call-to-action">Enter a website below and click go:</p>
         <div class="url-field">
           <div class="url">
             <i class="bi bi-link-45deg link-icon" [class.focused]="isInputFocused" aria-hidden="false" aria-label="link icon"></i>
-            <input type="text" (focus)="isInputFocused = true" (blur)="isInputFocused = false" />
-            <button class="">Go</button>
+            <input
+              type="url"
+              #validation="ngModel"
+              [(ngModel)]="website"
+              (keydown)="cleanValidation()"
+              (keydown.enter)="search()"
+              (focus)="isInputFocused = true"
+              (blur)="isInputFocused = false"
+              required
+            />
+            <button class="" (click)="search()">Go</button>
           </div>
+          <span class="error" *ngIf="validation.invalid && (hasSearched || validation.touched) && validation.errors.required">
+            <i class="bi bi-info-circle-fill icon"></i> Please enter a website above.
+          </span>
+          <span class="error" *ngIf="notEmbeddable"
+            ><i class="bi bi-info-circle-fill icon"></i> For security reasons, we cannot scroll this website.
+            <u [ngbTooltip]="tipContent" placement="bottom">Why?</u></span
+          >
+          <ng-template #tipContent
+            >Some websites have extra security that protects them from being embedded onto another website (CORS). There's nothing we can do about it. We're sorry!</ng-template
+          >
         </div>
       </div>
       <div class="col-lg-6 content-right">
-        <img src="assets/wave.svg" class="wave" alt="">
+        <img src="assets/wave.svg" class="wave" alt="" />
         <div class="square"></div>
         <!-- <video class="demo" autoplay loop>
           <source src="assets/demo.mp4" type="video/mp4">

@@ -14,7 +14,7 @@ interface ProxyResponse {
   providedIn: 'root',
 })
 export class ProxyService {
-  readonly PROXY_URL = 'https://api.codetabs.com/v1/headers/?domain=';
+  private readonly PROXY_URL = 'https://api.codetabs.com/v1/headers/?domain=';
 
   constructor(private http: HttpClient) {}
 
@@ -22,7 +22,7 @@ export class ProxyService {
     return params.pipe(pluck('website'), switchMap(this.verifyWithProxy));
   }
 
-  verifyWithProxy = (websiteUrl: string) => {
+  verifyWithProxy = (websiteUrl: string): Observable<ProxyResponse> => {
     console.log({ websiteUrl });
     return this.http.get(this.PROXY_URL + websiteUrl).pipe(
       map((responses: any[]) => {
@@ -33,7 +33,7 @@ export class ProxyService {
     );
   }
 
-  isEmbeddable = (responses: any): boolean => {
+  private isEmbeddable = (responses: any): boolean => {
     if (responses.length === 0) {
       return true;
     }
