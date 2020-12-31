@@ -3,6 +3,10 @@
 @import "~bootstrap/scss/mixins";
 @import "~src/assets/variables";
 
+.slide {
+  text-align: center;
+}
+
 .logo {
   font-weight: 100;
   margin: 20px 0;
@@ -16,7 +20,6 @@
 
 .content {
   margin-top: 1.5vh;
-  text-align: center;
   .square {
     width: 85vw;
     height: 55vw;
@@ -101,6 +104,9 @@
 }
 
 @include media-breakpoint-up(lg) {
+  .slide {
+    text-align: inherit;
+  }
   .header-left {
     text-align: left;
     .logo {
@@ -112,7 +118,6 @@
     text-align: right;
   }
   .content {
-    text-align: inherit;
     margin-top: 3rem;
     margin-bottom: 10vh;
     .content-right {

@@ -8,7 +8,7 @@ import { concatMap, delay, exhaustMap, tap } from 'rxjs/operators';
   styleUrls: ['./use-case.component.scss'],
 })
 export class UseCaseComponent implements OnInit {
-  instruments = ['guitar', 'piano', 'ukelele', 'accordion', 'harmonica'];
+  instruments = ['guitar', 'piano', 'ukulele', 'accordion', 'harmonica'];
   instrument: string;
   readonly WRITE_SPEED = 200;
   readonly ERASE_SPEED = 150;

@@ -27,7 +27,6 @@ body {
 // }
 
 .slide {
-  // height: 94vh;
   padding: 0px;
 }
 
@@ -37,7 +36,6 @@ body {
 }
 @include media-breakpoint-up(md) {
   .slide {
-    // height: 100vh;
     padding: 0px 30px;
   }
 }

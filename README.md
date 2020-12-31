@@ -98,3 +98,13 @@
 ## Known Issues
 
 1. In mobile, touch scrolling doesn't work on certain websites. By wrapping an iframe on a div, we have to make the iframe height sufficiently high so that wrapping div displays it correctly. But by doing so, some websites might stop working properly on mobile devices when the user attempts a touch scroll.
+
+## Image Processing
+
+1. Source: Shutterstock
+2. PNG: https://cloudconvert.com/eps-to-png
+3. Background: https://pixlr.com/remove-background/
+4. Blob Maker: https://www.blobmaker.app/
+5. SVG Editor: https://boxy-svg.com/
+6. WebP: https://squoosh.app/editor
+7. Compress: https://compresspng.com/

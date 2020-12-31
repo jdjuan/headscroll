@@ -4,7 +4,7 @@
 @import "~src/assets/variables";
 
 .slide {
-  margin-top: 6rem;
+  margin-top: 0rem;
   text-align: center;
 }
 
@@ -41,7 +41,7 @@
 
 @include media-breakpoint-up(lg) {
   .slide {
-    margin-top: 10rem;
+    // margin-top: 5rem;
     text-align: inherit;
   }
   .feature-image {
