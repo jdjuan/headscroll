@@ -16,22 +16,28 @@
 
 .content {
   margin-top: 1.5vh;
-  .content-left {
-    position: relative;
-    margin-bottom: 30vh;
-  }
-  .content-right {
-    text-align: center;
+  text-align: center;
+  .square {
+    width: 85vw;
+    height: 55vw;
+    background-color: white;
+    display: inline-block;
+    margin-bottom: 1rem;
+    &.desktop {
+      display: none;
+    }
   }
   .title {
-    font-size: min(80px, 9vh);
-    margin-bottom: 4vw;
+    font-size: 13vw;
+    margin-bottom: 3vw;
   }
 
   .description {
-    margin-bottom: 5vh;
-    font-weight: 200;
-    font-size: 18px;
+    margin-bottom: 7vh;
+    font-weight: 100;
+    font-size: 16px;
+    font-size: max(16px, 2.5vw);
+    padding: 0px 18px;
   }
 
   .call-to-action {
@@ -92,31 +98,6 @@
   .wave {
     display: none;
   }
-  .blob {
-    width: 200vw;
-    position: absolute;
-    left: -11rem;
-    top: -8rem;
-    transform: rotate(180deg);
-    z-index: -1;
-  }
-  .square {
-    width: 80vw;
-    height: 80vw;
-    background-color: white;
-    display: inline-block;
-  }
-}
-
-@include media-breakpoint-up(sm) {
-  .content {
-    .content-left {
-      margin-bottom: 15vh;
-    }
-    .blob {
-      display: none;
-    }
-  }
 }
 
 @include media-breakpoint-up(lg) {
@@ -131,7 +112,9 @@
     text-align: right;
   }
   .content {
+    text-align: inherit;
     margin-top: 3rem;
+    margin-bottom: 10vh;
     .content-right {
       text-align: right;
     }
@@ -159,6 +142,12 @@
     .square {
       width: 30vw;
       height: 20vw;
+      &.desktop {
+        display: inline-block;
+      }
+      &.mobile {
+        display: none;
+      }
     }
     .blob {
       display: none;

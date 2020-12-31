@@ -5,6 +5,7 @@
 
 .slide {
   margin-top: 10rem;
+  text-align: center;
 }
 
 .guitar {
@@ -41,6 +42,7 @@
 @include media-breakpoint-up(lg) {
   .slide {
     margin-top: 7rem;
+    text-align: inherit;
   }
   .guitar {
     margin-bottom: 0px;
