@@ -1,0 +1,67 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~src/assets/variables";
+
+.slide {
+  margin-top: max(6rem, 10vw);
+  text-align: center;
+}
+
+.square {
+  width: 85vw;
+  height: 55vw;
+  background-color: white;
+  display: inline-block;
+  margin-bottom: 1rem;
+  border-radius: 20px;
+}
+
+.title {
+  font-size: min(60px, 7vh);
+}
+
+.subtitle {
+  font-weight: inherit;
+  background-color: $beta;
+  display: inline-block;
+  padding: 5px 10px;
+  margin-bottom: 2rem;
+  border-radius: 4px;
+
+  font-size: max(2vw, 20px);
+}
+
+.steps {
+  padding-left: 4vw;
+}
+
+.description {
+  font-size: min(5.5vw, 1.6rem);
+  font-weight: 100;
+}
+
+.bold {
+  font-weight: 300;
+}
+
+@include media-breakpoint-up(lg) {
+  .slide {
+    margin-top: 10rem;
+    text-align: inherit;
+  }
+  .square {
+    width: 40vw;
+    height: 30vw;
+  }
+  .title {
+    font-size: 5vw;
+  }
+  .steps {
+    padding: 0;
+  }
+  .description {
+    font-size: 2.5vw;
+    font-weight: 100;
+  }
+}

@@ -34,11 +34,11 @@
             />
             <button class="" (click)="search()">Go</button>
           </div>
-          <span class="error" *ngIf="validation.invalid && (hasSearched || validation.touched) && validation.errors.required">
+          <span class="error" *ngIf="validation.invalid && (hasSearched || validation.touched)">
             <i class="bi bi-info-circle-fill icon"></i> Please enter a website above.
           </span>
           <span class="error" *ngIf="notEmbeddable"
-            ><i class="bi bi-info-circle-fill icon"></i> For security reasons, we cannot scroll this website.
+            ><i class="bi bi-info-circle-fill icon"></i> We cannot scroll this website, check your spelling or try another one.
             <u [ngbTooltip]="tipContent" placement="bottom">Why?</u></span
           >
           <ng-template #tipContent

@@ -14,7 +14,6 @@
 }
 
 .title {
-  // margin-top: 10rem;
   font-size: min(60px, 7vh);
   margin-bottom: 2rem;
 }
@@ -25,10 +24,10 @@
 }
 
 .dynamic {
-  background-color: #ffe6e6;
-  color: #6155a6;
-  background-color: #a685e2;
-  color: #f0f8ff;
+  background-color: $gamma;
+  color: $alpha;
+  background-color: $beta;
+  color: $omega;
   padding: 3px 11px 6px 3px;
   border-radius: 6px;
   font-weight: 300;

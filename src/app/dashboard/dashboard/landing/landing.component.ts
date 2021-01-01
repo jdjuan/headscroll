@@ -22,21 +22,24 @@ export class LandingComponent implements OnInit {
   ngOnInit(): void {}
 
   search(): void {
-    this.notEmbeddable = false;
     this.hasSearched = true;
-    this.loading = true;
-    this.proxyService
-      .verifyWithProxy(this.website)
-      .pipe(untilDestroyed(this))
-      .subscribe(({ isEmbeddable }) => {
-        this.loading = false;
-        if (isEmbeddable) {
-          this.router.navigate(['', this.website]);
-        } else {
-          this.notEmbeddable = true;
-        }
-      });
+    if (this.website) {
+      this.notEmbeddable = false;
+      this.loading = true;
+      this.proxyService
+        .verifyWithProxy(this.website)
+        .pipe(untilDestroyed(this))
+        .subscribe(({ isEmbeddable }) => {
+          this.loading = false;
+          if (isEmbeddable) {
+            this.router.navigate(['', this.website]);
+          } else {
+            this.notEmbeddable = true;
+          }
+        });
+    }
   }
+
   cleanValidation(): void {
     this.notEmbeddable = false;
   }

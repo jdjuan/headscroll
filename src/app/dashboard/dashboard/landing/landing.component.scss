@@ -24,6 +24,7 @@
     display: none;
   }
   .square {
+    border-radius: 20px;
     width: 85vw;
     height: 55vw;
     background-color: white;
@@ -51,7 +52,7 @@
   .url {
     position: relative;
     box-shadow: 0px 0px 32px -14px rgba(0, 0, 0, 0.75);
-    border-radius: 10px;
+    border-radius: 6px;
     display: flex;
     &:hover {
       .link-icon {
@@ -75,8 +76,8 @@
       padding-left: 45px;
       height: 3rem;
       border: none;
-      border-bottom-left-radius: 10px;
-      border-top-left-radius: 10px;
+      border-bottom-left-radius: 6px;
+      border-top-left-radius: 6px;
       color: $alpha;
       outline-color: $alpha;
     }
@@ -87,10 +88,9 @@
       background-color: $beta;
       color: $omega;
       font-weight: 200;
-      border-top-right-radius: 10px;
-      border-bottom-right-radius: 10px;
       font-size: 26px;
-      border-bottom-right-radius: 10px;
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
       height: 3rem;
       outline-color: $alpha;
       &:hover {
@@ -99,13 +99,13 @@
     }
   }
   .error {
+    font-weight: 300;
+    font-size: 15px;
     margin-top: 7px;
     background-color: $pi;
     display: inline-block;
     padding: 5px 10px;
-    font-weight: 300;
     border-radius: 10px;
-    font-size: 20px;
     .icon {
       margin-right: 0.5rem;
     }
@@ -141,8 +141,7 @@
       margin-bottom: 10rem;
       line-height: 2rem;
       font-size: max(20px, 1vw);
-      // font-size: 2.5rem;
-      // font-weight: 100;
+      padding: 0px;
     }
     .call-to-action {
       font-size: max(32px, 1.6vw);
@@ -165,6 +164,10 @@
     }
     .blob {
       display: none;
+    }
+    .error {
+      font-weight: 300;
+      font-size: 20px;
     }
   }
 }

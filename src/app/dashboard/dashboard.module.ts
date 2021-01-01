@@ -8,9 +8,11 @@ import { UseCaseComponent } from './dashboard/use-case/use-case.component';
 import { PrivacyComponent } from './dashboard/privacy/privacy.component';
 import { FormsModule } from '@angular/forms';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { BookmarkletComponent } from './dashboard/bookmarklet/bookmarklet.component';
+import { AboutComponent } from './dashboard/about/about.component';
 
 @NgModule({
-  declarations: [DashboardComponent, LandingComponent, UseCaseComponent, PrivacyComponent],
+  declarations: [DashboardComponent, LandingComponent, UseCaseComponent, PrivacyComponent, BookmarkletComponent, AboutComponent],
   imports: [DashboardRoutingModule, FormsModule, CommonModule, MaterialModule, NgbTooltipModule],
 })
 export class DashboardModule {}
