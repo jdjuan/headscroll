@@ -26,13 +26,17 @@
   background-color: $beta;
   display: inline-block;
   padding: 5px 10px;
-  margin-bottom: 2rem;
   border-radius: 4px;
-
   font-size: max(2vw, 20px);
+}
+.note{
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 300;
 }
 
 .steps {
+  margin-top: 2rem;
   padding-left: 4vw;
 }
 
@@ -41,8 +45,20 @@
   font-weight: 100;
 }
 
-.bold {
-  font-weight: 300;
+.bookmarklet {
+  background-color: $omega;
+  color: $alpha;
+  padding: 0px 6px;
+  border-radius: 6px;
+  box-shadow: 0px 0px 11px 0px #3c346a;
+  font-weight: 200;
+  transition: background-color 0.5s cubic-bezier(0.39, 0.58, 0.57, 1);
+  cursor: grab;
+  &:hover {
+    text-decoration: none;
+    background-color: $beta;
+    color: $omega;
+  }
 }
 
 @include media-breakpoint-up(lg) {

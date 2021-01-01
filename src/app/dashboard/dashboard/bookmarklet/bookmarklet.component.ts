@@ -3,13 +3,14 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-bookmarklet',
   templateUrl: './bookmarklet.component.html',
-  styleUrls: ['./bookmarklet.component.scss']
+  styleUrls: ['./bookmarklet.component.scss'],
 })
 export class BookmarkletComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
+  ngOnInit(): void {}
 
-  ngOnInit(): void {
+  prevent(event: Event): void {
+    event.preventDefault();
   }
-
 }
