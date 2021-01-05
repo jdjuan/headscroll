@@ -7,85 +7,70 @@
 
 ## Website
 
-## V2
-
-> Dark backgrounds for the gifs
-> Light for the illustrations
-
-1. HS HeadScroll.io            | Privacy | FAQ | About Us |
-2. Scroll websites with your head! [Gif]
-   1. Add a link below and click Go!
-   2. Enable your camera (Your data is safe ⬇)
-   3. Tilt your head left or right to start scrolling
-      1. [               ][Go!]
-      2. [Add_a_link_for_me]
-3. Don't stop the music! [Guitar]
-   1. HeadScroll helps you scroll your [{music_sheets}] without ever leaving your [{guitar|ukele|flute|piano}]
-4. Your privacy is a priority | [Binoculars]
-   3. We don't (and never will) store your camera stream data
-   4. We only collect the following anonymous information:
-      1. Domains searched -> To improve the experience is the most used websites
-      2. Bookmarklet use vs website use
-5. Use our bookmarklet! | [Gif]
-6. The fastest way to use HeadScroll!
-   1. Drag [this_button] into your bookmarks
-   2. Open a website you'd like to scroll
-   3. Press the button and you are ready to go!
-7. Should I buy a coffee on your behalf? | [Coffee]
+1. Should I buy a coffee on your behalf? | [Coffee]
    1. Kidding, you don't have to donate, it's fine, seriously, it's cool.
    2. If you did, you'd made my day, but no pressure.
    3. Also, if you did I'd send you a personalized thank you email
       1. [Donate]
-8. Spread the word! | [Megaphone]
+2. Spread the word! | [Megaphone]
    1. Tell your friends about HeadScroll on social media with the hashtag [#HeadScroll]
    2. I'll make sure to like each one of your tweets, pinky promise
    3. [Tweet_Now]
-9. Frequently Asked Questions | [TBD]
-10. About ~~Us~~ Me | [Juan]
+3. Frequently Asked Questions | [TBD]
+4.  About ~~Us~~ Me | [Juan]
    1.  I'm Juan. I've been playing guitar for about 20 years. And it's always been a burden to stop playing guitar to scroll my tabs. Autoscroll doesn't work for me. So I decided to create this. I took 
 
 ### Scroller
 
-1. It's time to enable to your camera
-2. [Camera]
-   1. Your video stays with you always, we don't store any of it
+1. It's time to enable to your camera [Camera]
+   1. Add exception for cam blocked or not found
+2. Tips for a better experience | [Don't_show_again] | [woman-tilting-head]
+   1. Put your camera in front of you
+   2. Avoid tilting your head unless you want to scroll
 3. Our mobile experience is not ready at the moment, please use a laptop | [laptop_woman] 
    1. Let me see it, I won't judge!
    2. I will try later on another device
+4. Is the website displayed correctly? | [yes-no]
+5. Loading indicators
+   1. Also for URL submit from landing
+6. Layout, remove material
+7. Make the default heigh larger for my screen
+8. Options
+   1. Hide / Show camera
+   2. Speed
+   3. Invert Scrolling
+   4. Report website
+   5. Body Points
+9. Fix bug for https://www.cifraclub.com.br/shakira/te-espero-sentada/
 
-### Social Media
+### Backend
 
-1. [Woman_tilting_head]
+1. Store websites searched (both the URL and URI), and keep the count
+2. Admin View to Blacklist and whitelist.
+   1. https://twitter.com/cifraclub
 
-<!-- 3. Tips for a better experience | [Don't_show_again]
-   1. Put your camera in front of you
-   2. Avoid tilting your head unless you  -->
-<!-- 4. Tilt your head left and right to scroll the website | [woman_tilting] -->
+### SEO
 
-### V1
+1. OG and SEO Tags, Images for social media
+2. Add Google Analytics
+3. Buy domain
+4. Add product hunt reference
+5. Send email my personal subscription list
+6. Tweet, tagging: https://twitter.com/ire_alva
 
-1. Scroll websites with your head! [Gif]
-2. Try it now [Heads]
-   1. [Start your camera]
-      1. *We don't store your camera data by any means!
-   2. Tilt your head to the sides
-   3. When the user tilted both sides several times: "Good Job!" 
-3. Let's t
+### Test
 
-4. 
-5. Use the bookmarklet [lightbulb]
-   1. Drag it to your bookmarks
-   2. On a new tab open the website you'd like to scroll
-   3. Then click the bookmark from step 1
-   4. Done!
-6. Donate a coffee!
-   1. I'll send a thank you note to every donator!
-7. Privacy
-   1. We don't (and never will) store your camera stream data.
-   2. We only collect the following anonymous information:
-      1. Domains searched -> To improve the experience is the most used websites
-      2. Statistics about the bookmarklet use vs website use
-      3. 
+1. Test in other browsers (remove <b> tags) and OS's, and devices
+2. 
+
+### Model
+
+1. Test more and improve model
+
+### Main
+
+1. Button: Scroll a random song
+
 
 ## Roadmap
 
