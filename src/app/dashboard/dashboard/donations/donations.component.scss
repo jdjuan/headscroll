@@ -4,13 +4,16 @@
 @import "~src/assets/variables";
 
 .slide {
-  margin-top: 6rem;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.left-content {
   text-align: center;
 }
 
 .feature-image {
   width: 80%;
-  margin-bottom: 1rem;
 }
 
 .title {
@@ -24,10 +27,10 @@
 }
 
 .dynamic {
-  background-color: $gamma;
-  color: $alpha;
-  background-color: $beta;
-  color: $omega;
+  background-color: #ffe6e6;
+  color: #6155a6;
+  background-color: #a685e2;
+  color: #f0f8ff;
   padding: 3px 11px 6px 3px;
   border-radius: 6px;
   font-weight: 300;
@@ -40,15 +43,16 @@
 
 @include media-breakpoint-up(lg) {
   .slide {
-    margin-top: 10rem;
+    // margin-top: 5rem;
     text-align: inherit;
   }
   .feature-image {
     width: 90%;
+    margin-top: 9rem;
     margin-bottom: 0px;
   }
   .title {
-    margin-top: 5vw;
+    margin-top: 10vw;
     font-size: 5vw;
     margin-bottom: 2rem;
   }

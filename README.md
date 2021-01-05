@@ -49,6 +49,10 @@
 2. Admin View to Blacklist and whitelist.
    1. https://twitter.com/cifraclub
 
+### Buy me a coffee
+
+1. Customize page
+
 ### SEO
 
 1. OG and SEO Tags, Images for social media
@@ -87,9 +91,10 @@
 ## Image Processing
 
 1. Source: Shutterstock
-2. PNG: https://cloudconvert.com/eps-to-png
-3. Background: https://pixlr.com/remove-background/
-4. Blob Maker: https://www.blobmaker.app/
-5. SVG Editor: https://boxy-svg.com/
-6. WebP: https://squoosh.app/editor
-7. Compress: https://compresspng.com/
+<!-- 3. PNG: https://cloudconvert.com/eps-to-png -->
+<!-- 4. Background: https://pixlr.com/remove-background/ -->
+1. Blob Maker: https://www.blobmaker.app/
+2. SVG Editor: https://boxy-svg.com/
+3. SVG: https://cloudconvert.com/eps-to-svg
+4. WebP: https://squoosh.app/editor
+5. Compress: https://compresspng.com/
