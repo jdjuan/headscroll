@@ -10,3 +10,88 @@
     padding: 0;
   }
 }
+
+.slide {
+  background-color: $omega;
+  color: $alpha;
+  text-align: center;
+  padding-top: 3rem;
+}
+
+.picture {
+  background-color: white;
+  display: inline-block;
+  margin-bottom: 1rem;
+  border-radius: 20px;
+  width: 90%;
+  height: auto;
+  margin-top: 2rem;
+}
+
+.title {
+  font-size: min(60px, 7vh);
+}
+
+.subtitle {
+  font-weight: 300;
+  color: #f0f8ff;
+  background-color: #6155a6;
+  display: inline-block;
+  border-radius: 4px;
+  font-size: max(2vw, 20px);
+  position: absolute;
+  right: 50%;
+  transform: translateX(50%);
+  padding: 0.5rem 1rem;
+  bottom: -1.6rem;
+}
+
+.steps {
+  padding-left: 4vw;
+}
+
+.summary {
+  font-size: min(6.7vw, 2.2rem);
+  font-weight: 100;
+  text-align: center;
+}
+
+.description {
+  font-size: min(5.5vw, 1.6rem);
+  font-weight: 300;
+}
+
+.external-links {
+  color: $beta;
+  font-weight: 400;
+  text-decoration: underline;
+}
+
+@include media-breakpoint-up(lg) {
+  .slide {
+    text-align: inherit;
+  }
+  .square {
+    width: 40vw;
+    height: 30vw;
+  }
+  .title {
+    font-size: 5vw;
+  }
+  .steps {
+    padding: 0;
+  }
+
+  .summary {
+    text-align: inherit;
+  }
+
+  .description {
+    font-size: 1.5rem;
+    font-weight: 300;
+  }
+  .subtitle {
+    padding: 0.5rem 3rem;
+    bottom: -2rem;
+  }
+}

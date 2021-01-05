@@ -37,7 +37,7 @@
   white-space: nowrap;
 }
 
-.bold {
+.button {
   font-weight: 300;
 }
 
@@ -62,5 +62,8 @@
   }
   .dynamic {
     padding: 0px 12px 7px 4px;
+  }
+  .button {
+    font-size: 2rem;
   }
 }

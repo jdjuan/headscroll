@@ -5,20 +5,12 @@
 - https://www.producthunt.com/
 - https://www.shutterstock.com/licenses/image
 
-## Website
+## FAQ [lightbuld]
 
-1. Should I buy a coffee on your behalf? | [Coffee]
-   1. Kidding, you don't have to donate, it's fine, seriously, it's cool.
-   2. If you did, you'd made my day, but no pressure.
-   3. Also, if you did I'd send you a personalized thank you email
-      1. [Donate]
-2. Spread the word! | [Megaphone]
-   1. Tell your friends about HeadScroll on social media with the hashtag [#HeadScroll]
-   2. I'll make sure to like each one of your tweets, pinky promise
-   3. [Tweet_Now]
-3. Frequently Asked Questions | [TBD]
-4.  About ~~Us~~ Me | [Juan]
-   1.  I'm Juan. I've been playing guitar for about 20 years. And it's always been a burden to stop playing guitar to scroll my tabs. Autoscroll doesn't work for me. So I decided to create this. I took 
+1. How did you build this?
+2. What are the long-term plan? Selling it, haha, kidding.
+3. How does it work?
+4. Why can't you display certain websites?
 
 ### Scroller
 

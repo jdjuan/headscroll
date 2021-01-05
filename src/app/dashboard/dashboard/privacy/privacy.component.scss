@@ -34,10 +34,6 @@
   white-space: nowrap;
 }
 
-.bold {
-  font-weight: 300;
-}
-
 @include media-breakpoint-up(lg) {
   .slide {
     // margin-top: 5rem;
