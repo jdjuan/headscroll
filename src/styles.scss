@@ -53,6 +53,12 @@ body {
   font-weight: 300;
 }
 
+.external-link {
+  color: $beta;
+  font-weight: 400;
+  text-decoration: underline;
+}
+
 @include media-breakpoint-up(sm) {
 }
 @include media-breakpoint-up(md) {

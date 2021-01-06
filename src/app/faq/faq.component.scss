@@ -1,0 +1,57 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~src/assets/variables";
+
+.slide {
+  text-align: center;
+}
+
+.feature-image {
+    width: 50%;
+    margin-bottom: 1rem;
+  }
+
+.title {
+  font-size: min(50px, 5vh);
+  margin-top: 2.5rem;
+  padding: 0 4vw;
+  text-align: center;
+}
+
+.subtitle {
+  text-align: left;
+}
+
+.description {
+  font-size: min(5vw, 1.2rem);
+  font-weight: 100;
+  text-align: left;
+}
+
+.external-link {
+  color: $gamma;
+  font-weight: 400;
+  text-decoration: underline;
+}
+
+@include media-breakpoint-up(lg) {
+  .slide {
+    margin-top: 5vw;
+    text-align: inherit;
+  }
+  .feature-image {
+    width: 100%;
+    margin-bottom: 0px;
+    margin-top: -5vw;
+  }
+  .title {
+    text-align: left;
+    font-size: 5vw;
+    margin-top: 2rem;
+  }
+  .description {
+    font-size: 1.5rem;
+    font-weight: 100;
+  }
+}

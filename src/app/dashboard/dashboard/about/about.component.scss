@@ -47,21 +47,21 @@
 }
 
 .steps {
-  padding-left: 4vw;
+  padding: 0 4vw;
 }
 
 .summary {
-  font-size: min(6.7vw, 2.2rem);
+  font-size: min(6.2vw, 2.2rem);
   font-weight: 100;
   text-align: center;
 }
 
 .description {
-  font-size: min(5.5vw, 1.6rem);
+  font-size: min(5vw, 1.6rem);
   font-weight: 300;
 }
 
-.external-links {
+.external-link {
   color: $beta;
   font-weight: 400;
   text-decoration: underline;
