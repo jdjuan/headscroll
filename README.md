@@ -1,13 +1,5 @@
 # HeadScroll
 
-## References
-
-- https://www.producthunt.com/
-- https://www.shutterstock.com/licenses/image
-
-- Add loading spinner to landing
-- Fix the size of my picture
-
 ### Scroller
 
 1. It's time to enable to your camera [Camera]
@@ -22,14 +14,15 @@
 5. Loading indicators
    1. Also for URL submit from landing
 6. Layout, remove material
-7. Make the default heigh larger for my screen
-8. Options
+7. Check/Remove bootstrap icons
+8. Make the default heigh larger for my screen
+9. Options
    1. Hide / Show camera
    2. Speed
    3. Invert Scrolling
    4. Report website
    5. Body Points
-9. Fix bug for https://www.cifraclub.com.br/shakira/te-espero-sentada/
+10. Fix bug for https://www.cifraclub.com.br/shakira/te-espero-sentada/
 
 ### Backend
 
@@ -62,6 +55,10 @@
 ### Main
 
 1. Button: Scroll a random song
+
+### Security 
+
+1. Avoid DoS
 
 
 ## Roadmap

@@ -15,7 +15,7 @@ export class LandingComponent implements OnInit {
   // website = 'https://tabs.ultimate-guitar.com/tab/avi-kaplan/change-on-the-rise-chords-2691219';
   hasSearched: boolean;
   notEmbeddable: boolean;
-  loading: boolean;
+  loading = false;
 
   constructor(private router: Router, private proxyService: ProxyService) {}
 

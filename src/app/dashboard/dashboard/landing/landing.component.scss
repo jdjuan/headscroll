@@ -43,17 +43,15 @@
     box-shadow: 0px 0px 32px -14px rgba(0, 0, 0, 0.75);
     border-radius: 6px;
     display: flex;
-    &:hover {
-      .link-icon {
-        color: $alpha;
-      }
+    &:hover .link-icon {
+      color: $alpha;
     }
     .link-icon {
       position: absolute;
       left: 12px;
       top: 6px;
       font-size: 25px;
-      color: darkgray;
+      color: $delta;
       z-index: 10;
       &.focused {
         color: $alpha;
@@ -70,7 +68,7 @@
       color: $alpha;
       outline-color: $alpha;
     }
-    button {
+    .submit-button {
       height: 3rem;
       width: 3rem;
       border: none;
@@ -99,6 +97,19 @@
       margin-right: 0.5rem;
     }
   }
+  .spinner {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+  }
+  .url.disabled {
+    .link-icon {
+      color: $delta;
+    }
+    .submit-button:hover {
+      background-color: $beta;
+    }
+  }
 }
 
 @include media-breakpoint-up(lg) {
@@ -125,6 +136,7 @@
     .call-to-action {
       font-size: 2.5rem;
     }
+
     .wave {
       display: block;
       position: absolute;
