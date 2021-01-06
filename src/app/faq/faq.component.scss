@@ -6,17 +6,15 @@
 .slide {
   text-align: center;
 }
-
 .feature-image {
-    width: 50%;
-    margin-bottom: 1rem;
-  }
+  width: 50%;
+  margin-bottom: 1rem;
+}
 
 .title {
   font-size: min(50px, 5vh);
-  margin-top: 2.5rem;
-  padding: 0 4vw;
   text-align: center;
+  margin-top: 2rem;
 }
 
 .subtitle {
@@ -37,18 +35,24 @@
 
 @include media-breakpoint-up(lg) {
   .slide {
-    margin-top: 5vw;
     text-align: inherit;
+  }
+  .header-right {
+    display: block;
+    text-align: right;
+  }
+  .content {
+    margin-top: 2rem;
   }
   .feature-image {
     width: 100%;
     margin-bottom: 0px;
-    margin-top: -5vw;
+    margin-top: -2vw;
   }
   .title {
     text-align: left;
     font-size: 5vw;
-    margin-top: 2rem;
+    margin-top: 0;
   }
   .description {
     font-size: 1.5rem;

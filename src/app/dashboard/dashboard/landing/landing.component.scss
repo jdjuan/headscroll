@@ -7,17 +7,6 @@
   text-align: center;
 }
 
-.logo {
-  font-weight: 100;
-  margin: 20px 0;
-  font-size: 30px;
-  display: inline-block;
-}
-
-.header-right {
-  display: none;
-}
-
 .content {
   margin-top: 1.5vh;
   .content-right {
@@ -115,16 +104,6 @@
 @include media-breakpoint-up(lg) {
   .slide {
     text-align: inherit;
-  }
-  .header-left {
-    text-align: left;
-    .logo {
-      font-size: 40px;
-    }
-  }
-  .header-right {
-    display: block;
-    text-align: right;
   }
   .content {
     margin-top: 3rem;

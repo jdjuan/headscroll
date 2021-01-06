@@ -1,67 +1,67 @@
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-lg-10">
-      <h1 class="title">Frequently Asked Questions</h1>
-    </div>
-    <div class="col-lg-2 d-flex align-items-center text-right">
-      <a routerLink="/" class="text-omega">Go back</a>
-    </div>
-  </div>
-  <div class="row slide">
-    <div class="col-lg-4">
-      <picture>
-        <source srcset="assets/faq.webp" type="image/webp" />
-        <img class="feature-image" src="assets/faq.png" alt="People inspecting a computer" />
-      </picture>
-    </div>
-    <div class="col-lg-8">
-      <h2 class="display-4 subtitle">How does it work?</h2>
-      <p class="description">
-        In plain English, I took about 5000 pictures and managed to teach a machine what a tilted head was, and what it was not. <br><br>
-        In other words, I created a model using Google's <span class="bold">Teachable Machine</span>, put it on an Angular application, and scrolled a website every time the model told me there was a tilted head.
-      </p>
-      <br />
-      <h2 class="display-4 subtitle">What's on the roadmap?</h2>
-      <p class="description">
-        Taking a break, watching Netflix and playing videogames.<br /><br>
-        But after that, I'm thinking of enabling HeadScroll as a native app (the kind you install in your computer) so that you can scroll
-        any website without restrictions and with a better user experience.
-      </p>
-      <br />
-      <h2 class="display-4 subtitle">Is it open source?</h2>
-      <p class="description">
-        Yes! The code is available <a class="external-link" href="https://github.com/jdjuan/headscroll" target="_blank">here</a>. Contributions and issues are
-        always welcomed.
-      </p>
-      <br />
-      <h2 class="display-4 subtitle">Why can't you display certain websites?</h2>
-      <p class="description">
-        It's complicated.<br />
-        I'm using an iframe to embed the websites and that already adds a lot of contraints. There's not even a reliable way to know if a website was displayed correctly other than user's feedback, so you can imagine.<br />
-        That's why a native app would likely be the way to go.
-      </p>
-      <br />
-      <h2 class="display-4 subtitle">Who's behind this project?</h2>
-      <p class="description">
-        For legal matters, suits, or millionaire deals, it's just <a class="external-link" href="https://twitter.com/jdjuan" target="_blank">me</a>.<br>
-        But HeadScroll wouldn't have been possible without the endless support of my family, my partner, and my friends. I also want to thank <span class="bold">you!</span> For motivating me to deliver when I first published a <a class="external-link" href="https://twitter.com/jdjuan/status/1330805748239097861" target="_blank">quick peak</a> of HeadScroll.
-      </p>
-      <br />
-      <!-- <h2 class="title">Our Bookmarklet</h2> -->
-      <!-- <h4 class="subtitle">The fastest way to use HeadScroll</h4> -->
-      <!-- <h5 class="note">(desktop only)</h5> -->
-      <!-- <div class="steps text-left"> -->
-      <!-- <p class="description">
-          1. Drag
-          <a class="bookmarklet" href="javascript: window.open('https://headscroll.vercel.app/' + encodeURIComponent(location.href));"
-            >this</a
-          >
-          into your bookmarks
-        </p>
-        <p class="description">2. Open a website you'd like to scroll</p>
-        <p class="description">3. Press the bookmarklet!</p>
+  <div class="col slide">
+    <div class="row header align-items-center">
+      <div class="col-lg-6 header-left">
+        <h1 class="logo"><a class="no-style" routerLink="/">HeadScroll.io <span class="bold bg-beta rounded px-1">beta</span></a></h1>
       </div>
-      <br /><br /> -->
+      <div class="col-lg-6 header-right">
+        <a routerLink="/">Home</a>
+        <a routerLink="/">Privacy</a>
+        <a routerLink="/">About</a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <h1 class="title">Frequently Asked Questions</h1>
+      </div>
+    </div>
+    <div class="row content">
+      <div class="col-lg-4">
+        <picture>
+          <source srcset="assets/faq.webp" type="image/webp" />
+          <img class="feature-image" src="assets/faq.png" alt="People inspecting a computer" />
+        </picture>
+      </div>
+      <div class="col-lg-8">
+        <h2 class="display-4 subtitle">How does it work?</h2>
+        <p class="description">
+          In plain English, I took about 5000 pictures and managed to teach a machine what a tilted head was, and what it was not.
+          <br /><br />
+          In other words, I created a model using Google's <span class="bold">Teachable Machine</span>, put it on an Angular application,
+          and scrolled a website every time the model told me there was a tilted head.
+        </p>
+        <br />
+        <h2 class="display-4 subtitle">What's on the roadmap?</h2>
+        <p class="description">
+          Taking a break, watching Netflix and playing videogames.<br /><br />
+          But after that, I'm thinking of enabling HeadScroll as a native app (the kind you install in your computer) so that you can scroll
+          any website without restrictions and with a better user experience.
+        </p>
+        <br />
+        <h2 class="display-4 subtitle">Is it open source?</h2>
+        <p class="description">
+          Yes! The code is available <a class="external-link" href="https://github.com/jdjuan/headscroll" target="_blank">here</a>.
+          Contributions and issues are always welcomed.
+        </p>
+        <br />
+        <h2 class="display-4 subtitle">Why can't you display certain websites?</h2>
+        <p class="description">
+          It's complicated.<br />
+          I'm using an iframe to embed the websites and that already adds a lot of contraints. There's not even a reliable way to know if a
+          website was displayed correctly other than user's feedback, so you can imagine.<br />
+          That's why a native app would likely be the way to go.
+        </p>
+        <br />
+        <h2 class="display-4 subtitle">Who's behind this project?</h2>
+        <p class="description">
+          For legal matters, suits, or millionaire deals, it's just
+          <a class="external-link" href="https://twitter.com/jdjuan" target="_blank">me</a>.<br />
+          But HeadScroll wouldn't have been possible without the endless support of my family, my partner, and my friends. I also want to
+          thank <span class="bold">you!</span> For motivating me to deliver when I first published a
+          <a class="external-link" href="https://twitter.com/jdjuan/status/1330805748239097861" target="_blank">quick peak</a> of
+          HeadScroll.
+        </p>
+      </div>
     </div>
   </div>
 </div>

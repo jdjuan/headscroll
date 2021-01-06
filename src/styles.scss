@@ -59,6 +59,31 @@ body {
   text-decoration: underline;
 }
 
+a {
+  color: inherit;
+  &:hover {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+.logo {
+  font-weight: 100;
+  margin: 20px 0;
+  font-size: 30px;
+  display: inline-block;
+}
+
+.header-right {
+  a {
+    margin: 0 1rem;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  color: $omega;
+}
+
 @include media-breakpoint-up(sm) {
 }
 @include media-breakpoint-up(md) {
@@ -71,5 +96,19 @@ body {
 @include media-breakpoint-up(lg) {
   .slide {
     padding: 0px 60px;
+  }
+  .header-left {
+    text-align: left;
+    .logo {
+      font-size: 40px;
+    }
+  }
+  .header-right {
+    color: $alpha;
+    display: block;
+    text-align: right;
+    a {
+      margin-left: 3rem;
+    }
   }
 }
