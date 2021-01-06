@@ -104,11 +104,14 @@ a {
     }
   }
   .header-right {
-    color: $alpha;
+    color: $omega;
     display: block;
     text-align: right;
     a {
       margin-left: 3rem;
+      &.contrast-color {
+        color: $alpha;
+      }
     }
   }
 }
