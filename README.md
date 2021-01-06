@@ -5,13 +5,6 @@
 - https://www.producthunt.com/
 - https://www.shutterstock.com/licenses/image
 
-## FAQ [lightbuld]
-
-1. How did you build this?
-2. What are the long-term plan? Selling it, haha, kidding.
-3. How does it work?
-4. Why can't you display certain websites?
-
 - Put website url into a query param instead to avoid people seeing an error when they mistype headscroll's url
   - Requires to update bookmarks and routers
 - Change bookmark anitmation (more shadow, bigger?)

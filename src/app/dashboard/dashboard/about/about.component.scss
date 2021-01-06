@@ -65,6 +65,9 @@
   color: $beta;
   font-weight: 400;
   text-decoration: underline;
+  &:hover {
+    color: darken($beta, 5);
+  }
 }
 
 @include media-breakpoint-up(lg) {
