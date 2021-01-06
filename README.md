@@ -5,9 +5,8 @@
 - https://www.producthunt.com/
 - https://www.shutterstock.com/licenses/image
 
-- Put website url into a query param instead to avoid people seeing an error when they mistype headscroll's url
-  - Requires to update bookmarks and routers
-- Change bookmark anitmation (more shadow, bigger?)
+- Add loading spinner to landing
+- Fix the size of my picture
 
 ### Scroller
 
@@ -54,7 +53,7 @@
 ### Test
 
 1. Test in other browsers (remove <b> tags) and OS's, and devices
-2. 
+2. Test accessibility features
 
 ### Model
 

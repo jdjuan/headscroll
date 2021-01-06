@@ -12,7 +12,7 @@
     <app-sidenav></app-sidenav>
   </mat-sidenav>
   <mat-sidenav-content class="sidenav-content">
-    <app-camera (scrollDown)="scrollDown()" (scrollUp)="scrollUp()"></app-camera>
+    <app-camera *ngIf="shouldRequestCam" (scrollDown)="scrollDown()" (scrollUp)="scrollUp()"></app-camera>
     <div #iframeWrapper class="iframe-wrapper" [class.mobile]="isMobile">
       <iframe class="iframe" [src]="websiteSafeUrl" [height]="iframeHeight"></iframe>
     </div>

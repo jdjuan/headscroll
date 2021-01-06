@@ -20,6 +20,7 @@ export class ScrollerComponent implements OnInit {
   iframeHeight = this.DEFAULT_IFRAME_HEIGHT;
   websiteUrl = 'Loading...';
   isMobile: boolean;
+  shouldRequestCam: boolean;
   // javascript: window.open('http://localhost:4200/' + encodeURIComponent(location.href));
 
   constructor(
@@ -36,7 +37,7 @@ export class ScrollerComponent implements OnInit {
   }
 
   fetchWebsite(): void {
-    this.proxyService.getWebsiteUrl(this.activatedRoute.params).pipe(untilDestroyed(this)).subscribe(this.render);
+    this.proxyService.getWebsiteUrl(this.activatedRoute.queryParams).pipe(untilDestroyed(this)).subscribe(this.render);
   }
 
   searchWebsite(websiteUrl: string): void {
@@ -48,6 +49,7 @@ export class ScrollerComponent implements OnInit {
     if (isEmbeddable) {
       this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(websiteUrl);
       this.websiteUrl = websiteUrl;
+      this.shouldRequestCam = true;
     } else {
       alert('Not embeddable');
     }

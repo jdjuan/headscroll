@@ -32,7 +32,7 @@ export class LandingComponent implements OnInit {
         .subscribe(({ isEmbeddable }) => {
           this.loading = false;
           if (isEmbeddable) {
-            this.router.navigate(['', this.website]);
+            this.router.navigate(['scroller'], { queryParams: { website: this.website } });
           } else {
             this.notEmbeddable = true;
           }
