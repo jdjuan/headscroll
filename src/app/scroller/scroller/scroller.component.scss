@@ -1,3 +1,8 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~src/assets/variables";
+
 .label {
   margin: 0;
   margin-right: 4px;
@@ -22,9 +27,12 @@
   }
 }
 .iframe-wrapper {
-  overflow-x: hidden;
+  border-radius: 10px;
+  box-shadow: 0px 0px 1rem 3px #371f63;
+  // DO NO ERASE
+  overflow-x: hidden; 
   overflow-y: scroll;
-  height: calc(100vh - 64px);
+  height: calc(97vh - 64px);
   &.mobile {
     height: calc(94vh - 64px); // Weird bug on mobile phones
   }
@@ -33,4 +41,5 @@
     border: none;
     transform-origin: 0 0;
   }
+  // DO NO ERASE
 }

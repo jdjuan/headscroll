@@ -67,6 +67,10 @@
       border-top-left-radius: 6px;
       color: $alpha;
       outline-color: $alpha;
+      &::placeholder {
+        color: $delta;
+      }
+      
     }
     .submit-button {
       height: 3rem;

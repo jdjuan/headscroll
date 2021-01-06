@@ -1,20 +1,23 @@
-<mat-toolbar color="primary">
-  <button mat-icon-button (click)="sidenav.toggle()" aria-label="Menu icon">
-    <mat-icon>menu</mat-icon>
-  </button>
-  <span>HeadScroll</span>
-  <span class="spacer"></span>
-  <p class="label">Website:</p>
-  <input class="url-input" (keydown.enter)="searchWebsite($event.target.value)" type="url" [value]="websiteUrl" />
-</mat-toolbar>
-<mat-sidenav-container [hasBackdrop]="false">
-  <mat-sidenav #sidenav mode="over" class="sidenav-menu">
-    <app-sidenav></app-sidenav>
-  </mat-sidenav>
-  <mat-sidenav-content class="sidenav-content">
-    <app-camera *ngIf="shouldRequestCam" (scrollDown)="scrollDown()" (scrollUp)="scrollUp()"></app-camera>
-    <div #iframeWrapper class="iframe-wrapper" [class.mobile]="isMobile">
-      <iframe class="iframe" [src]="websiteSafeUrl" [height]="iframeHeight"></iframe>
+<div class="container-fluid">
+  <div class="row align-items-center">
+    <div class="col-lg-3">
+      <h1 class="logo">
+        <a routerLink="/">HeadScroll.io <span class="bold bg-beta rounded px-1">beta</span></a>
+      </h1>
     </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+    <div class="col-lg-9 text-right">
+      <span>URL: </span>
+      <input class="url-input" (keydown.enter)="searchWebsite($event.target.value)" type="url" [value]="websiteUrl" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-9">
+      <div #iframeWrapper class="iframe-wrapper" [class.mobile]="isMobile">
+        <iframe class="iframe" [src]="websiteSafeUrl" [height]="iframeHeight"></iframe>
+      </div>
+    </div>
+    <div class="col-3">
+      <app-camera *ngIf="shouldRequestCam" (scrollDown)="scrollDown()" (scrollUp)="scrollUp()"></app-camera>
+    </div>
+  </div>
+</div>

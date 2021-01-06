@@ -26,6 +26,7 @@
           <input
             type="url"
             #validation="ngModel"
+            placeholder="Your URL"
             [disabled]="loading"
             [(ngModel)]="website"
             (keydown)="cleanValidation()"
