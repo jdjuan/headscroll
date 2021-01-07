@@ -24,11 +24,9 @@ export class ProxyService {
   }
 
   verifyWithProxy = (websiteUrl: string): Observable<ProxyResponse> => {
-    console.log({ websiteUrl });
     if (this.websitesAttempted[websiteUrl]) {
       return of({ isEmbeddable: true, websiteUrl } as ProxyResponse);
     }
-    console.log('REQUEST ATTEMPTED');
     return this.http.get(this.PROXY_URL + websiteUrl).pipe(
       map((responses: any[]) => {
         const isEmbeddable = this.isEmbeddable(responses);

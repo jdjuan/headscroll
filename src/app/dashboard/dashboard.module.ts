@@ -5,11 +5,10 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { LandingComponent } from './dashboard/landing/landing.component';
 import { UseCaseComponent } from './dashboard/use-case/use-case.component';
 import { PrivacyComponent } from './dashboard/privacy/privacy.component';
-import { FormsModule } from '@angular/forms';
-import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { BookmarkletComponent } from './dashboard/bookmarklet/bookmarklet.component';
 import { AboutComponent } from './dashboard/about/about.component';
 import { DonationsComponent } from './dashboard/donations/donations.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -21,6 +20,6 @@ import { DonationsComponent } from './dashboard/donations/donations.component';
     AboutComponent,
     DonationsComponent,
   ],
-  imports: [DashboardRoutingModule, FormsModule, CommonModule, NgbTooltipModule],
+  imports: [DashboardRoutingModule, CommonModule, SharedModule],
 })
 export class DashboardModule {}

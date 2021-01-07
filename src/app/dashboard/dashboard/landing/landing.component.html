@@ -21,36 +21,7 @@
       </p>
       <p class="call-to-action">Enter a website below and click go:</p>
       <div class="url-field">
-        <div class="url" [class.disabled]="loading">
-          <i class="bi bi-link-45deg link-icon" [class.focused]="isInputFocused" aria-hidden="false" aria-label="link icon"></i>
-          <input
-            type="url"
-            #validation="ngModel"
-            placeholder="Your URL"
-            [disabled]="loading"
-            [(ngModel)]="website"
-            (keydown)="cleanValidation()"
-            (keydown.enter)="search()"
-            (focus)="isInputFocused = true"
-            (blur)="isInputFocused = false"
-            required
-          />
-          <button class="submit-button" type="button" [disabled]="loading" (click)="search()">{{ loading ? "" : "Go" }}</button>
-          <div *ngIf="loading" class="spinner-border spinner" role="status">
-            <span class="sr-only">Loading...</span>
-          </div>
-        </div>
-        <span class="error" *ngIf="validation.invalid && (hasSearched || validation.touched)">
-          <i class="bi bi-info-circle-fill icon"></i> Please enter a website above.
-        </span>
-        <span class="error" *ngIf="notEmbeddable"
-          ><i class="bi bi-info-circle-fill icon"></i> We cannot scroll this website, check your spelling or try another one.
-          <u [ngbTooltip]="tipContent" placement="bottom">Why?</u></span
-        >
-        <ng-template #tipContent
-          >Some websites have extra security that protects them from being embedded onto another website (CORS). There's nothing we can do
-          about it. We're sorry!</ng-template
-        >
+        <app-search-field (search)="search($event)"></app-search-field>
       </div>
     </div>
     <div class="col-lg-6 content-right">

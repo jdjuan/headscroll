@@ -1,0 +1,87 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~src/assets/variables";
+
+.url {
+  position: relative;
+  box-shadow: 0px 0px 32px -14px rgba(0, 0, 0, 0.75);
+  border-radius: 6px;
+  display: flex;
+  &:hover .link-icon {
+    color: $alpha;
+  }
+  .link-icon {
+    position: absolute;
+    left: 12px;
+    top: 6px;
+    font-size: 25px;
+    color: $delta;
+    z-index: 10;
+    &.focused {
+      color: $alpha;
+    }
+  }
+  input {
+    position: relative;
+    width: calc(100% - 3rem);
+    padding-left: 45px;
+    height: 3rem;
+    border: none;
+    border-bottom-left-radius: 6px;
+    border-top-left-radius: 6px;
+    color: $alpha;
+    outline-color: $alpha;
+    &::placeholder {
+      color: $delta;
+    }
+  }
+  .submit-button {
+    height: 3rem;
+    width: 3rem;
+    border: none;
+    background-color: $beta;
+    color: $omega;
+    font-weight: 200;
+    font-size: 26px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    height: 3rem;
+    outline-color: $alpha;
+    &:hover {
+      background-color: darken($beta, 5);
+    }
+  }
+}
+.error {
+  font-weight: 300;
+  font-size: 15px;
+  margin-top: 7px;
+  background-color: $pi;
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 10px;
+  .icon {
+    margin-right: 0.5rem;
+  }
+}
+.spinner {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+}
+.url.disabled {
+  .link-icon {
+    color: $delta;
+  }
+  .submit-button:hover {
+    background-color: $beta;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .error {
+    font-weight: 300;
+    font-size: 20px;
+  }
+}

@@ -3,16 +3,10 @@
 @import "~bootstrap/scss/mixins";
 @import "~src/assets/variables";
 
-.label {
-  margin: 0;
-  margin-right: 4px;
-  font-size: 18px;
-}
-
 .url-input {
   width: 40%;
   font-size: 16px;
-  background-color: #FFEB3B;
+  background-color: #ffeb3b;
   color: darkslategray;
   border: none;
   padding: 0px 7px;
@@ -20,21 +14,15 @@
   border: 2px solid black;
 }
 
-.sidenav-menu {
-  padding: 2rem;
-  .menu-item {
-    margin-bottom: 1rem;
-  }
-}
 .iframe-wrapper {
   border-radius: 10px;
   box-shadow: 0px 0px 1rem 3px #371f63;
   // DO NO ERASE
-  overflow-x: hidden; 
+  overflow-x: hidden;
   overflow-y: scroll;
   height: calc(97vh - 64px);
   &.mobile {
-    height: calc(94vh - 64px); // Weird bug on mobile phones
+    height: calc(94vh - 64px); // To account for the mobile browser navbar
   }
   .iframe {
     width: 100%;
@@ -42,4 +30,7 @@
     transform-origin: 0 0;
   }
   // DO NO ERASE
+}
+
+@include media-breakpoint-up(lg) {
 }

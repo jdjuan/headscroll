@@ -21,6 +21,7 @@ export class ScrollerComponent implements OnInit {
   websiteUrl = 'Loading...';
   isMobile: boolean;
   shouldRequestCam: boolean;
+  favicon: string;
   // javascript: window.open('http://localhost:4200/' + encodeURIComponent(location.href));
 
   constructor(
@@ -50,9 +51,17 @@ export class ScrollerComponent implements OnInit {
       this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(websiteUrl);
       this.websiteUrl = websiteUrl;
       this.shouldRequestCam = true;
+      this.favicon = this.getFavicon(websiteUrl);
     } else {
       alert('Not embeddable');
     }
+  }
+
+  getFavicon(website: string): string {
+    const url = new URL(website);
+    const urlParts = url.hostname.split('.');
+    const [hostname, domain] = urlParts.slice(Math.max(urlParts.length - 2, 0));
+    return `${url.protocol}//${hostname}.${domain}/favicon.ico`;
   }
 
   scrollDown(): void {

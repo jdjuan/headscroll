@@ -6,17 +6,22 @@
       </h1>
     </div>
     <div class="col-lg-9 text-right">
+      <img [src]="favicon" onerror="this.src='assets/favicon.ico'" alt="Generic logo" />
       <span>URL: </span>
+
+
+
+      
       <input class="url-input" (keydown.enter)="searchWebsite($event.target.value)" type="url" [value]="websiteUrl" />
     </div>
   </div>
   <div class="row">
-    <div class="col-9">
+    <div class="col-lg-10">
       <div #iframeWrapper class="iframe-wrapper" [class.mobile]="isMobile">
         <iframe class="iframe" [src]="websiteSafeUrl" [height]="iframeHeight"></iframe>
       </div>
     </div>
-    <div class="col-3">
+    <div class="col-lg-2">
       <app-camera *ngIf="shouldRequestCam" (scrollDown)="scrollDown()" (scrollUp)="scrollUp()"></app-camera>
     </div>
   </div>
