@@ -1,28 +1,25 @@
 <div class="container-fluid">
   <div class="row align-items-center">
-    <div class="col-lg-3">
+    <div class="col-lg-2">
       <h1 class="logo">
         <a routerLink="/">HeadScroll.io <span class="bold bg-beta rounded px-1">beta</span></a>
       </h1>
     </div>
-    <div class="col-lg-9 text-right">
-      <img [src]="favicon" onerror="this.src='assets/favicon.ico'" alt="Generic logo" />
-      <span>URL: </span>
-
-
-
-      
-      <input class="url-input" (keydown.enter)="searchWebsite($event.target.value)" type="url" [value]="websiteUrl" />
+    <div class="col-lg-10 text-right">
+      <!-- <img [src]="favicon" onerror="this.src='assets/favicon.ico'" alt="Generic logo" /> -->
+      <app-search-field (search)="searchWebsite($event)" [url]="website"></app-search-field>
+      <!-- <span>URL: </span>      
+      <input class="url-input" (keydown.enter)="searchWebsite($event.target.value)" type="url" [value]="websiteUrl" /> -->
     </div>
   </div>
   <div class="row">
+    <div class="col-lg-2">
+      <app-camera *ngIf="shouldRequestCam" (scrollDown)="scrollDown()" (scrollUp)="scrollUp()"></app-camera>
+    </div>
     <div class="col-lg-10">
       <div #iframeWrapper class="iframe-wrapper" [class.mobile]="isMobile">
         <iframe class="iframe" [src]="websiteSafeUrl" [height]="iframeHeight"></iframe>
       </div>
-    </div>
-    <div class="col-lg-2">
-      <app-camera *ngIf="shouldRequestCam" (scrollDown)="scrollDown()" (scrollUp)="scrollUp()"></app-camera>
     </div>
   </div>
 </div>

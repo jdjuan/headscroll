@@ -78,6 +78,23 @@
     background-color: $beta;
   }
 }
+.favicon {
+  position: absolute;
+  left: 10px;
+  top: 11px;
+  z-index: 20;
+  width: 28px;
+}
+::ng-deep .error-tooltip {
+  opacity: 1 !important;
+  .tooltip-inner {
+    background-color: $pi;
+    color: $omega;
+  }
+  .arrow::before {
+    border-left-color: $pi;
+  }
+}
 
 @include media-breakpoint-up(lg) {
   .error {

@@ -18,11 +18,9 @@ export class ScrollerComponent implements OnInit {
   readonly DEFAULT_IFRAME_HEIGHT = 3500;
   websiteSafeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
   iframeHeight = this.DEFAULT_IFRAME_HEIGHT;
-  websiteUrl = 'Loading...';
+  website = '';
   isMobile: boolean;
   shouldRequestCam: boolean;
-  favicon: string;
-  // javascript: window.open('http://localhost:4200/' + encodeURIComponent(location.href));
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -41,27 +39,22 @@ export class ScrollerComponent implements OnInit {
     this.proxyService.getWebsiteUrl(this.activatedRoute.queryParams).pipe(untilDestroyed(this)).subscribe(this.render);
   }
 
-  searchWebsite(websiteUrl: string): void {
+  searchWebsite(website: string): void {
+    console.log(this.iframeWrapper.nativeElement.scrollTo(0, 0));
+
     this.iframeHeight = this.DEFAULT_IFRAME_HEIGHT;
-    this.proxyService.verifyWithProxy(websiteUrl).pipe(untilDestroyed(this)).subscribe(this.render);
+    this.proxyService.verifyWithProxy(website).pipe(untilDestroyed(this)).subscribe(this.render);
   }
 
   render = ({ isEmbeddable, websiteUrl }) => {
     if (isEmbeddable) {
       this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(websiteUrl);
-      this.websiteUrl = websiteUrl;
+      this.website = websiteUrl;
+      console.log({ websiteUrl });
       this.shouldRequestCam = true;
-      this.favicon = this.getFavicon(websiteUrl);
     } else {
       alert('Not embeddable');
     }
-  }
-
-  getFavicon(website: string): string {
-    const url = new URL(website);
-    const urlParts = url.hostname.split('.');
-    const [hostname, domain] = urlParts.slice(Math.max(urlParts.length - 2, 0));
-    return `${url.protocol}//${hostname}.${domain}/favicon.ico`;
   }
 
   scrollDown(): void {
