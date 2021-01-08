@@ -1,0 +1,45 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~src/assets/variables";
+
+h1 {
+  font-size: 2.4rem;
+}
+
+.column {
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  &.compact {
+    margin-bottom: 0;
+  }
+}
+
+.description {
+  font-weight: 100;
+  font-size: 1.3rem;
+}
+
+.button {
+  font-size: 1.3rem;
+  font-weight: 300;
+  padding: 0px 13px;
+}
+
+.external-link {
+  color: $omega;
+  font-weight: 100;
+  &:hover {
+    color: darken($omega, 5);
+  }
+}
+
+.picture {
+  width: 80%;
+  &.compact {
+    width: 100%;
+  }
+  .image {
+    width: 100%;
+  }
+}

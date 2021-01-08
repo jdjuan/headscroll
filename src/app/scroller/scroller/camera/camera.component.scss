@@ -3,8 +3,7 @@ $app-primary: mat-palette($mat-indigo);
 
 .camera {
   position: absolute;
-  bottom: 1rem;
-  right: 1rem;
+  bottom: 0;
   z-index: 10;
   .spinner {
     top: 50%;
@@ -13,7 +12,8 @@ $app-primary: mat-palette($mat-indigo);
     transform: translate(-50%, -50%);
   }
   .canvas {
-    border-radius: 1rem;
+    width: 100%;
+    border-radius: 10px;
     background-color: mat-color($app-primary);
   }
   .emoji {

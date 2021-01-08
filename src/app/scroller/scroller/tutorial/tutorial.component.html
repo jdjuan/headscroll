@@ -1,0 +1,16 @@
+<app-modal
+  title="Are you ready?"
+  buttonText="Let's do this!"
+  assetName="tilt"
+  altText="Woman holding a camera"
+  (proceed)="done()"
+  [compact]="true"
+>
+  Simply tilt your head left or right, we'll take care of the rest.
+  <span class="bold">For better results,</span> make sure the camera is right in front of you.
+  <br />
+  <div class="skip">
+    <input (change)="skipTutorial()" class="check-input" type="checkbox" value="" id="flexCheckDefault" />
+    <label class="label" for="flexCheckDefault"> Don't show this again </label>
+  </div>
+</app-modal>

@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { distinct } from 'rxjs/operators';
+import { BehaviorSubject, from, merge, Observable, Subject, interval, of } from 'rxjs';
+import { catchError, distinct, mapTo, take, tap } from 'rxjs/operators';
+
+export enum CameraStates {
+  Allowed = 'Camera is allowed',
+  Blocked = 'Camera is blocked',
+  Timeout = 'Camera request timed out',
+}
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +17,29 @@ export class CameraService {
   // tslint:disable-next-line: variable-name
   private _showSkeleton$ = new BehaviorSubject<boolean>(true);
 
+  readonly CAMERA_PERMISSION_TIMEOUT = 2000;
+
   constructor() {}
+
+  hasCameraPermission(): Observable<CameraStates> {
+    const cameraPermission$ = from(navigator.mediaDevices.getUserMedia({ video: true })).pipe(
+      mapTo(CameraStates.Allowed),
+      catchError(() => of(CameraStates.Blocked))
+    );
+    const timeout$ = interval(this.CAMERA_PERMISSION_TIMEOUT).pipe(mapTo(CameraStates.Timeout));
+    return merge(cameraPermission$, timeout$).pipe(take(1));
+    // .then(
+    //   (g) => {
+    //     // this.enableCameraModalRef.close();
+    //     console.log({ g }); // slightly faster
+    //     // open the second modal
+    //   },
+    //   (e) => {
+    //     // Open another dialog, explaining their camera is currently no enabled, they have to do it manually
+    //     console.log({ e }); // quick
+    //   }
+    // );
+  }
 
   async getAvailableCameras(): Promise<MediaDeviceInfo[]> {
     const devices = await navigator.mediaDevices.enumerateDevices();

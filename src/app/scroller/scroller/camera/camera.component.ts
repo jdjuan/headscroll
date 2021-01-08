@@ -26,6 +26,7 @@ export class CameraComponent implements OnInit {
 
   @Output() scrollDown = new EventEmitter();
   @Output() scrollUp = new EventEmitter();
+  @Output() cameraLoaded = new EventEmitter<boolean>();
   @ViewChild('canvas') canvas: ElementRef;
   cameraSize = this.DEFAULT_CAMERA_SIZE;
   isLoadingCamera = true;
@@ -73,10 +74,16 @@ export class CameraComponent implements OnInit {
   async setupWebCam(deviceId: string): Promise<void> {
     const flip = true;
     this.webcam = new Webcam(this.cameraSize, this.cameraSize, flip);
-    await this.webcam.setup({ deviceId });
-    await this.webcam.play();
-    window.requestAnimationFrame(this.loop);
-    this.isLoadingCamera = false;
+    try {
+      await this.webcam.setup({ deviceId });
+      await this.webcam.play();
+      window.requestAnimationFrame(this.loop);
+      this.isLoadingCamera = false;
+      this.cameraLoaded.next(true);
+
+    } catch (error) {
+      this.cameraLoaded.next(false);
+    }
   }
 
   loop = async (timestamp: any) => {

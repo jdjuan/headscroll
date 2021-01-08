@@ -6,15 +6,12 @@
       </h1>
     </div>
     <div class="col-lg-10 text-right">
-      <!-- <img [src]="favicon" onerror="this.src='assets/favicon.ico'" alt="Generic logo" /> -->
       <app-search-field (search)="searchWebsite($event)" [url]="website"></app-search-field>
-      <!-- <span>URL: </span>      
-      <input class="url-input" (keydown.enter)="searchWebsite($event.target.value)" type="url" [value]="websiteUrl" /> -->
     </div>
   </div>
   <div class="row">
     <div class="col-lg-2">
-      <app-camera *ngIf="shouldRequestCam" (scrollDown)="scrollDown()" (scrollUp)="scrollUp()"></app-camera>
+      <app-camera *ngIf="shouldRequestCam" (cameraLoaded)="onCameraLoaded($event)" (scrollDown)="scrollDown()" (scrollUp)="scrollUp()"></app-camera>
     </div>
     <div class="col-lg-10">
       <div #iframeWrapper class="iframe-wrapper" [class.mobile]="isMobile">

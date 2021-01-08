@@ -4,6 +4,14 @@ import { LayoutService } from './../services/layout.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ProxyService } from '../../core/proxy.service';
 import { ActivatedRoute } from '@angular/router';
+import { AllowCameraComponent } from './allow-camera/allow-camera.component';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { merge } from 'rxjs';
+import { CameraService, CameraStates } from '../services/camera.service';
+import { take, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { BlockedCameraComponent } from './blocked-camera/blocked-camera.component';
+import { TutorialComponent } from './tutorial/tutorial.component';
 
 @UntilDestroy()
 @Component({
@@ -21,18 +29,63 @@ export class ScrollerComponent implements OnInit {
   website = '';
   isMobile: boolean;
   shouldRequestCam: boolean;
+  hasCameraLoaded: boolean;
+  enableCameraModalRef: NgbModalRef;
+  hasCameraLoaded$ = new Subject();
 
   constructor(
     private sanitizer: DomSanitizer,
     private activatedRoute: ActivatedRoute,
     private proxyService: ProxyService,
-    private layoutService: LayoutService
+    private layoutService: LayoutService,
+    private modalService: NgbModal,
+    private cameraService: CameraService
   ) {
     this.layoutService.isMobileOnce$.subscribe((isMobile) => (this.isMobile = isMobile));
   }
 
   ngOnInit(): void {
+    this.checkCameraStatus();
     this.fetchWebsite();
+  }
+
+  checkCameraStatus = (): void => {
+    this.cameraService.hasCameraPermission().subscribe((isCameraAvailable) => {
+      console.log({ isCameraAvailable });
+      switch (isCameraAvailable) {
+        case CameraStates.Timeout:
+          this.openEnableCameraModal();
+          break;
+        case CameraStates.Blocked:
+          this.openBlockedCameraModal();
+          break;
+        case CameraStates.Allowed:
+          this.openInstructionsModal();
+          // Open dialog showing them instructions
+          break;
+      }
+    });
+  }
+
+  openEnableCameraModal(): void {
+    const ref = this.modalService.open(AllowCameraComponent);
+    merge(ref.closed, ref.dismissed, this.hasCameraLoaded$).pipe(take(1)).subscribe(this.checkCameraStatus);
+  }
+
+  openBlockedCameraModal(): void {
+    const ref = this.modalService.open(BlockedCameraComponent);
+    merge(ref.closed, ref.dismissed, this.hasCameraLoaded$).pipe(take(1)).subscribe(this.checkCameraStatus);
+  }
+
+  onCameraLoaded(hasCameraLoaded: boolean): void {
+    this.hasCameraLoaded = hasCameraLoaded;
+    if (hasCameraLoaded) {
+      this.hasCameraLoaded$.next();
+    }
+  }
+
+  openInstructionsModal(): void {
+    this.modalService.open(TutorialComponent);
   }
 
   fetchWebsite(): void {
@@ -40,17 +93,15 @@ export class ScrollerComponent implements OnInit {
   }
 
   searchWebsite(website: string): void {
-    console.log(this.iframeWrapper.nativeElement.scrollTo(0, 0));
-
+    this.iframeWrapper.nativeElement.scrollTo(0, 0);
     this.iframeHeight = this.DEFAULT_IFRAME_HEIGHT;
-    this.proxyService.verifyWithProxy(website).pipe(untilDestroyed(this)).subscribe(this.render);
+    this.proxyService.verifyWithProxy(website).subscribe(this.render);
   }
 
   render = ({ isEmbeddable, websiteUrl }) => {
     if (isEmbeddable) {
       this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(websiteUrl);
       this.website = websiteUrl;
-      console.log({ websiteUrl });
       this.shouldRequestCam = true;
     } else {
       alert('Not embeddable');

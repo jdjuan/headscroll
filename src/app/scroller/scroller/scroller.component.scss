@@ -21,6 +21,12 @@
   overflow-x: hidden;
   overflow-y: scroll;
   height: calc(97vh - 64px);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
   &.mobile {
     height: calc(94vh - 64px); // To account for the mobile browser navbar
   }

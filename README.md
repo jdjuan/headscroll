@@ -1,39 +1,39 @@
 # HeadScroll
 
-### Scroller
+#### Tutorial
 
-2. Canvas to be 100% of available size
-3. Remove hands
-4. No shadows on the sidebar
-5. On mobile, I don't render the second column, and instead display the camera on top of the first one
-   1. Options? I can put a options button that opens a modal with the settings to change?
-   2. Yes, on the navbar, to the right, it opens a modal
-6.  Loading spinners removes all the content (using diplay:none with isCameraReady) except the logo, and shows nice messages (totally centered) | IT ALSO WAITS FOR THE PROXY TO GIVE GREEN LIGHTS
-   3. It is loading by default
-   4. It shows the camera modal
-   5. Then the instruction modal
-      1. Only after accepting, it should start scrolling
+1. Only after accepting, it should start scrolling
+2. After the camera has been resolved, it should check the proxy of the website, and it it fails, it should show a message on the input
 
-7.  It's time to enable to your camera [Camera]
-   6. Add exception for cam blocked or not found
-8.  Tips for a better experience | [Don't_show_again] | [woman-tilting-head]
-   7. Put your camera in front of you
-   8. Avoid tilting your head unless you want to scroll
-9.  Our mobile experience is not ready at the moment, please use a laptop | [laptop_woman] 
-   9. Let me see it, I won't judge!
-   10. I will try later on another device
-10. Is the website displayed correctly? | [yes-no]
-11. Loading indicators
-   11. Also for URL submit from landing
-12. Layout, remove material
-13. Check/Remove bootstrap icons
-14. Make the default heigh larger for my screen
-15. Options
-   12. Hide / Show camera
-   13. Speed
-   14. Invert Scrolling
-   15. Report website
-   16. Body Points
+#### Loading
+1. Through Landing
+   1. Hides everything, (shows tutorial)?, waits for camera to be ready to display everything
+2. Through Bookmark
+   1. Hides everything, (shows tutorial)?, waits for camera to be ready to display everything
+3. Through Search on Scroller
+   1. Nothing, just the bar
+
+fix zoom
+2. Remove hands
+3. On mobile, I don't render the first column, and instead display the camera on the right bottom corner
+   1. Options? I can put a options button that opens a modal with the settings to change
+4.  It's time to enable to your camera [Camera]
+   2. Add exception for cam blocked or not found
+5.  Tips for a better experience | [Don't_show_again] | [woman-tilting-head]
+   3. Put your camera in front of you
+   4. Avoid tilting your head unless you want to scroll
+6.  Our mobile experience is not ready at the moment, please use a laptop | [laptop_woman] 
+   5. Let me see it, I won't judge!
+   6.  I will try later on another device
+7.  Is the website displayed correctly? | [yes-no]
+8.  Check/Remove bootstrap icons
+9.  Make the default heigh larger for my screen
+10. Options
+   7.  Hide / Show camera
+   8.  Speed
+   9.  Invert Scrolling
+   10. Report website
+   11. Body Points
 
 ### Backend
 
@@ -49,28 +49,20 @@
 
 1. OG and SEO Tags, Images for social media
 2. Add Google Analytics
-3. Buy domain
 4. Add product hunt reference
 5. Send email my personal subscription list
 6. Tweet, tagging: https://twitter.com/ire_alva
 
 ### Test
 
-1. Test in other browsers (remove <b> tags) and OS's, and devices
+1. Test in other browsers, OS's, and devices
 2. Test accessibility features
+3. Test model (and improve)
 
-### Model
-
-1. Test more and improve model
-
-### Main
+### Next Steps
 
 1. Button: Scroll a random song
-
-### Security 
-
-1. Avoid DoS
-
+2. Avoid DoS 
 
 ## Roadmap
 
