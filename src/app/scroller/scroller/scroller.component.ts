@@ -1,17 +1,17 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { LayoutService } from './../services/layout.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { ProxyService } from '../../core/proxy.service';
 import { ActivatedRoute } from '@angular/router';
 import { AllowCameraComponent } from './allow-camera/allow-camera.component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { merge } from 'rxjs';
 import { CameraService, CameraStates } from '../services/camera.service';
-import { take, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { BlockedCameraComponent } from './blocked-camera/blocked-camera.component';
 import { TutorialComponent } from './tutorial/tutorial.component';
+import { LocalStorageService } from 'src/app/core/local-storage.service';
 
 @UntilDestroy()
 @Component({
@@ -31,7 +31,8 @@ export class ScrollerComponent implements OnInit {
   shouldRequestCam: boolean;
   hasCameraLoaded: boolean;
   enableCameraModalRef: NgbModalRef;
-  hasCameraLoaded$ = new Subject();
+  isLoading = true;
+  isTutorialFinished: boolean;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -39,7 +40,8 @@ export class ScrollerComponent implements OnInit {
     private proxyService: ProxyService,
     private layoutService: LayoutService,
     private modalService: NgbModal,
-    private cameraService: CameraService
+    private cameraService: CameraService,
+    private localStorage: LocalStorageService
   ) {
     this.layoutService.isMobileOnce$.subscribe((isMobile) => (this.isMobile = isMobile));
   }
@@ -61,35 +63,46 @@ export class ScrollerComponent implements OnInit {
           break;
         case CameraStates.Allowed:
           this.openInstructionsModal();
-          // Open dialog showing them instructions
           break;
       }
     });
-  }
+  };
 
   openEnableCameraModal(): void {
     const ref = this.modalService.open(AllowCameraComponent);
-    merge(ref.closed, ref.dismissed, this.hasCameraLoaded$).pipe(take(1)).subscribe(this.checkCameraStatus);
+    merge(ref.closed, ref.dismissed).pipe(take(1)).subscribe(this.checkCameraStatus);
   }
 
   openBlockedCameraModal(): void {
     const ref = this.modalService.open(BlockedCameraComponent);
-    merge(ref.closed, ref.dismissed, this.hasCameraLoaded$).pipe(take(1)).subscribe(this.checkCameraStatus);
+    merge(ref.closed, ref.dismissed).pipe(take(1)).subscribe(this.checkCameraStatus);
   }
 
-  onCameraLoaded(hasCameraLoaded: boolean): void {
-    this.hasCameraLoaded = hasCameraLoaded;
-    if (hasCameraLoaded) {
-      this.hasCameraLoaded$.next();
+  onCameraLoaded(): void {
+    this.hasCameraLoaded = true;
+    if (this.isTutorialFinished) {
+      this.isLoading = false;
     }
   }
 
   openInstructionsModal(): void {
-    this.modalService.open(TutorialComponent);
+    if (this.localStorage.shouldShowTutorial()) {
+      const ref = this.modalService.open(TutorialComponent);
+      merge(ref.closed, ref.dismissed)
+        .pipe(take(1))
+        .subscribe(() => {
+          this.isTutorialFinished = true;
+          if (this.hasCameraLoaded) {
+            this.isLoading = false;
+          }
+        });
+    } else {
+      this.isTutorialFinished = true;
+    }
   }
 
   fetchWebsite(): void {
-    this.proxyService.getWebsiteUrl(this.activatedRoute.queryParams).pipe(untilDestroyed(this)).subscribe(this.render);
+    this.proxyService.getWebsiteUrl(this.activatedRoute.queryParams).subscribe(this.render);
   }
 
   searchWebsite(website: string): void {
@@ -106,7 +119,7 @@ export class ScrollerComponent implements OnInit {
     } else {
       alert('Not embeddable');
     }
-  }
+  };
 
   scrollDown(): void {
     // buffer added when the user reaches the iframe bottom
@@ -125,14 +138,16 @@ export class ScrollerComponent implements OnInit {
   }
 
   performScroll(scrollDown: boolean): void {
-    let speed = this.SCROLL_SPEED;
-    if (this.isMobile) {
-      speed *= this.SCROLL_SPEED_MOBILE_MULTIPLIER;
-    }
-    if (!scrollDown) {
-      speed = -speed;
-    }
+    if (!this.isLoading) {
+      let speed = this.SCROLL_SPEED;
+      if (this.isMobile) {
+        speed *= this.SCROLL_SPEED_MOBILE_MULTIPLIER;
+      }
+      if (!scrollDown) {
+        speed = -speed;
+      }
 
-    this.iframeWrapper.nativeElement.scrollBy(0, speed);
+      this.iframeWrapper.nativeElement.scrollBy(0, speed);
+    }
   }
 }

@@ -3,15 +3,16 @@
 @import "~bootstrap/scss/mixins";
 @import "~src/assets/variables";
 
-.url-input {
-  width: 40%;
-  font-size: 16px;
-  background-color: #ffeb3b;
-  color: darkslategray;
-  border: none;
-  padding: 0px 7px;
-  border-radius: 5px;
-  border: 2px solid black;
+.row.hide {
+  display: none;
+}
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  text-align: center;
+  transform: translate(-50%, -50%);
 }
 
 .iframe-wrapper {

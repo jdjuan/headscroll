@@ -2,33 +2,25 @@
 
 #### Tutorial
 
-1. Only after accepting, it should start scrolling
 2. After the camera has been resolved, it should check the proxy of the website, and it it fails, it should show a message on the input
-
-#### Loading
-1. Through Landing
-   1. Hides everything, (shows tutorial)?, waits for camera to be ready to display everything
-2. Through Bookmark
-   1. Hides everything, (shows tutorial)?, waits for camera to be ready to display everything
-3. Through Search on Scroller
-   1. Nothing, just the bar
+When the proxy fails, show tooltip in bar
 
 fix zoom
-2. Remove hands
-3. On mobile, I don't render the first column, and instead display the camera on the right bottom corner
+1. Remove hands
+2. On mobile, I don't render the first column, and instead display the camera on the right bottom corner
    1. Options? I can put a options button that opens a modal with the settings to change
-4.  It's time to enable to your camera [Camera]
+3.  It's time to enable to your camera [Camera]
    2. Add exception for cam blocked or not found
-5.  Tips for a better experience | [Don't_show_again] | [woman-tilting-head]
+4.  Tips for a better experience | [Don't_show_again] | [woman-tilting-head]
    3. Put your camera in front of you
    4. Avoid tilting your head unless you want to scroll
-6.  Our mobile experience is not ready at the moment, please use a laptop | [laptop_woman] 
+5.  Our mobile experience is not ready at the moment, please use a laptop | [laptop_woman] 
    5. Let me see it, I won't judge!
    6.  I will try later on another device
-7.  Is the website displayed correctly? | [yes-no]
-8.  Check/Remove bootstrap icons
-9.  Make the default heigh larger for my screen
-10. Options
+6.  Is the website displayed correctly? | [yes-no]
+7.  Check/Remove bootstrap icons
+8.  Make the default heigh larger for my screen
+9.  Options
    7.  Hide / Show camera
    8.  Speed
    9.  Invert Scrolling

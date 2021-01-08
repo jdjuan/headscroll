@@ -26,7 +26,7 @@ export class CameraComponent implements OnInit {
 
   @Output() scrollDown = new EventEmitter();
   @Output() scrollUp = new EventEmitter();
-  @Output() cameraLoaded = new EventEmitter<boolean>();
+  @Output() cameraLoaded = new EventEmitter();
   @ViewChild('canvas') canvas: ElementRef;
   cameraSize = this.DEFAULT_CAMERA_SIZE;
   isLoadingCamera = true;
@@ -79,10 +79,10 @@ export class CameraComponent implements OnInit {
       await this.webcam.play();
       window.requestAnimationFrame(this.loop);
       this.isLoadingCamera = false;
-      this.cameraLoaded.next(true);
-
+      this.cameraLoaded.next();
     } catch (error) {
-      this.cameraLoaded.next(false);
+      console.log('Could not load the camera');
+      console.log(error);
     }
   }
 
@@ -90,7 +90,7 @@ export class CameraComponent implements OnInit {
     this.webcam.update();
     await this.predict();
     window.requestAnimationFrame(this.loop);
-  }
+  };
 
   async predict(): Promise<void> {
     if (this.webcam) {
