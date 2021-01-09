@@ -24,7 +24,7 @@ export class SearchFieldComponent implements OnInit {
       this.onSearch();
     }
   }
-  @Input() compactVersion = true;
+  @Input() compactVersion = false;
   @Output() search = new EventEmitter();
   @Output() fail = new EventEmitter();
   errorTooltipMessage: string;
@@ -42,7 +42,7 @@ export class SearchFieldComponent implements OnInit {
   ngOnInit(): void {
     // Ensure the tooltip shows a message to the user the first it is loaded with wrong url
     if (this.notEmbeddable) {
-      this.errorTooltip.open();
+      this.openTooltip();
     }
   }
 
@@ -66,12 +66,18 @@ export class SearchFieldComponent implements OnInit {
             this.notEmbeddable = true;
             this.shouldShowFavicon = false;
             this.errorTooltipMessage = ErrorMessages.Cors;
-            this.errorTooltip?.open();
+            this.openTooltip();
           }
         });
     } else {
       this.errorTooltipMessage = ErrorMessages.Required;
-      this.errorTooltip.open();
+      this.openTooltip();
+    }
+  }
+
+  openTooltip(): void{
+    if (this.compactVersion) {
+      this.errorTooltip?.open();
     }
   }
 

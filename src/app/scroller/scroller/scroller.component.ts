@@ -115,7 +115,7 @@ export class ScrollerComponent implements OnInit {
     this.location.go(url);
     this.hasAtLeastLoadedAWebsite = true;
     this.hasSearchFailed = false;
-    this.iframeWrapper.nativeElement.scrollTo(0, 0);
+    this.iframeWrapper?.nativeElement.scrollTo(0, 0);
     this.iframeHeight = this.DEFAULT_IFRAME_HEIGHT;
     this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(website);
     this.shouldRequestCam = true;
