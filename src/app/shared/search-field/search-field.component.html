@@ -1,41 +1,43 @@
-<div class="url" [class.disabled]="loading">
-  <img [src]="favicon" *ngIf="shouldShowFavicon" class="favicon" (error)="shouldShowFavicon = true" alt="" />
-  <i class="bi bi-link-45deg link-icon" [class.focused]="isInputFocused" aria-hidden="false" aria-label="link icon"></i>
-  <input
-    type="url"
-    #validation="ngModel"
-    placeholder="Your URL"
-    [disabled]="loading"
-    [(ngModel)]="website"
-    (keydown)="cleanValidation()"
-    (keydown.enter)="onSearch()"
-    (focus)="isInputFocused = true"
-    (blur)="isInputFocused = false"
-    [ngbTooltip]="tipError"
-    triggers="manual"
-    #tooltip="ngbTooltip"
-    tooltipClass="error-tooltip"
-    placement="left"
-    required
-  />
-  <button class="submit-button" type="button" [disabled]="loading" (click)="onSearch()">
-    {{ loading ? "" : "Go" }}
-  </button>
-  <div *ngIf="loading" class="spinner-border spinner" role="status">
-    <span class="sr-only">Loading...</span>
+<div [class.compact]="isCompactVersion">
+  <div class="url" [class.disabled]="loading">
+    <img [src]="favicon" *ngIf="shouldShowFavicon" class="favicon" (error)="shouldShowFavicon = true" alt="" />
+    <i class="bi bi-link-45deg link-icon" [class.focused]="isInputFocused" aria-hidden="false" aria-label="link icon"></i>
+    <input
+      type="url"
+      #validation="ngModel"
+      placeholder="Your URL"
+      [disabled]="loading"
+      [(ngModel)]="website"
+      (keydown)="cleanValidation()"
+      (keydown.enter)="onSearch()"
+      (focus)="isInputFocused = true"
+      (blur)="isInputFocused = false"
+      [ngbTooltip]="tipError"
+      triggers="manual"
+      #tooltip="ngbTooltip"
+      tooltipClass="error-tooltip"
+      placement="left"
+      required
+    />
+    <button class="submit-button" type="button" [disabled]="loading" (click)="onSearch()">
+      {{ loading ? "" : "Go" }}
+    </button>
+    <div *ngIf="loading" class="spinner-border spinner" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
   </div>
-</div>
-<div *ngIf="!isCompactVersion">
-  <span class="error" *ngIf="validation.invalid && (hasSearched || validation.touched)">
-    <i class="bi bi-info-circle-fill icon"></i> {{ errorMessages.Required }}
-  </span>
-  <span class="error" *ngIf="notEmbeddable"
-    ><i class="bi bi-info-circle-fill icon"></i> {{ errorMessages.Cors }} <u [ngbTooltip]="tipContent" placement="bottom">Why?</u></span
+  <div *ngIf="!isCompactVersion">
+    <span class="error" *ngIf="validation.invalid && (hasSearched || validation.touched)">
+      <i class="bi bi-info-circle-fill icon"></i> {{ errorMessages.Required }}
+    </span>
+    <span class="error" *ngIf="notEmbeddable"
+      ><i class="bi bi-info-circle-fill icon"></i> {{ errorMessages.Cors }} <u [ngbTooltip]="tipContent" placement="bottom">Why?</u></span
+    >
+  </div>
+  <ng-template #tipContent
+    >Some websites have extra security that protects them from being embedded onto another website (CORS). There's nothing we can do about
+    it. We're sorry!</ng-template
   >
-</div>
-<ng-template #tipContent
-  >Some websites have extra security that protects them from being embedded onto another website (CORS). There's nothing we can do about it.
-  We're sorry!</ng-template
->
 
-<ng-template #tipError>{{ errorTooltipMessage }}</ng-template>
+  <ng-template #tipError>{{ errorTooltipMessage }}</ng-template>
+</div>

@@ -2,35 +2,24 @@
 
 #### Tutorial
 
-REVIEW MOBILE DESIGN
-add options
+1. fix zoom
+2. REPLACE EMOJIS
+3. 7.  Options
+   1.  Hide / Show camera
+   2.  Speed
+   3.  Invert Scrolling
+   4.  Report website
+   5.  Body Points
+4.  Our mobile experience is not ready at the moment, please use a laptop | [laptop_woman] 
+   6. Let me see it, I won't judge!
+   7.  I will try later on another device
+5.  Is the website displayed correctly? | [yes-no]
 
-fix zoom
-1. Remove hands
-2. On mobile, I don't render the first column, and instead display the camera on the right bottom corner
-   1. Options? I can put a options button that opens a modal with the settings to change
-3.  It's time to enable to your camera [Camera]
-   2. Add exception for cam blocked or not found
-4.  Tips for a better experience | [Don't_show_again] | [woman-tilting-head]
-   3. Put your camera in front of you
-   4. Avoid tilting your head unless you want to scroll
-5.  Our mobile experience is not ready at the moment, please use a laptop | [laptop_woman] 
-   5. Let me see it, I won't judge!
-   6.  I will try later on another device
-6.  Is the website displayed correctly? | [yes-no]
-7.  Check/Remove bootstrap icons
-8.  Make the default heigh larger for my screen
-9.  Options
-   7.  Hide / Show camera
-   8.  Speed
-   9.  Invert Scrolling
-   10. Report website
-   11. Body Points
+### Perf
 
-Reduce image resolution and seize
+1. Reduce image resolution and seize
+2. Check/Remove bootstrap icons?
 
-- Fix lacuerda https://chords.lacuerda.net/heroes_del_silencio/la_chispa_adecuada-3.shtml
-  - cookies modal that hides content
 ### Backend
 
 1. Store websites searched (both the URL and URI), and keep the count
