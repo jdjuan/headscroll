@@ -15,6 +15,8 @@
    7.  I will try later on another device
 5.  Is the website displayed correctly? | [yes-no]
 
+Make model local, and improve the online one
+
 ### Perf
 
 1. Reduce image resolution and seize

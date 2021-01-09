@@ -15,6 +15,10 @@
   position: relative;
 }
 
+.logo{
+  font-size: 7vw;
+}
+
 .iframe-wrapper {
   border-radius: 10px;
   box-shadow: 0px 0px 1rem 3px #371f63;
@@ -48,5 +52,13 @@
 @include media-breakpoint-up(lg) {
   .iframe-wrapper{
     margin-top: 0;
+  }
+  .header {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .logo{
+    font-size: 1.7vw;
+    margin: 0;
   }
 }

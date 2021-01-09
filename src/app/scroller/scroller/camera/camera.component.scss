@@ -6,7 +6,7 @@
 .camera {
   position: absolute;
   z-index: 10;
-  bottom: -1px;
+  bottom: 0;
   right: 21px;
   .spinner {
     top: 50%;
@@ -23,7 +23,6 @@
 
 @include media-breakpoint-up(lg) {
   .camera {
-    bottom: 0;
-    left: 0;
+    right: initial;
   }
 }

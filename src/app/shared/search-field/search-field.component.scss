@@ -101,7 +101,7 @@
   }
 }
 
-@include media-breakpoint-down(lg) {
+@include media-breakpoint-down(md) {
   .compact {
     .spinner {
       width: 1rem;
