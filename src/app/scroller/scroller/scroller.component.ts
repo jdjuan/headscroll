@@ -1,7 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { LayoutService } from './../services/layout.service';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AllowCameraComponent } from './allow-camera/allow-camera.component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -13,7 +12,6 @@ import { TutorialComponent } from './tutorial/tutorial.component';
 import { LocalStorageService } from 'src/app/core/local-storage.service';
 import { Location } from '@angular/common';
 
-@UntilDestroy()
 @Component({
   selector: 'app-scroller',
   templateUrl: './scroller.component.html',
@@ -23,7 +21,8 @@ export class ScrollerComponent implements OnInit {
   @ViewChild('iframeWrapper') iframeWrapper: ElementRef;
   readonly SCROLL_SPEED = 5;
   readonly SCROLL_SPEED_MOBILE_MULTIPLIER = 3;
-  readonly DEFAULT_IFRAME_HEIGHT = 3500;
+  // To match iframeWrapper
+  readonly DEFAULT_IFRAME_HEIGHT = window.innerHeight * 0.97 - 64;
   websiteSafeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
   iframeHeight = this.DEFAULT_IFRAME_HEIGHT;
   website: string;

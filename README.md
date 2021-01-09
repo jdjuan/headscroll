@@ -2,7 +2,6 @@
 
 #### Tutorial
 
-Fix cookies lack of scroll
 REVIEW MOBILE DESIGN
 
 fix zoom
