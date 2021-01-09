@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfigService } from '../../services/config.service';
 
 @Component({
   selector: 'app-config',
@@ -7,11 +7,16 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./config.component.scss'],
 })
 export class ConfigComponent implements OnInit {
-  constructor(public activeModal: NgbActiveModal) {}
+  scrollSpeed: number;
 
-  ngOnInit(): void {}
+  constructor(private configService: ConfigService) {}
+  ngOnInit(): void {
+    this.configService.scrollSpeed.subscribe((speed) => {
+      this.scrollSpeed = speed;
+    });
+  }
 
-  done(): void {
-    this.activeModal.close();
+  speedChange(): void {
+    this.configService.updateSpeed(this.scrollSpeed);
   }
 }

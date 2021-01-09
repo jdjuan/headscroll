@@ -14,16 +14,30 @@
    5. Can't see this website?
       1. Report website
 4. fix zoom
-5. REPLACE EMOJIS: With a border to the left of the camera?
+5. Resize iframe height when window resizes
+6. Exception for when it takes too long to show (more than 5 seconds, and more than 10 seconds)
+7. REPLACE EMOJIS: With a border to the left of the camera?
    1. https://icons.getbootstrap.com/icons/caret-down-fill/
-6.  Our mobile experience is not ready at the moment, please use a laptop | [laptop_woman] 
+8.  Our mobile experience is not ready at the moment, please use a laptop | [laptop_woman] 
    2. Let me see it, I won't judge!
    3.  I will try later on another device
-7.  Is the website displayed correctly? | [yes-no]
+9. ~~Is the website displayed correctly?~~
+10. Make model local, and **improve** the online one
+   1. Add debounce to the model
+      1. https://rxmarbles.com/#debounce
+      2. Pass an observable who first waits 500ms to emit, and then 0
+      3. And it's restarted when the user does another action.
+11. Text websites that do not work on mobile
+12. Search for typical chords websites in major languages (portuguese, german)
+13. OG and SEO Tags, Images for social media
+14. Test in other browsers, OS's, and devices
+15. Add Google Analytics
+    
+> 😃 SEND OVER! 😃
 
-Make model local, and improve the online one
+### Buy me a coffee
 
-Text websites that do not work on mobile
+1. Customize page
 
 ### Perf
 
@@ -36,14 +50,8 @@ Text websites that do not work on mobile
 2. Admin View to Blacklist and whitelist.
    1. https://twitter.com/cifraclub
 
-### Buy me a coffee
-
-1. Customize page
-
 ### SEO
 
-1. OG and SEO Tags, Images for social media
-2. Add Google Analytics
 4. Add product hunt reference
 5. Send email my personal subscription list
 6. Tweet, tagging: https://twitter.com/ire_alva
@@ -52,12 +60,11 @@ Text websites that do not work on mobile
 
 1. Test in other browsers, OS's, and devices
 2. Test accessibility features
-3. Test model (and improve)
 
 ### Next Steps
 
 1. Button: Scroll a random song
-2. Avoid DoS 
+2. Avoid DoS
 
 ## Roadmap
 

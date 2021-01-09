@@ -1,0 +1,25 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~src/assets/variables";
+
+.config-option {
+  margin-bottom: 2rem;
+}
+
+.config-title {
+  font-weight: 200;
+  font-size: 1.5rem;
+  background-color: $beta;
+  display: inline-block;
+  padding: 4px 7px;
+  border-radius: 4px;
+}
+
+.star {
+  font-size: 1rem;
+  color: $omega;
+}
+.filled {
+  color: $beta;
+}

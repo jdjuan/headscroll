@@ -1,1 +1,21 @@
-<p>config works!</p>
+<div class="config-option">
+  <h4 class="config-title">Scrolling Speed:</h4>
+  <ngb-rating [(rate)]="scrollSpeed" (rateChange)="speedChange()">
+    <ng-template let-fill="fill" let-index="index">
+      <span class="star" [class.filled]="fill === 100">►</span>
+    </ng-template>
+  </ngb-rating>
+</div>
+
+<div class="config-option">
+  <h4 class="config-title">Switch Camera:</h4>
+</div>
+<div class="config-option">
+  <h4 class="config-title">Show Body Points:</h4>
+</div>
+<div class="config-option">
+  <h4 class="config-title">Invert Direction:</h4>
+</div>
+<div class="config-option">
+  <h4 class="config-title">Website didn't load?</h4>
+</div>

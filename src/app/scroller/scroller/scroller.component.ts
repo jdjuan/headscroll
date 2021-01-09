@@ -12,7 +12,8 @@ import { LocalStorageService } from 'src/app/core/local-storage.service';
 import { Location } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { LARGE_BREAKPOINT } from 'src/app/core/constants';
-import { ConfigComponent } from './config/config.component';
+import { ConfigModalComponent } from './config-modal/config-modal.component';
+import { ConfigService } from '../services/config.service';
 
 @Component({
   selector: 'app-scroller',
@@ -21,7 +22,7 @@ import { ConfigComponent } from './config/config.component';
 })
 export class ScrollerComponent implements OnInit {
   @ViewChild('iframeWrapper') iframeWrapper: ElementRef;
-  readonly SCROLL_SPEED = 5;
+  scrollSpeed: number;
   readonly SCROLL_SPEED_MOBILE_MULTIPLIER = 3;
   websiteSafeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
   defaultIframeHeight: number;
@@ -45,10 +46,14 @@ export class ScrollerComponent implements OnInit {
     private cameraService: CameraService,
     private localStorage: LocalStorageService,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private configService: ConfigService
   ) {}
 
   ngOnInit(): void {
+    this.configService.scrollSpeed.subscribe((speed) => {
+      this.scrollSpeed = speed;
+    });
     this.breakpointObserver.observe([LARGE_BREAKPOINT]).subscribe(({ matches }) => {
       this.isMobile = matches;
       this.defineIframeHeight();
@@ -159,7 +164,7 @@ export class ScrollerComponent implements OnInit {
 
   performScroll(scrollDown: boolean): void {
     if (!this.isLoading && !this.hasSearchFailed && !this.isConfigOpen) {
-      let speed = this.SCROLL_SPEED;
+      let speed = this.scrollSpeed;
       if (this.isMobile) {
         speed *= this.SCROLL_SPEED_MOBILE_MULTIPLIER;
       }
@@ -173,7 +178,7 @@ export class ScrollerComponent implements OnInit {
 
   openConfig(): void {
     this.isConfigOpen = true;
-    const ref = this.modalService.open(ConfigComponent);
+    const ref = this.modalService.open(ConfigModalComponent);
     merge(ref.closed, ref.dismissed)
       .pipe(take(1))
       .subscribe(() => {
