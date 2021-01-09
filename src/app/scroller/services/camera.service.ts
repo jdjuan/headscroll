@@ -15,7 +15,7 @@ export class CameraService {
   // tslint:disable-next-line: variable-name
   private _selectedCamera$ = new Subject<string>();
   // tslint:disable-next-line: variable-name
-  private _showSkeleton$ = new BehaviorSubject<boolean>(true);
+  private _showSkeleton$ = new BehaviorSubject<boolean>(false);
 
   readonly CAMERA_PERMISSION_TIMEOUT = 2000;
 

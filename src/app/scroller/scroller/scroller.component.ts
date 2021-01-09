@@ -22,16 +22,11 @@ export class ScrollerComponent implements OnInit {
   @ViewChild('iframeWrapper') iframeWrapper: ElementRef;
   readonly SCROLL_SPEED = 5;
   readonly SCROLL_SPEED_MOBILE_MULTIPLIER = 3;
-  // To match iframeWrapper
-  defaultIframeHeight: number;
-  // defaultIframeHeight = window.innerHeight * 0.86 - 64;
-  // readonly DEFAULT_IFRAME_HEIGHT = window.innerHeight * 0.94 - 64;
-  // readonly DEFAULT_IFRAME_HEIGHT = window.innerHeight * 0.97 - 64;
   websiteSafeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
+  defaultIframeHeight: number;
   iframeHeight: number;
-  // iframeHeight = this.defaultIframeHeight;
   website: string;
-  isMobile: boolean;
+  isMobile = this.breakpointObserver.isMatched(LARGE_BREAKPOINT);
   shouldRequestCam: boolean;
   hasCameraLoaded: boolean;
   enableCameraModalRef: NgbModalRef;
@@ -49,19 +44,25 @@ export class ScrollerComponent implements OnInit {
     private localStorage: LocalStorageService,
     private location: Location,
     private router: Router
-  ) {
-    this.isMobile = this.breakpointObserver.isMatched(LARGE_BREAKPOINT);
+  ) {}
+
+  ngOnInit(): void {
+    this.breakpointObserver.observe([LARGE_BREAKPOINT]).subscribe(({ matches }) => {
+      this.isMobile = matches;
+      this.defineIframeHeight();
+    });
+
+    this.getWebsiteFromParams();
+    this.checkCameraStatus();
+  }
+
+  defineIframeHeight(): void {
     if (this.isMobile) {
       this.defaultIframeHeight = window.innerHeight * 0.86 - 64;
     } else {
       this.defaultIframeHeight = window.innerHeight * 0.97 - 64;
     }
     this.iframeHeight = this.defaultIframeHeight;
-    this.getWebsiteFromParams();
-  }
-
-  ngOnInit(): void {
-    this.checkCameraStatus();
   }
 
   checkCameraStatus = (): void => {

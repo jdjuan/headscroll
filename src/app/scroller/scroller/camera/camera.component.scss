@@ -1,15 +1,13 @@
-@import "~@angular/material/theming";
-$app-primary: mat-palette($mat-indigo);
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~src/assets/variables";
 
 .camera {
   position: absolute;
-  bottom: 0;
   z-index: 10;
-  &.mobile {
-    bottom: -1px;
-    z-index: 10;
-    right: 21px;
-  }
+  bottom: -1px;
+  right: 21px;
   .spinner {
     top: 50%;
     left: 50%;
@@ -19,29 +17,13 @@ $app-primary: mat-palette($mat-indigo);
   .canvas {
     width: 100%;
     border-radius: 10px;
-    background-color: mat-color($app-primary);
+    background-color: $alpha;
   }
-  .emoji {
-    z-index: 20;
-    font-size: 3rem;
-    text-align: center;
-    position: absolute;
-    bottom: 2rem;
-    &.down {
-      left: 0.5rem;
-    }
-    &.up {
-      right: 0.5rem;
-    }
-    &.mobile {
-      font-size: 1rem;
-      bottom: 10px;
-      &.down {
-        left: 7px;
-      }
-      &.up {
-        right: 7px;
-      }
-    }
+}
+
+@include media-breakpoint-up(lg) {
+  .camera {
+    bottom: 0;
+    left: 0;
   }
 }

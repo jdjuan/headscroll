@@ -3,7 +3,6 @@
 #### Tutorial
 
 REVIEW MOBILE DESIGN
-change CDK breakout to use bootstrap lg
 add options
 
 fix zoom

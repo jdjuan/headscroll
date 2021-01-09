@@ -58,7 +58,6 @@ export class CameraComponent implements OnInit {
   async init(deviceId: string): Promise<void> {
     if (this.isMobile) {
       this.cameraSize = this.SMALL_CAMERA_SIZE;
-      this.showSkeleton = false;
     }
     this.model = await load(this.MODEL_URL, this.METADATA_URL);
     this.setCanvasContext();

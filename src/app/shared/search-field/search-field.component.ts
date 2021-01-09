@@ -24,7 +24,7 @@ export class SearchFieldComponent implements OnInit {
       this.onSearch();
     }
   }
-  @Input() compactVersion = false;
+  @Input() isCompactVersion = false;
   @Output() search = new EventEmitter();
   @Output() fail = new EventEmitter();
   errorTooltipMessage: string;
@@ -76,7 +76,7 @@ export class SearchFieldComponent implements OnInit {
   }
 
   openTooltip(): void{
-    if (this.compactVersion) {
+    if (this.isCompactVersion) {
       this.errorTooltip?.open();
     }
   }

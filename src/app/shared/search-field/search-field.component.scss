@@ -13,9 +13,10 @@
   }
   .link-icon {
     position: absolute;
-    left: 12px;
-    top: 6px;
-    font-size: 25px;
+    left: 6px;
+    top: 5px;
+    font-size: 16px;
+
     color: $delta;
     z-index: 10;
     &.focused {
@@ -24,9 +25,11 @@
   }
   input {
     position: relative;
-    width: calc(100% - 3rem);
-    padding-left: 45px;
-    height: 3rem;
+    width: calc(100% - 2rem);
+    font-size: 12px;
+    height: 2rem;
+    padding-left: 25px;
+
     border: none;
     border-bottom-left-radius: 6px;
     border-top-left-radius: 6px;
@@ -37,16 +40,15 @@
     }
   }
   .submit-button {
-    height: 3rem;
-    width: 3rem;
+    font-size: 16px;
+    height: 2rem;
+    width: 2rem;
+    font-weight: 300;
     border: none;
     background-color: $beta;
     color: $omega;
-    font-weight: 200;
-    font-size: 26px;
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
-    height: 3rem;
     outline-color: $alpha;
     &:hover {
       background-color: darken($beta, 5);
@@ -69,6 +71,9 @@
   position: absolute;
   right: 8px;
   top: 8px;
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.2em;
 }
 .url.disabled {
   .link-icon {
@@ -80,10 +85,11 @@
 }
 .favicon {
   position: absolute;
-  left: 10px;
-  top: 11px;
+  width: 16px;
+  left: 5px;
+  top: 9px;
+
   z-index: 20;
-  width: 28px;
 }
 ::ng-deep .error-tooltip {
   opacity: 1 !important;
@@ -100,5 +106,34 @@
   .error {
     font-weight: 300;
     font-size: 20px;
+  }
+  .spinner {
+    width: 2rem;
+    height: 2rem;
+    border-width: 0.3rem;
+  }
+  .favicon {
+    width: 28px;
+    left: 10px;
+    top: 10px;
+  }
+  .url {
+    .link-icon {
+      left: 12px;
+      top: 5px;
+      font-size: 25px;
+    }
+    input {
+      width: calc(100% - 3rem);
+      height: 3rem;
+      padding-left: 45px;
+      font-size: inherit;
+    }
+    .submit-button {
+      font-size: 26px;
+      height: 3rem;
+      width: 3rem;
+      font-weight: 200;
+    }
   }
 }
