@@ -2,36 +2,27 @@
 
 #### Tutorial
 
-3. Options
-   1. Speed
-      1. Dots
-   2. Select your Camera
-      1.  Dropdown
-   3. Invert Scrolling:
-      1. Normal / Inverted
-   4. Body Points:
-      1. Show / Hide
-   5. Can't see this website?
-      1. Report website
-4. fix zoom
-5. Resize iframe height when window resizes
-6. Exception for when it takes too long to show (more than 5 seconds, and more than 10 seconds)
-7. REPLACE EMOJIS: With a border to the left of the camera?
+
+1. Report website
+2. Review mobile
+3. fix zoom
+4. Exception for when it takes too long to show (more than 5 seconds, and more than 10 seconds)
+5. REPLACE EMOJIS: With a border to the left of the camera?
    1. https://icons.getbootstrap.com/icons/caret-down-fill/
-8.  Our mobile experience is not ready at the moment, please use a laptop | [laptop_woman] 
+6.  Our mobile experience is not ready at the moment, please use a laptop | [laptop_woman] 
    2. Let me see it, I won't judge!
    3.  I will try later on another device
-9. ~~Is the website displayed correctly?~~
-10. Make model local, and **improve** the online one
+7. ~~Is the website displayed correctly?~~
+8.  Make model local, and **improve** the online one
    1. Add debounce to the model
       1. https://rxmarbles.com/#debounce
       2. Pass an observable who first waits 500ms to emit, and then 0
       3. And it's restarted when the user does another action.
-11. Text websites that do not work on mobile
-12. Search for typical chords websites in major languages (portuguese, german)
-13. OG and SEO Tags, Images for social media
-14. Test in other browsers, OS's, and devices
-15. Add Google Analytics
+9.  Text websites that do not work on mobile
+10. Search for typical chords websites in major languages (portuguese, german)
+11. OG and SEO Tags, Images for social media
+12. Test in other browsers, OS's, and devices
+13. Add Google Analytics
     
 > 😃 SEND OVER! 😃
 

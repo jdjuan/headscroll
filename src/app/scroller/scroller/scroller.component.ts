@@ -8,9 +8,9 @@ import { CameraService, CameraStates } from '../services/camera.service';
 import { pluck, take } from 'rxjs/operators';
 import { BlockedCameraComponent } from './blocked-camera/blocked-camera.component';
 import { TutorialComponent } from './tutorial/tutorial.component';
-import { LocalStorageService } from 'src/app/core/local-storage.service';
 import { Location } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 import { LARGE_BREAKPOINT } from 'src/app/core/constants';
 import { ConfigModalComponent } from './config-modal/config-modal.component';
 import { ConfigService } from '../services/config.service';
@@ -44,16 +44,21 @@ export class ScrollerComponent implements OnInit {
     private breakpointObserver: BreakpointObserver,
     private modalService: NgbModal,
     private cameraService: CameraService,
-    private localStorage: LocalStorageService,
     private location: Location,
     private router: Router,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private viewportRuler: ViewportRuler
   ) {}
 
   ngOnInit(): void {
     this.configService.scrollSpeed.subscribe((speed) => {
       this.scrollSpeed = speed;
     });
+    // define iframe height on resize
+    this.viewportRuler.change(200).subscribe(() => {
+      this.defineIframeHeight();
+    });
+    // define iframe height on breakpoint change
     this.breakpointObserver.observe([LARGE_BREAKPOINT]).subscribe(({ matches }) => {
       this.isMobile = matches;
       this.defineIframeHeight();
@@ -107,7 +112,7 @@ export class ScrollerComponent implements OnInit {
   }
 
   openInstructionsModal(): void {
-    if (this.localStorage.shouldShowTutorial()) {
+    if (this.configService.shouldShowTutorial()) {
       const ref = this.modalService.open(TutorialComponent);
       merge(ref.closed, ref.dismissed)
         .pipe(take(1))

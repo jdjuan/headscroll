@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { LocalStorageService } from 'src/app/core/local-storage.service';
+import { ConfigService } from '../../services/config.service';
 
 @Component({
   selector: 'app-tutorial',
@@ -8,10 +8,10 @@ import { LocalStorageService } from 'src/app/core/local-storage.service';
   styleUrls: ['./tutorial.component.scss'],
 })
 export class TutorialComponent implements OnInit {
-  constructor(public activeModal: NgbActiveModal, private localStorage: LocalStorageService) {}
+  constructor(public activeModal: NgbActiveModal, private configService: ConfigService) {}
 
   ngOnInit(): void {
-    this.localStorage.stopShowingTutorial();
+    this.configService.stopShowingTutorial();
   }
 
   done(): void {
@@ -20,9 +20,9 @@ export class TutorialComponent implements OnInit {
 
   updateTutorialStatus(selected: boolean): void {
     if (selected) {
-      this.localStorage.stopShowingTutorial();
+      this.configService.stopShowingTutorial();
     } else {
-      this.localStorage.keepShowingTutorial();
+      this.configService.keepShowingTutorial();
     }
   }
 }

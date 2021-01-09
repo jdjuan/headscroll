@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, from, merge, Observable, Subject, interval, of } from 'rxjs';
-import { catchError, distinct, mapTo, take, tap } from 'rxjs/operators';
+import { from, merge, Observable, Subject, interval, of } from 'rxjs';
+import { catchError, mapTo, take } from 'rxjs/operators';
 
 export enum CameraStates {
   Allowed = 'Camera is allowed',
@@ -12,14 +12,8 @@ export enum CameraStates {
   providedIn: 'root',
 })
 export class CameraService {
-  // tslint:disable-next-line: variable-name
   private _selectedCamera$ = new Subject<string>();
-  // tslint:disable-next-line: variable-name
-  private _showSkeleton$ = new BehaviorSubject<boolean>(false);
-
   readonly CAMERA_PERMISSION_TIMEOUT = 2000;
-
-  constructor() {}
 
   hasCameraPermission(): Observable<CameraStates> {
     const cameraPermission$ = from(navigator.mediaDevices.getUserMedia({ video: true })).pipe(
@@ -40,15 +34,7 @@ export class CameraService {
     this._selectedCamera$.next(deviceId);
   }
 
-  toggleSkeleton(showSkeleton: boolean): void {
-    this._showSkeleton$.next(showSkeleton);
-  }
-
   get selectedCamera$(): Observable<string> {
-    return this._selectedCamera$.pipe(distinct());
-  }
-
-  get showSkeleton$(): Observable<boolean> {
-    return this._showSkeleton$.asObservable();
+    return this._selectedCamera$.asObservable();
   }
 }

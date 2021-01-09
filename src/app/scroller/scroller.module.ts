@@ -5,11 +5,12 @@ import { ScrollerComponent } from './scroller/scroller.component';
 import { CameraComponent } from './scroller/camera/camera.component';
 import { SharedModule } from '../shared/shared.module';
 import { AllowCameraComponent } from './scroller/allow-camera/allow-camera.component';
-import { NgbModalModule, NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModalModule, NgbButtonsModule, NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
 import { BlockedCameraComponent } from './scroller/blocked-camera/blocked-camera.component';
 import { TutorialComponent } from './scroller/tutorial/tutorial.component';
 import { ConfigComponent } from './scroller/config/config.component';
 import { ConfigModalComponent } from './scroller/config-modal/config-modal.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,15 @@ import { ConfigModalComponent } from './scroller/config-modal/config-modal.compo
     ConfigComponent,
     ConfigModalComponent,
   ],
-  imports: [CommonModule, ScrollerRoutingModule, SharedModule, NgbModalModule, NgbRatingModule],
+  imports: [
+    CommonModule,
+    ScrollerRoutingModule,
+    SharedModule,
+    NgbModalModule,
+    NgbRatingModule,
+    NgbDropdownModule,
+    NgbButtonsModule,
+    FormsModule,
+  ],
 })
 export class ScrollerModule {}

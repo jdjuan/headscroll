@@ -1,10 +1,11 @@
-import { Component, OnInit, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Webcam, CustomPoseNet, load, drawKeypoints, drawSkeleton } from '@teachablemachine/pose';
 import { Keypoint } from '@tensorflow-models/posenet';
 import { CameraService } from '../../services/camera.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { LARGE_BREAKPOINT } from 'src/app/core/constants';
+import { ConfigService } from '../../services/config.service';
 
 export enum Classes {
   Left = 'Left',
@@ -18,7 +19,7 @@ export enum Classes {
   templateUrl: './camera.component.html',
   styleUrls: ['./camera.component.scss'],
 })
-export class CameraComponent implements OnInit {
+export class CameraComponent {
   readonly MODEL_URL = 'https://teachablemachine.withgoogle.com/models/l5fbLAKJu/model.json';
   readonly METADATA_URL = 'https://teachablemachine.withgoogle.com/models/l5fbLAKJu/metadata.json';
   readonly DEFAULT_CAMERA_SIZE = 300;
@@ -31,29 +32,27 @@ export class CameraComponent implements OnInit {
   @ViewChild('canvas') canvas: ElementRef;
   cameraSize = this.DEFAULT_CAMERA_SIZE;
   isLoadingCamera = true;
-  showSkeleton: boolean;
   isMobile: boolean;
   forecast: Classes;
   webcam: Webcam;
   model: CustomPoseNet;
   ctx: CanvasRenderingContext2D;
+  direction: boolean;
 
-  constructor(private breakpointObserver: BreakpointObserver, cameraService: CameraService) {
+  constructor(private breakpointObserver: BreakpointObserver, private cameraService: CameraService, private configService: ConfigService) {
     this.isMobile = this.breakpointObserver.isMatched(LARGE_BREAKPOINT);
-    cameraService.getAvailableCameras().then((cameras) => {
+    this.cameraService.getAvailableCameras().then((cameras) => {
       const [firstCamera] = cameras;
       const { deviceId } = firstCamera;
       this.init(deviceId);
     });
-    cameraService.selectedCamera$.pipe(untilDestroyed(this)).subscribe((deviceId) => {
+    this.cameraService.selectedCamera$.subscribe((deviceId) => {
       this.setupWebCam(deviceId);
     });
-    cameraService.showSkeleton$.pipe(untilDestroyed(this)).subscribe((showSkeleton) => {
-      this.showSkeleton = showSkeleton;
+    this.configService.direction$.subscribe((direction) => {
+      this.direction = direction;
     });
   }
-
-  ngOnInit(): void {}
 
   async init(deviceId: string): Promise<void> {
     if (this.isMobile) {
@@ -86,17 +85,17 @@ export class CameraComponent implements OnInit {
 
   loop = async (timestamp: any) => {
     this.webcam.update();
-    await this.predict();
+    if (this.webcam.canvas) {
+      await this.predict();
+    }
     window.requestAnimationFrame(this.loop);
   }
 
   async predict(): Promise<void> {
-    if (this.webcam) {
-      const { pose, posenetOutput } = await this.model.estimatePose(this.webcam.canvas);
-      const output = await this.model.predict(posenetOutput);
-      this.getForecast(output);
-      this.drawPose(pose);
-    }
+    const { pose, posenetOutput } = await this.model.estimatePose(this.webcam.canvas);
+    const output = await this.model.predict(posenetOutput);
+    this.getForecast(output);
+    this.drawPose(pose);
   }
 
   getForecast(output: { className: string; probability: number }[]): void {
@@ -104,10 +103,18 @@ export class CameraComponent implements OnInit {
     const rightForecast = output.find((entry) => entry.className === Classes.Right);
     if (leftForecast.probability > this.FORECAST_CONFIDENCE) {
       this.forecast = Classes.Left;
-      this.scrollDown.emit();
+      if (this.direction) {
+        this.scrollUp.emit();
+      } else {
+        this.scrollDown.emit();
+      }
     } else if (rightForecast.probability > this.FORECAST_CONFIDENCE) {
       this.forecast = Classes.Right;
-      this.scrollUp.emit();
+      if (this.direction) {
+        this.scrollDown.emit();
+      } else {
+        this.scrollUp.emit();
+      }
     } else {
       this.forecast = Classes.Neutral;
     }
@@ -123,11 +130,11 @@ export class CameraComponent implements OnInit {
   drawPose(pose: { keypoints: Keypoint[] }): void {
     if (this.webcam.canvas) {
       this.ctx.drawImage(this.webcam.canvas, 0, 0);
-      if (pose && this.showSkeleton) {
-        const minPartConfidence = 0.5;
-        drawKeypoints(pose.keypoints, minPartConfidence, this.ctx);
-        drawSkeleton(pose.keypoints, minPartConfidence, this.ctx);
-      }
+      // if (pose) {
+      //   const minPartConfidence = 0.5;
+      //   drawKeypoints(pose.keypoints, minPartConfidence, this.ctx);
+      //   drawSkeleton(pose.keypoints, minPartConfidence, this.ctx);
+      // }
     }
   }
 }
