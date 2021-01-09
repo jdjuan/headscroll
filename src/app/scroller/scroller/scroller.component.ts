@@ -1,6 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { LayoutService } from './../services/layout.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AllowCameraComponent } from './allow-camera/allow-camera.component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -11,6 +10,8 @@ import { BlockedCameraComponent } from './blocked-camera/blocked-camera.componen
 import { TutorialComponent } from './tutorial/tutorial.component';
 import { LocalStorageService } from 'src/app/core/local-storage.service';
 import { Location } from '@angular/common';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { LARGE_BREAKPOINT } from 'src/app/core/constants';
 
 @Component({
   selector: 'app-scroller',
@@ -22,11 +23,13 @@ export class ScrollerComponent implements OnInit {
   readonly SCROLL_SPEED = 5;
   readonly SCROLL_SPEED_MOBILE_MULTIPLIER = 3;
   // To match iframeWrapper
-  readonly DEFAULT_IFRAME_HEIGHT = window.innerHeight * 0.86 - 64;
+  defaultIframeHeight: number;
+  // defaultIframeHeight = window.innerHeight * 0.86 - 64;
   // readonly DEFAULT_IFRAME_HEIGHT = window.innerHeight * 0.94 - 64;
   // readonly DEFAULT_IFRAME_HEIGHT = window.innerHeight * 0.97 - 64;
   websiteSafeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
-  iframeHeight = this.DEFAULT_IFRAME_HEIGHT;
+  iframeHeight: number;
+  // iframeHeight = this.defaultIframeHeight;
   website: string;
   isMobile: boolean;
   shouldRequestCam: boolean;
@@ -40,14 +43,20 @@ export class ScrollerComponent implements OnInit {
   constructor(
     private sanitizer: DomSanitizer,
     private activatedRoute: ActivatedRoute,
-    private layoutService: LayoutService,
+    private breakpointObserver: BreakpointObserver,
     private modalService: NgbModal,
     private cameraService: CameraService,
     private localStorage: LocalStorageService,
     private location: Location,
     private router: Router
   ) {
-    this.layoutService.isMobileOnce$.subscribe((isMobile) => (this.isMobile = isMobile));
+    this.isMobile = this.breakpointObserver.isMatched(LARGE_BREAKPOINT);
+    if (this.isMobile) {
+      this.defaultIframeHeight = window.innerHeight * 0.86 - 64;
+    } else {
+      this.defaultIframeHeight = window.innerHeight * 0.97 - 64;
+    }
+    this.iframeHeight = this.defaultIframeHeight;
     this.getWebsiteFromParams();
   }
 
@@ -70,7 +79,7 @@ export class ScrollerComponent implements OnInit {
           break;
       }
     });
-  };
+  }
 
   openEnableCameraModal(): void {
     const ref = this.modalService.open(AllowCameraComponent);
@@ -118,7 +127,7 @@ export class ScrollerComponent implements OnInit {
     this.hasAtLeastLoadedAWebsite = true;
     this.hasSearchFailed = false;
     this.iframeWrapper?.nativeElement.scrollTo(0, 0);
-    this.iframeHeight = this.DEFAULT_IFRAME_HEIGHT;
+    this.iframeHeight = this.defaultIframeHeight;
     this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(website);
     this.shouldRequestCam = true;
   }

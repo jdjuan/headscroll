@@ -1,9 +1,10 @@
 import { Component, OnInit, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Webcam, CustomPoseNet, load, drawKeypoints, drawSkeleton } from '@teachablemachine/pose';
 import { Keypoint } from '@tensorflow-models/posenet';
-import { LayoutService } from '../../services/layout.service';
 import { CameraService } from '../../services/camera.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { LARGE_BREAKPOINT } from 'src/app/core/constants';
 
 export enum Classes {
   Left = 'Left',
@@ -37,13 +38,11 @@ export class CameraComponent implements OnInit {
   model: CustomPoseNet;
   ctx: CanvasRenderingContext2D;
 
-  constructor(layoutService: LayoutService, cameraService: CameraService) {
-    const cameras$ = cameraService.getAvailableCameras();
-    const isMobile$ = layoutService.isMobileOnce$.toPromise();
-    Promise.all([cameras$, isMobile$]).then(([cameras, isMobile]) => {
+  constructor(private breakpointObserver: BreakpointObserver, cameraService: CameraService) {
+    this.isMobile = this.breakpointObserver.isMatched(LARGE_BREAKPOINT);
+    cameraService.getAvailableCameras().then((cameras) => {
       const [firstCamera] = cameras;
       const { deviceId } = firstCamera;
-      this.isMobile = isMobile;
       this.init(deviceId);
     });
     cameraService.selectedCamera$.pipe(untilDestroyed(this)).subscribe((deviceId) => {
@@ -90,7 +89,7 @@ export class CameraComponent implements OnInit {
     this.webcam.update();
     await this.predict();
     window.requestAnimationFrame(this.loop);
-  };
+  }
 
   async predict(): Promise<void> {
     if (this.webcam) {
