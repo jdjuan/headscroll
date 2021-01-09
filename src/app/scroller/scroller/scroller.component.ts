@@ -22,7 +22,9 @@ export class ScrollerComponent implements OnInit {
   readonly SCROLL_SPEED = 5;
   readonly SCROLL_SPEED_MOBILE_MULTIPLIER = 3;
   // To match iframeWrapper
-  readonly DEFAULT_IFRAME_HEIGHT = window.innerHeight * 0.97 - 64;
+  readonly DEFAULT_IFRAME_HEIGHT = window.innerHeight * 0.86 - 64;
+  // readonly DEFAULT_IFRAME_HEIGHT = window.innerHeight * 0.94 - 64;
+  // readonly DEFAULT_IFRAME_HEIGHT = window.innerHeight * 0.97 - 64;
   websiteSafeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
   iframeHeight = this.DEFAULT_IFRAME_HEIGHT;
   website: string;

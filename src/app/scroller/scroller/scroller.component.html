@@ -16,11 +16,12 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-lg-2">
+    <div class="col-lg-2" *ngIf="!isMobile">
       <app-camera (cameraLoaded)="onCameraLoaded()" (scrollDown)="scrollDown()" (scrollUp)="scrollUp()"></app-camera>
     </div>
-    <div class="col-lg-10">
-      <div #iframeWrapper class="iframe-wrapper" [class.mobile]="isMobile">
+    <div class="col-lg-10 content" >
+      <app-camera (cameraLoaded)="onCameraLoaded()" (scrollDown)="scrollDown()" (scrollUp)="scrollUp()"></app-camera>
+      <div #iframeWrapper class="iframe-wrapper" [style.height.px]="DEFAULT_IFRAME_HEIGHT" [class.mobile]="isMobile">
         <iframe class="iframe" [src]="websiteSafeUrl" [height]="iframeHeight"></iframe>
         <div class="error-message text-center" *ngIf="hasSearchFailed">
           <h2 class="display-3 text-alpha">We cannot display this website</h2>

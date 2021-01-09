@@ -5,6 +5,11 @@ $app-primary: mat-palette($mat-indigo);
   position: absolute;
   bottom: 0;
   z-index: 10;
+  &.mobile {
+    bottom: -1px;
+    z-index: 10;
+    right: 21px;
+  }
   .spinner {
     top: 50%;
     left: 50%;

@@ -14,6 +14,9 @@ h1 {
     margin-bottom: 0;
   }
 }
+.content {
+  padding: 0;
+}
 
 .description {
   font-weight: 100;
@@ -42,4 +45,9 @@ h1 {
   .image {
     width: 100%;
   }
+}
+@include media-breakpoint-up(lg) {
+  // .content {
+  //   padding: ;
+  // }
 }

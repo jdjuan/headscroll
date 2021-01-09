@@ -3,6 +3,8 @@
 #### Tutorial
 
 REVIEW MOBILE DESIGN
+change CDK breakout to use bootstrap lg
+add options
 
 fix zoom
 1. Remove hands
@@ -25,6 +27,8 @@ fix zoom
    9.  Invert Scrolling
    10. Report website
    11. Body Points
+
+Reduce image resolution and seize
 
 - Fix lacuerda https://chords.lacuerda.net/heroes_del_silencio/la_chispa_adecuada-3.shtml
   - cookies modal that hides content
