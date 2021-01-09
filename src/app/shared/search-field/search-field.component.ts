@@ -18,16 +18,15 @@ export class SearchFieldComponent implements OnInit {
   @ViewChild('tooltip') errorTooltip: NgbTooltip;
   // tslint:disable-next-line: variable-name
   @Input() set url(value: string) {
-    console.log({ value });
     if (value) {
-      console.log({ value });
-
       this.favicon = this.getFavicon(value);
       this.website = value;
+      this.onSearch();
     }
   }
   @Input() compactVersion = true;
   @Output() search = new EventEmitter();
+  @Output() fail = new EventEmitter();
   errorTooltipMessage: string;
   errorMessages = ErrorMessages;
   website: string;
@@ -40,10 +39,15 @@ export class SearchFieldComponent implements OnInit {
 
   constructor(private proxyService: ProxyService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // Ensure the tooltip shows a message to the user the first it is loaded with wrong url
+    if (this.notEmbeddable) {
+      this.errorTooltip.open();
+    }
+  }
 
   onSearch(): void {
-    this.errorTooltip.close();
+    this.errorTooltip?.close();
     this.shouldShowFavicon = false;
     this.hasSearched = true;
     if (this.website) {
@@ -58,10 +62,11 @@ export class SearchFieldComponent implements OnInit {
             this.favicon = this.getFavicon(this.website);
             this.search.emit(websiteUrl);
           } else {
+            this.fail.next();
             this.notEmbeddable = true;
             this.shouldShowFavicon = false;
             this.errorTooltipMessage = ErrorMessages.Cors;
-            this.errorTooltip.open();
+            this.errorTooltip?.open();
           }
         });
     } else {

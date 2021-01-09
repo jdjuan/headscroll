@@ -2,8 +2,8 @@
 
 #### Tutorial
 
-2. After the camera has been resolved, it should check the proxy of the website, and it it fails, it should show a message on the input
-When the proxy fails, show tooltip in bar
+Fix cookies lack of scroll
+REVIEW MOBILE DESIGN
 
 fix zoom
 1. Remove hands
@@ -27,6 +27,8 @@ fix zoom
    10. Report website
    11. Body Points
 
+- Fix lacuerda https://chords.lacuerda.net/heroes_del_silencio/la_chispa_adecuada-3.shtml
+  - cookies modal that hides content
 ### Backend
 
 1. Store websites searched (both the URL and URI), and keep the count

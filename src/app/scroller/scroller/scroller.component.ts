@@ -2,16 +2,16 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { LayoutService } from './../services/layout.service';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { ProxyService } from '../../core/proxy.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AllowCameraComponent } from './allow-camera/allow-camera.component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { merge } from 'rxjs';
 import { CameraService, CameraStates } from '../services/camera.service';
-import { take } from 'rxjs/operators';
+import { pluck, take } from 'rxjs/operators';
 import { BlockedCameraComponent } from './blocked-camera/blocked-camera.component';
 import { TutorialComponent } from './tutorial/tutorial.component';
 import { LocalStorageService } from 'src/app/core/local-storage.service';
+import { Location } from '@angular/common';
 
 @UntilDestroy()
 @Component({
@@ -26,29 +26,32 @@ export class ScrollerComponent implements OnInit {
   readonly DEFAULT_IFRAME_HEIGHT = 3500;
   websiteSafeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
   iframeHeight = this.DEFAULT_IFRAME_HEIGHT;
-  website = '';
+  website: string;
   isMobile: boolean;
   shouldRequestCam: boolean;
   hasCameraLoaded: boolean;
   enableCameraModalRef: NgbModalRef;
   isLoading = true;
   isTutorialFinished: boolean;
+  hasSearchFailed: boolean;
+  hasAtLeastLoadedAWebsite: boolean;
 
   constructor(
     private sanitizer: DomSanitizer,
     private activatedRoute: ActivatedRoute,
-    private proxyService: ProxyService,
     private layoutService: LayoutService,
     private modalService: NgbModal,
     private cameraService: CameraService,
-    private localStorage: LocalStorageService
+    private localStorage: LocalStorageService,
+    private location: Location,
+    private router: Router
   ) {
     this.layoutService.isMobileOnce$.subscribe((isMobile) => (this.isMobile = isMobile));
+    this.getWebsiteFromParams();
   }
 
   ngOnInit(): void {
     this.checkCameraStatus();
-    this.fetchWebsite();
   }
 
   checkCameraStatus = (): void => {
@@ -101,25 +104,29 @@ export class ScrollerComponent implements OnInit {
     }
   }
 
-  fetchWebsite(): void {
-    this.proxyService.getWebsiteUrl(this.activatedRoute.queryParams).subscribe(this.render);
+  getWebsiteFromParams(): void {
+    this.activatedRoute.queryParams.pipe(pluck('website')).subscribe((website: string) => {
+      // triggers lookup in search-field component, which later triggers searchWebsite()
+      this.website = website;
+    });
   }
 
   searchWebsite(website: string): void {
+    const url = this.router.createUrlTree([], { relativeTo: this.activatedRoute, queryParams: { website } }).toString();
+    this.location.go(url);
+    this.hasAtLeastLoadedAWebsite = true;
+    this.hasSearchFailed = false;
     this.iframeWrapper.nativeElement.scrollTo(0, 0);
     this.iframeHeight = this.DEFAULT_IFRAME_HEIGHT;
-    this.proxyService.verifyWithProxy(website).subscribe(this.render);
+    this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(website);
+    this.shouldRequestCam = true;
   }
 
-  render = ({ isEmbeddable, websiteUrl }) => {
-    if (isEmbeddable) {
-      this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(websiteUrl);
-      this.website = websiteUrl;
-      this.shouldRequestCam = true;
-    } else {
-      alert('Not embeddable');
+  onSearchFail(): void {
+    if (!this.hasAtLeastLoadedAWebsite) {
+      this.hasSearchFailed = true;
     }
-  };
+  }
 
   scrollDown(): void {
     // buffer added when the user reaches the iframe bottom
@@ -138,7 +145,7 @@ export class ScrollerComponent implements OnInit {
   }
 
   performScroll(scrollDown: boolean): void {
-    if (!this.isLoading) {
+    if (!this.isLoading && !this.hasSearchFailed) {
       let speed = this.SCROLL_SPEED;
       if (this.isMobile) {
         speed *= this.SCROLL_SPEED_MOBILE_MULTIPLIER;

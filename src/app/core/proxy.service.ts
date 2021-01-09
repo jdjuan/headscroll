@@ -25,12 +25,12 @@ export class ProxyService {
 
   verifyWithProxy = (websiteUrl: string): Observable<ProxyResponse> => {
     if (this.websitesAttempted[websiteUrl]) {
-      return of({ isEmbeddable: true, websiteUrl } as ProxyResponse);
+      return of({ isEmbeddable: this.websitesAttempted[websiteUrl], websiteUrl } as ProxyResponse);
     }
     return this.http.get(this.PROXY_URL + websiteUrl).pipe(
       map((responses: any[]) => {
         const isEmbeddable = this.isEmbeddable(responses);
-        this.websitesAttempted[websiteUrl] = true;
+        this.websitesAttempted[websiteUrl] = isEmbeddable;
         return { isEmbeddable, websiteUrl } as ProxyResponse;
       }),
       catchError(() => {

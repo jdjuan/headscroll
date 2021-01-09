@@ -28,17 +28,6 @@ export class CameraService {
     );
     const timeout$ = interval(this.CAMERA_PERMISSION_TIMEOUT).pipe(mapTo(CameraStates.Timeout));
     return merge(cameraPermission$, timeout$).pipe(take(1));
-    // .then(
-    //   (g) => {
-    //     // this.enableCameraModalRef.close();
-    //     console.log({ g }); // slightly faster
-    //     // open the second modal
-    //   },
-    //   (e) => {
-    //     // Open another dialog, explaining their camera is currently no enabled, they have to do it manually
-    //     console.log({ e }); // quick
-    //   }
-    // );
   }
 
   async getAvailableCameras(): Promise<MediaDeviceInfo[]> {

@@ -1,32 +1,35 @@
-<div class="container-fluid">
-  <div class="spinner">
-    <p>We're getting things ready for you...</p>
-    <div *ngIf="isLoading" class="spinner-border" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
+<div class="spinner" *ngIf="isLoading">
+  <p>We're getting things ready for you...</p>
+  <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
   </div>
-  <div class="row align-items-center" [class.hide]="isLoading">
+</div>
+<div class="container-fluid" [class.hide]="isLoading">
+  <div class="row align-items-center" >
     <div class="col-lg-2">
       <h1 class="logo">
         <a routerLink="/">HeadScroll.io <span class="bold bg-beta rounded px-1">beta</span></a>
       </h1>
     </div>
     <div class="col-lg-10 text-right">
-      <app-search-field (search)="searchWebsite($event)" [url]="website"></app-search-field>
+      <app-search-field (search)="searchWebsite($event)" (fail)="onSearchFail()" [url]="website"></app-search-field>
     </div>
   </div>
-  <div class="row" [class.hide]="isLoading">
+  <div class="row">
     <div class="col-lg-2">
-      <app-camera
-        *ngIf="shouldRequestCam"
-        (cameraLoaded)="onCameraLoaded()"
-        (scrollDown)="scrollDown()"
-        (scrollUp)="scrollUp()"
-      ></app-camera>
+      <!-- *ngIf="shouldRequestCam" -->
+      <app-camera (cameraLoaded)="onCameraLoaded()" (scrollDown)="scrollDown()" (scrollUp)="scrollUp()"></app-camera>
     </div>
     <div class="col-lg-10">
       <div #iframeWrapper class="iframe-wrapper" [class.mobile]="isMobile">
         <iframe class="iframe" [src]="websiteSafeUrl" [height]="iframeHeight"></iframe>
+        <div class="error-message text-center" *ngIf="hasSearchFailed">
+          <h2 class="display-3 text-alpha">We cannot display this website</h2>
+          <picture>
+            <source srcset="assets/error.webp" type="image/webp" />
+            <img width="100%" src="assets/error.jpg" alt="Woman concerned holding a megaphone" />
+          </picture>
+        </div>
       </div>
     </div>
   </div>
