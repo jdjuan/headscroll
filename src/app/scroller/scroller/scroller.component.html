@@ -6,10 +6,11 @@
 </div>
 <div class="container-fluid" [class.hide]="isLoading">
   <div class="row align-items-center header">
-    <div class="col-lg-2">
+    <div class="col-lg-2 header-left">
       <h1 class="logo">
         <a routerLink="/">HeadScroll.io <span class="bold bg-beta rounded px-1">beta</span></a>
       </h1>
+      <button *ngIf="isMobile" class="btn config-button" (click)="openConfig()"><i class="bi bi-gear-fill"></i></button>
     </div>
     <div class="col-lg-10 text-right">
       <app-search-field [isCompactVersion]="true" (search)="searchWebsite($event)" (fail)="onSearchFail()" [url]="website"></app-search-field>

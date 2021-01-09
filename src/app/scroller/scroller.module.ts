@@ -8,9 +8,10 @@ import { AllowCameraComponent } from './scroller/allow-camera/allow-camera.compo
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { BlockedCameraComponent } from './scroller/blocked-camera/blocked-camera.component';
 import { TutorialComponent } from './scroller/tutorial/tutorial.component';
+import { ConfigComponent } from './scroller/config/config.component';
 
 @NgModule({
-  declarations: [ScrollerComponent, CameraComponent, AllowCameraComponent, BlockedCameraComponent, TutorialComponent],
+  declarations: [ScrollerComponent, CameraComponent, AllowCameraComponent, BlockedCameraComponent, TutorialComponent, ConfigComponent],
   imports: [
     CommonModule,
     ScrollerRoutingModule,

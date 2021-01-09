@@ -15,8 +15,18 @@
   position: relative;
 }
 
-.logo{
+.header-left {
+  display: flex;
+  justify-content: space-between;
+}
+
+.logo {
   font-size: 7vw;
+}
+
+.config-button {
+  font-size: 1.5rem;
+  padding: 4px;
 }
 
 .iframe-wrapper {
@@ -50,14 +60,14 @@
 }
 
 @include media-breakpoint-up(lg) {
-  .iframe-wrapper{
+  .iframe-wrapper {
     margin-top: 0;
   }
   .header {
     margin-top: 20px;
     margin-bottom: 20px;
   }
-  .logo{
+  .logo {
     font-size: 1.7vw;
     margin: 0;
   }

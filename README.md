@@ -2,20 +2,28 @@
 
 #### Tutorial
 
-1. fix zoom
-2. REPLACE EMOJIS
-3. 7.  Options
-   1.  Hide / Show camera
-   2.  Speed
-   3.  Invert Scrolling
-   4.  Report website
-   5.  Body Points
-4.  Our mobile experience is not ready at the moment, please use a laptop | [laptop_woman] 
-   6. Let me see it, I won't judge!
-   7.  I will try later on another device
-5.  Is the website displayed correctly? | [yes-no]
+3. Options
+   1. Speed
+      1. Dots
+   2. Select your Camera
+      1.  Dropdown
+   3. Invert Scrolling:
+      1. Normal / Inverted
+   4. Body Points:
+      1. Show / Hide
+   5. Can't see this website?
+      1. Report website
+4. fix zoom
+5. REPLACE EMOJIS: With a border to the left of the camera?
+   1. https://icons.getbootstrap.com/icons/caret-down-fill/
+6.  Our mobile experience is not ready at the moment, please use a laptop | [laptop_woman] 
+   2. Let me see it, I won't judge!
+   3.  I will try later on another device
+7.  Is the website displayed correctly? | [yes-no]
 
 Make model local, and improve the online one
+
+Text websites that do not work on mobile
 
 ### Perf
 

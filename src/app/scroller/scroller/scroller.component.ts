@@ -12,6 +12,7 @@ import { LocalStorageService } from 'src/app/core/local-storage.service';
 import { Location } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { LARGE_BREAKPOINT } from 'src/app/core/constants';
+import { ConfigComponent } from './config/config.component';
 
 @Component({
   selector: 'app-scroller',
@@ -32,6 +33,7 @@ export class ScrollerComponent implements OnInit {
   enableCameraModalRef: NgbModalRef;
   isLoading = true;
   isTutorialFinished: boolean;
+  isConfigOpen: boolean;
   hasSearchFailed: boolean;
   hasAtLeastLoadedAWebsite: boolean;
 
@@ -156,7 +158,7 @@ export class ScrollerComponent implements OnInit {
   }
 
   performScroll(scrollDown: boolean): void {
-    if (!this.isLoading && !this.hasSearchFailed) {
+    if (!this.isLoading && !this.hasSearchFailed && !this.isConfigOpen) {
       let speed = this.SCROLL_SPEED;
       if (this.isMobile) {
         speed *= this.SCROLL_SPEED_MOBILE_MULTIPLIER;
@@ -167,5 +169,15 @@ export class ScrollerComponent implements OnInit {
 
       this.iframeWrapper.nativeElement.scrollBy(0, speed);
     }
+  }
+
+  openConfig(): void {
+    this.isConfigOpen = true;
+    const ref = this.modalService.open(ConfigComponent);
+    merge(ref.closed, ref.dismissed)
+      .pipe(take(1))
+      .subscribe(() => {
+        this.isConfigOpen = false;
+      });
   }
 }
