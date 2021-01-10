@@ -14,11 +14,15 @@
   }
   .square {
     border-radius: 10px;
-    width: 85vw;
-    height: 55vw;
-    background-color: white;
+    background-color: $alpha;
     display: inline-block;
     margin-bottom: 1rem;
+
+    width: 85vw;
+    height: 47vw;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 6px solid $theta;
   }
   .title {
     font-size: 13vw;
@@ -60,6 +64,7 @@
       line-height: 2rem;
       font-size: max(20px, 1vw);
       padding: 0px;
+      padding-right: 6vw;
     }
     .call-to-action {
       font-size: 2.5rem;
@@ -68,15 +73,16 @@
     .wave {
       display: block;
       position: absolute;
-      transform: rotate(108deg);
       z-index: -1;
-      width: 228vh;
-      left: -59vh;
-      top: -95vh;
+      width: 150vh;
+      left: -30vh;
+      top: -61vh;
     }
     .square {
-      width: 30vw;
-      height: 20vw;
+      width: 41vw;
+      height: 23.5vw;
+      border: 10px solid black;
+      box-shadow: 0px 0px 17px -1px #1f1139;
       &.mobile {
         display: none;
       }

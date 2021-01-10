@@ -10,13 +10,13 @@
 
 .square {
   background-color: $alpha;
-  width: 85vw;
-  height: 54vw;
   display: inline-block;
   margin-bottom: 1rem;
-  border-radius: 20px;
+  width: 85vw;
+  height: 53vw;
+  border-radius: 10px;
   overflow: hidden;
-  border: 8px solid $theta;
+  border: 6px solid $theta;
 }
 
 .title {
