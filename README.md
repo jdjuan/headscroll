@@ -1,12 +1,5 @@
 # HeadScroll
 
-#### Tutorial
-
-1.  Make the gifs
-2.  Make model local, and **improve** the online one [IMPROVE LEFT HEAD ]
-
-> 😃 SEND OVER! 😃
-
 1.  OG and SEO Tags, Images for social media
 2.  Add Google Analytics
 3.  Search for typical chords websites in major languages (portuguese, german)

@@ -20,8 +20,10 @@ export enum Classes {
   styleUrls: ['./camera.component.scss'],
 })
 export class CameraComponent {
-  readonly MODEL_URL = 'https://teachablemachine.withgoogle.com/models/l5fbLAKJu/model.json';
-  readonly METADATA_URL = 'https://teachablemachine.withgoogle.com/models/l5fbLAKJu/metadata.json';
+  readonly MODEL_URL = 'assets/model.json';
+  // readonly MODEL_URL = 'https://teachablemachine.withgoogle.com/models/l5fbLAKJu/model.json';
+  readonly METADATA_URL = 'assets/metadata.json';
+  // readonly METADATA_URL = 'https://teachablemachine.withgoogle.com/models/l5fbLAKJu/metadata.json';
   readonly DEFAULT_CAMERA_SIZE = 400;
   readonly SMALL_CAMERA_SIZE = 100;
   readonly FORECAST_CONFIDENCE = 0.95;
