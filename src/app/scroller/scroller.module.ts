@@ -11,6 +11,7 @@ import { TutorialComponent } from './scroller/tutorial/tutorial.component';
 import { ConfigComponent } from './scroller/config/config.component';
 import { ConfigModalComponent } from './scroller/config-modal/config-modal.component';
 import { FormsModule } from '@angular/forms';
+import { MobileWarningComponent } from './scroller/mobile-warning/mobile-warning.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { FormsModule } from '@angular/forms';
     TutorialComponent,
     ConfigComponent,
     ConfigModalComponent,
+    MobileWarningComponent,
   ],
   imports: [
     CommonModule,

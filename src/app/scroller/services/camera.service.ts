@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { from, merge, Observable, Subject, interval, of } from 'rxjs';
 import { catchError, mapTo, take } from 'rxjs/operators';
 
@@ -12,7 +13,7 @@ export enum CameraStates {
   providedIn: 'root',
 })
 export class CameraService {
-  private _selectedCamera$ = new Subject<string>();
+  private _selectedCamera$ = new BehaviorSubject<string>('');
   readonly CAMERA_PERMISSION_TIMEOUT = 2000;
 
   hasCameraPermission(): Observable<CameraStates> {

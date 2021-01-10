@@ -23,6 +23,17 @@ export class ConfigService {
   shouldShowTutorial(): boolean {
     return this.localStorageService.getShowTutorial();
   }
+
+  keepShowingWarning(): void {
+    this.localStorageService.setShowWarning(true);
+  }
+  stopShowingWarning(): void {
+    this.localStorageService.setShowWarning(false);
+  }
+  shouldShowWarning(): boolean {
+    return this.localStorageService.getShowWarning();
+  }
+
   changeSpeed(speed: number): void {
     this.localStorageService.setSpeed(speed);
     this._scrollSpeed$.next(speed);

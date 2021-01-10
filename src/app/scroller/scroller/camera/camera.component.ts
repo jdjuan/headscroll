@@ -1,8 +1,8 @@
 import { Component, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
-import { Webcam, CustomPoseNet, load, drawKeypoints, drawSkeleton } from '@teachablemachine/pose';
+import { Webcam, CustomPoseNet, load } from '@teachablemachine/pose';
 import { Keypoint } from '@tensorflow-models/posenet';
 import { CameraService } from '../../services/camera.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { LARGE_BREAKPOINT } from 'src/app/core/constants';
 import { ConfigService } from '../../services/config.service';
@@ -47,12 +47,16 @@ export class CameraComponent {
       this.init(deviceId);
     });
     this.cameraService.selectedCamera$.subscribe((deviceId) => {
-      this.setupWebCam(deviceId);
+      if (deviceId) {
+        this.setupWebCam(deviceId);
+      }
     });
     this.configService.direction$.subscribe((direction) => {
       this.direction = direction;
     });
   }
+
+  n;
 
   async init(deviceId: string): Promise<void> {
     if (this.isMobile) {

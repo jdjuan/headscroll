@@ -9,7 +9,7 @@
 }
 
 .config-title {
-  font-weight: 200;
+  font-weight: 300;
   font-size: 23px;
   background-color: $beta;
   padding: 7px 7px;
@@ -19,13 +19,24 @@
 .star {
   font-size: 1rem;
   color: $omega;
+  font-weight: 300;
 }
 .filled {
   color: $beta;
 }
 
+.camera-select {
+  cursor: pointer;
+  font-weight: 300;
+  background-color: $omega;
+}
+
+.sent-label {
+  margin-top: 7px;
+}
+
 .btn-omega {
-  font-weight: 200;
+  font-weight: 300;
   box-shadow: 0px 0px 12px -1px darken($alpha, 10);
 }
 .btn-omega:not(:disabled):not(.disabled).active {
@@ -34,8 +45,20 @@
   color: $omega;
 }
 
-.report-response {
-  font-weight: 100;
-  margin-top: 10px;
-  font-size: 11px;
+@include media-breakpoint-up(lg) {
+  .config-title {
+    font-weight: 200;
+  }
+  .camera-select {
+    font-weight: 200;
+  }
+  .star {
+    font-weight: inherit;
+  }
+  .rating-desktop {
+    display: block;
+  }
+  .btn-omega {
+    font-weight: 200;
+  }
 }

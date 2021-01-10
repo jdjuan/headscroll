@@ -4,6 +4,7 @@ enum PropertyKeys {
   Speed = 'speed',
   ShowTutorial = 'showTutorial',
   Direction = 'direction',
+  ShowWarning = 'showWarning',
 }
 
 @Injectable({
@@ -13,7 +14,15 @@ export class LocalStorageService {
   readonly DEFAULT_DIRECTION = false;
   readonly DEFAULT_SPEED = 5;
   readonly DEFAULT_SHOW_TUTORIAL = true;
+  readonly DEFAULT_SHOW_WARNING = true;
   constructor() {}
+
+  setShowWarning(value: boolean): void {
+    localStorage.setItem(PropertyKeys.ShowWarning, JSON.stringify(value));
+  }
+  getShowWarning(): boolean {
+    return this.getProp(PropertyKeys.ShowWarning, this.DEFAULT_SHOW_WARNING);
+  }
 
   setDirection(value: boolean): void {
     localStorage.setItem(PropertyKeys.Direction, JSON.stringify(value));

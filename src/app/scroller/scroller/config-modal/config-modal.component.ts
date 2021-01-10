@@ -10,7 +10,8 @@ export class ConfigModalComponent implements OnInit {
   constructor(public activeModal: NgbActiveModal) {}
 
   ngOnInit(): void {}
-  done(): void {
+  done(e: Event): void {
+    e.preventDefault();
     this.activeModal.close();
   }
 }

@@ -9,7 +9,7 @@
   bottom: 0;
   right: 21px;
   .canvas {
-    width: calc(100% - 15px);
+    width: 100%;
     border-radius: 10px;
     background-color: $alpha;
   }
@@ -18,5 +18,9 @@
 @include media-breakpoint-up(lg) {
   .camera {
     right: initial;
+    bottom: -6px;
+    .canvas {
+      width: calc(100% - 15px);
+    }
   }
 }

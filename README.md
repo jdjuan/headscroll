@@ -2,26 +2,25 @@
 
 #### Tutorial
 
-2. Review mobile
-3. fix zoom
-4. Exception for when it takes too long to show (more than 5 seconds, and more than 10 seconds)
-5. REPLACE EMOJIS: With a border to the left of the camera?
-   1. https://icons.getbootstrap.com/icons/caret-down-fill/
+<!-- 2. Review mobile -->
+<!-- 5. REPLACE EMOJIS: With a border to the left of the camera?
+   1. https://icons.getbootstrap.com/icons/caret-down-fill/ -->
 6.  Our mobile experience is not ready at the moment, please use a laptop | [laptop_woman] 
    2. Let me see it, I won't judge!
    3.  I will try later on another device
 7.  Make the gifs
-8. ~~Is the website displayed correctly?~~
+8.  Add exception for too long loading
 9.  Make model local, and **improve** the online one
-   1. Add debounce to the model
+   4. Add debounce to the model
       1. https://rxmarbles.com/#debounce
       2. Pass an observable who first waits 500ms to emit, and then 0
       3. And it's restarted when the user does another action.
-10. Text websites that do not work on mobile
+10. Test websites that do not work on mobile
 11. Search for typical chords websites in major languages (portuguese, german)
 12. OG and SEO Tags, Images for social media
 13. Test in other browsers, OS's, and devices
 14. Add Google Analytics
+15. Add pause
     
 > 😃 SEND OVER! 😃
 

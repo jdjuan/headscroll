@@ -14,6 +14,7 @@ import { ViewportRuler } from '@angular/cdk/scrolling';
 import { LARGE_BREAKPOINT } from 'src/app/core/constants';
 import { ConfigModalComponent } from './config-modal/config-modal.component';
 import { ConfigService } from '../services/config.service';
+import { MobileWarningComponent } from './mobile-warning/mobile-warning.component';
 
 @Component({
   selector: 'app-scroller',
@@ -24,6 +25,7 @@ export class ScrollerComponent implements OnInit {
   @ViewChild('iframeWrapper') iframeWrapper: ElementRef;
   scrollSpeed: number;
   readonly SCROLL_SPEED_MOBILE_MULTIPLIER = 3;
+  readonly RESIZE_THROTLE_TIME = 100;
   websiteSafeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
   defaultIframeHeight: number;
   iframeHeight: number;
@@ -37,6 +39,8 @@ export class ScrollerComponent implements OnInit {
   isConfigOpen: boolean;
   hasSearchFailed: boolean;
   hasAtLeastLoadedAWebsite: boolean;
+  showShowWarning: boolean;
+  isWarningAccepted: boolean;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -54,17 +58,17 @@ export class ScrollerComponent implements OnInit {
     this.configService.scrollSpeed.subscribe((speed) => {
       this.scrollSpeed = speed;
     });
-    // define iframe height on resize
-    this.viewportRuler.change(200).subscribe(() => {
+    this.viewportRuler.change(this.RESIZE_THROTLE_TIME).subscribe(() => {
+      // define iframe height on resize
       this.defineIframeHeight();
     });
-    // define iframe height on breakpoint change
     this.breakpointObserver.observe([LARGE_BREAKPOINT]).subscribe(({ matches }) => {
+      // define iframe height on breakpoint change
       this.isMobile = matches;
       this.defineIframeHeight();
     });
 
-    this.getWebsiteFromParams();
+    this.getWebsiteFromUrl();
     this.checkCameraStatus();
   }
 
@@ -72,14 +76,13 @@ export class ScrollerComponent implements OnInit {
     if (this.isMobile) {
       this.defaultIframeHeight = window.innerHeight * 0.86 - 64;
     } else {
-      this.defaultIframeHeight = window.innerHeight * 0.97 - 64;
+      this.defaultIframeHeight = window.innerHeight * 0.97 - 74;
     }
     this.iframeHeight = this.defaultIframeHeight;
   }
 
   checkCameraStatus = (): void => {
     this.cameraService.hasCameraPermission().subscribe((isCameraAvailable) => {
-      console.log({ isCameraAvailable });
       switch (isCameraAvailable) {
         case CameraStates.Timeout:
           this.openEnableCameraModal();
@@ -88,19 +91,33 @@ export class ScrollerComponent implements OnInit {
           this.openBlockedCameraModal();
           break;
         case CameraStates.Allowed:
-          this.openInstructionsModal();
+          if (this.isMobile && !this.isWarningAccepted && this.configService.shouldShowWarning()) {
+            this.openMobileWarning();
+          } else {
+            this.openInstructionsModal();
+          }
           break;
       }
     });
   }
 
+  openMobileWarning(): void {
+    const ref = this.modalService.open(MobileWarningComponent, { centered: true });
+    merge(ref.closed, ref.dismissed)
+      .pipe(take(1))
+      .subscribe(() => {
+        this.isWarningAccepted = true;
+        this.checkCameraStatus();
+      });
+  }
+
   openEnableCameraModal(): void {
-    const ref = this.modalService.open(AllowCameraComponent);
+    const ref = this.modalService.open(AllowCameraComponent, { centered: true });
     merge(ref.closed, ref.dismissed).pipe(take(1)).subscribe(this.checkCameraStatus);
   }
 
   openBlockedCameraModal(): void {
-    const ref = this.modalService.open(BlockedCameraComponent);
+    const ref = this.modalService.open(BlockedCameraComponent, { centered: true });
     merge(ref.closed, ref.dismissed).pipe(take(1)).subscribe(this.checkCameraStatus);
   }
 
@@ -113,7 +130,7 @@ export class ScrollerComponent implements OnInit {
 
   openInstructionsModal(): void {
     if (this.configService.shouldShowTutorial()) {
-      const ref = this.modalService.open(TutorialComponent);
+      const ref = this.modalService.open(TutorialComponent, { centered: true });
       merge(ref.closed, ref.dismissed)
         .pipe(take(1))
         .subscribe(() => {
@@ -124,10 +141,13 @@ export class ScrollerComponent implements OnInit {
         });
     } else {
       this.isTutorialFinished = true;
+      if (this.hasCameraLoaded) {
+        this.isLoading = false;
+      }
     }
   }
 
-  getWebsiteFromParams(): void {
+  getWebsiteFromUrl(): void {
     this.activatedRoute.queryParams.pipe(pluck('website')).subscribe((website: string) => {
       // triggers lookup in search-field component, which later triggers searchWebsite()
       this.website = website;
@@ -152,38 +172,40 @@ export class ScrollerComponent implements OnInit {
   }
 
   scrollDown(): void {
-    // buffer added when the user reaches the iframe bottom
-    const additionalBuffer = 200; // to avoid reaching the bottom
-    const { scrollTop, scrollHeight, clientHeight } = this.iframeWrapper.nativeElement;
-    const iframeHeight = scrollHeight - clientHeight - additionalBuffer;
-    const currentScroll = scrollTop;
-    if (currentScroll >= iframeHeight) {
-      this.iframeHeight += additionalBuffer;
+    if (!this.isLoading && !this.hasSearchFailed && !this.isConfigOpen) {
+      // buffer added when the user reaches the iframe bottom
+      const additionalBuffer = 200; // to avoid reaching the bottom
+      const { scrollTop, scrollHeight, clientHeight } = this.iframeWrapper.nativeElement;
+      const iframeHeight = scrollHeight - clientHeight - additionalBuffer;
+      const currentScroll = scrollTop;
+      if (currentScroll >= iframeHeight) {
+        this.iframeHeight += additionalBuffer;
+      }
+      this.performScroll(true);
     }
-    this.performScroll(true);
   }
 
   scrollUp(): void {
-    this.performScroll(false);
+    if (!this.isLoading && !this.hasSearchFailed && !this.isConfigOpen) {
+      this.performScroll(false);
+    }
   }
 
   performScroll(scrollDown: boolean): void {
-    if (!this.isLoading && !this.hasSearchFailed && !this.isConfigOpen) {
-      let speed = this.scrollSpeed;
-      if (this.isMobile) {
-        speed *= this.SCROLL_SPEED_MOBILE_MULTIPLIER;
-      }
-      if (!scrollDown) {
-        speed = -speed;
-      }
-
-      this.iframeWrapper.nativeElement.scrollBy(0, speed);
+    let speed = this.scrollSpeed;
+    if (this.isMobile) {
+      speed *= this.SCROLL_SPEED_MOBILE_MULTIPLIER;
     }
+    if (!scrollDown) {
+      speed = -speed;
+    }
+
+    this.iframeWrapper.nativeElement.scrollBy(0, speed);
   }
 
   openConfig(): void {
     this.isConfigOpen = true;
-    const ref = this.modalService.open(ConfigModalComponent);
+    const ref = this.modalService.open(ConfigModalComponent, { scrollable: true, windowClass: 'config-modal' });
     merge(ref.closed, ref.dismissed)
       .pipe(take(1))
       .subscribe(() => {

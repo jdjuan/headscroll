@@ -1,0 +1,16 @@
+@import "~src/assets/variables";
+
+:host {
+  background-color: $alpha;
+  border-radius: 10px;
+}
+
+.skip {
+  margin-top: 1rem;
+  .check-input {
+    margin-right: 8px;
+  }
+  .label {
+    font-size: 15px;
+  }
+}

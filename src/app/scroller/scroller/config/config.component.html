@@ -1,16 +1,30 @@
 <div class="config-option">
   <h4 class="config-title">Scrolling Speed</h4>
-  <ngb-rating [(rate)]="scrollSpeed" (rateChange)="updateSpeed()">
+  <!-- <ngb-rating class="rating-desktop" [(rate)]="scrollSpeed" (rateChange)="updateSpeed()">
     <ng-template let-fill="fill" let-index="index">
       <span class="star" [class.filled]="fill === 100">►</span>
     </ng-template>
-  </ngb-rating>
+  </ngb-rating> -->
+  
+  <div
+    class="btn-group btn-group-toggle rating-mobile"
+    ngbRadioGroup
+    name="radioBasic"
+    (change)="updateSpeed()"
+    [(ngModel)]="scrollSpeed"
+  >
+    <label ngbButtonLabel class="btn-omega"> <input ngbButton type="radio" [value]="1" />1</label>
+    <label ngbButtonLabel class="btn-omega"> <input ngbButton type="radio" [value]="2.5" />2</label>
+    <label ngbButtonLabel class="btn-omega"> <input ngbButton type="radio" [value]="5" />3</label>
+    <label ngbButtonLabel class="btn-omega"> <input ngbButton type="radio" [value]="7.5" />4</label>
+    <label ngbButtonLabel class="btn-omega"> <input ngbButton type="radio" [value]="10" />5</label>
+  </div>
 </div>
 
 <div class="config-option">
   <h4 class="config-title">Switch Camera</h4>
-  <select (change)="updateCamera($event.target.value)" class="custom-select">
-    <option [selected]="isFirst" [value]="cam.deviceId" *ngFor="let cam of cameras; first as isFirst">{{ cam.label }}</option>
+  <select (change)="updateCamera($event.target.value)" class="custom-select camera-select text-center">
+    <option [selected]="selectedCamera === cam.deviceId" [value]="cam.deviceId" *ngFor="let cam of cameras">{{ cam.label }}</option>
   </select>
 </div>
 <div class="config-option">
@@ -31,13 +45,13 @@
   <button
     class="btn btn-omega"
     (click)="sendReport()"
-    [disabled]="isReportSent"
-    ngbTooltip="We will take a look into this website. Sometimes we can't do much about it, but we'll do our best! For now you can try using another website."
+    ngbTooltip="Thanks! We will take a look into this. Sometimes we can't do much about it, but we'll do our best! Now please try using another website."
     triggers="manual"
     #reportTooltip="ngbTooltip"
   >
     Send Automatic Report
   </button>
+  <div class="sent-label" *ngIf="isReportSent"> <i class="bi bi-check-circle-fill"></i> Sent!</div>
   <!-- <p *ngIf="isReportSent" class="report-response">
     We will take a look into this website. Sometimes we can't do much about it, but we'll do our best! <br /><span class="bold"
       >For now you can try using another website.</span
