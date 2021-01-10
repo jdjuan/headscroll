@@ -3,21 +3,15 @@
 #### Tutorial
 
 1.  Make the gifs
-2.  Make model local, and **improve** the online one
-   1. Add debounce to the model
-      1. https://rxmarbles.com/#debounce
-      2. Pass an observable who first waits 500ms to emit, and then 0
-      3. And it's restarted when the user does another action.
-3.  Test websites that do not work on mobile
-4.  Search for typical chords websites in major languages (portuguese, german)
-5.  OG and SEO Tags, Images for social media
-7.  Add Google Analytics
+2.  Make model local, and **improve** the online one [IMPROVE LEFT HEAD ]
 
-
-8.  Add pause
-9.  Add exception for too long loading
-    
 > 😃 SEND OVER! 😃
+
+1.  OG and SEO Tags, Images for social media
+2.  Add Google Analytics
+3.  Search for typical chords websites in major languages (portuguese, german)
+4.  Add pause
+5.  Add exception for too long loading
 
 ### Buy me a coffee
 

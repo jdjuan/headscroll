@@ -9,12 +9,14 @@
 }
 
 .square {
+  background-color: $alpha;
   width: 85vw;
-  height: 55vw;
-  background-color: white;
+  height: 54vw;
   display: inline-block;
   margin-bottom: 1rem;
   border-radius: 20px;
+  overflow: hidden;
+  border: 8px solid $theta;
 }
 
 .title {
@@ -68,7 +70,9 @@
   }
   .square {
     width: 40vw;
-    height: 30vw;
+    height: 25.5vw;
+    margin-top: 2rem;
+    border: 16px solid $theta;
   }
   .title {
     font-size: 5vw;
