@@ -8,14 +8,8 @@
   z-index: 10;
   bottom: 0;
   right: 21px;
-  .spinner {
-    top: 50%;
-    left: 50%;
-    position: absolute;
-    transform: translate(-50%, -50%);
-  }
   .canvas {
-    width: 100%;
+    width: calc(100% - 15px);
     border-radius: 10px;
     background-color: $alpha;
   }

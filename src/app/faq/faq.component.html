@@ -2,7 +2,9 @@
   <div class="col slide">
     <div class="row header align-items-center">
       <div class="col-lg-6 header-left">
-        <h1 class="logo"><a class="no-style" routerLink="/">HeadScroll.io <span class="bold bg-beta rounded px-1">beta</span></a></h1>
+        <h1 class="logo">
+          <a class="no-style" routerLink="/">HeadScroll.io <span class="bold bg-beta rounded px-1">beta</span></a>
+        </h1>
       </div>
       <div class="col-lg-6 header-right">
         <a routerLink="/" class="undelin"><u>Home</u></a>
@@ -23,18 +25,17 @@
       <div class="col-lg-8">
         <h2 class="display-4 subtitle">How does it work?</h2>
         <p class="description">
-          In plain English, I took about 5000 pictures and managed to teach a machine what a tilted head was, and what it was not.
-          <br /><br />
+          In plain English, I took about <span class="bold">5000 pictures</span> and managed to teach a machine what a tilted head was, and what it was not.
+          <!-- <br /><br /> -->
           In other words, I created a model using Google's <span class="bold">Teachable Machine</span>, put it on an Angular application,
           and scrolled a website every time the model told me there was a tilted head.
         </p>
         <br />
         <h2 class="display-4 subtitle">What's on the roadmap?</h2>
         <p class="description">
-          The next step is release HeadScroll as a native app (the kind you install in your computer) so that you can scroll
-          any website without restrictions and with a better user experience. <br><br>
-          
-          But just like I told my mom when I was born, keep your expectations down.
+          The next step is release HeadScroll as a <span class="bold">native app</span> (the kind you install in your computer) so that you
+          can scroll any website without restrictions and with a better user experience. But just like I told my mom when I was born,
+          <span class="bold">keep your expectations down</span>.
         </p>
         <br />
         <h2 class="display-4 subtitle">Is it open source?</h2>
@@ -43,13 +44,28 @@
           Contributions and issues are always welcomed.
         </p>
         <br />
-        <h2 class="display-4 subtitle">Why can't you display certain websites?</h2>
+        <h2 class="display-4 subtitle">Where can I submit feedback?</h2>
+        <p class="description">
+          Send me an email to
+          <a href="mailto:david.juanherrera@gmail.com" target="_blank" class="external-link">david.juanherrera@gmail.com</a>, or you can use
+          our exceptional <a
+            href="https://twitter.com/messages/compose?recipient_id=302885922&text=I%20have%20some%20feedback%20:)"
+            class="external-link"
+            target="_blank"
+            data-screen-name="@jdjuan"
+          >
+            support system</a
+          >
+          available 24/7.
+        </p>
+        <br />
+        <!-- <h2 class="display-4 subtitle">Why can't you display certain websites?</h2>
         <p class="description">
           It's complicated.<br />
           I'm using an iframe to embed the websites and that already adds a lot of contraints. There's not even a reliable way to know if a
           website was displayed correctly other than user's feedback, so you can imagine.<br />
           That's why a native app would likely be the way to go.
-        </p>
+        </p> -->
         <br />
         <h2 class="display-4 subtitle">Who's behind this project?</h2>
         <p class="description">

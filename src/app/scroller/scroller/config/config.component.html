@@ -15,12 +15,32 @@
 </div>
 <div class="config-option">
   <h4 class="config-title">Direction</h4>
-  <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" (change)="updateDirection(!!$event.target.value)" [(ngModel)]="direction">
+  <div
+    class="btn-group btn-group-toggle"
+    ngbRadioGroup
+    name="radioBasic"
+    (change)="updateDirection(!!$event.target.value)"
+    [(ngModel)]="direction"
+  >
     <label ngbButtonLabel class="btn-omega"> <input ngbButton type="radio" [value]="false" />Default </label>
     <label ngbButtonLabel class="btn-omega"> <input ngbButton type="radio" [value]="true" />Inverted </label>
   </div>
 </div>
 <div class="config-option">
   <h4 class="config-title">Website didn't load?</h4>
-  <button class="btn btn-omega">Report</button>
+  <button
+    class="btn btn-omega"
+    (click)="sendReport()"
+    [disabled]="isReportSent"
+    ngbTooltip="We will take a look into this website. Sometimes we can't do much about it, but we'll do our best! For now you can try using another website."
+    triggers="manual"
+    #reportTooltip="ngbTooltip"
+  >
+    Send Automatic Report
+  </button>
+  <!-- <p *ngIf="isReportSent" class="report-response">
+    We will take a look into this website. Sometimes we can't do much about it, but we'll do our best! <br /><span class="bold"
+      >For now you can try using another website.</span
+    >
+  </p> -->
 </div>

@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Input, ViewChild } from '@angu
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ProxyService } from 'src/app/core/proxy.service';
+import { ConfigService } from 'src/app/scroller/services/config.service';
 
 enum ErrorMessages {
   Cors = 'We couldn\'t display this website, please try another one.',
@@ -16,7 +17,6 @@ enum ErrorMessages {
 })
 export class SearchFieldComponent implements OnInit {
   @ViewChild('tooltip') errorTooltip: NgbTooltip;
-  // tslint:disable-next-line: variable-name
   @Input() set url(value: string) {
     if (value) {
       this.favicon = this.getFavicon(value);
@@ -37,7 +37,7 @@ export class SearchFieldComponent implements OnInit {
   favicon: string;
   shouldShowFavicon = true;
 
-  constructor(private proxyService: ProxyService) {}
+  constructor(private proxyService: ProxyService, private configService: ConfigService) {}
 
   ngOnInit(): void {
     // Ensure the tooltip shows a message to the user the first it is loaded with wrong url
@@ -59,6 +59,7 @@ export class SearchFieldComponent implements OnInit {
         .subscribe(({ isEmbeddable, websiteUrl }) => {
           this.loading = false;
           if (isEmbeddable) {
+            this.configService.changeCurrentWebsite(websiteUrl);
             this.favicon = this.getFavicon(this.website);
             this.search.emit(websiteUrl);
           } else {
@@ -75,7 +76,7 @@ export class SearchFieldComponent implements OnInit {
     }
   }
 
-  openTooltip(): void{
+  openTooltip(): void {
     if (this.isCompactVersion) {
       this.errorTooltip?.open();
     }

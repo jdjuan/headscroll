@@ -5,7 +5,7 @@ import { ScrollerComponent } from './scroller/scroller.component';
 import { CameraComponent } from './scroller/camera/camera.component';
 import { SharedModule } from '../shared/shared.module';
 import { AllowCameraComponent } from './scroller/allow-camera/allow-camera.component';
-import { NgbDropdownModule, NgbModalModule, NgbButtonsModule, NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModalModule, NgbButtonsModule, NgbRatingModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { BlockedCameraComponent } from './scroller/blocked-camera/blocked-camera.component';
 import { TutorialComponent } from './scroller/tutorial/tutorial.component';
 import { ConfigComponent } from './scroller/config/config.component';
@@ -31,6 +31,7 @@ import { FormsModule } from '@angular/forms';
     NgbDropdownModule,
     NgbButtonsModule,
     FormsModule,
+    NgbTooltipModule
   ],
 })
 export class ScrollerModule {}

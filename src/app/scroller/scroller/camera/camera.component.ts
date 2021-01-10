@@ -22,7 +22,7 @@ export enum Classes {
 export class CameraComponent {
   readonly MODEL_URL = 'https://teachablemachine.withgoogle.com/models/l5fbLAKJu/model.json';
   readonly METADATA_URL = 'https://teachablemachine.withgoogle.com/models/l5fbLAKJu/metadata.json';
-  readonly DEFAULT_CAMERA_SIZE = 300;
+  readonly DEFAULT_CAMERA_SIZE = 400;
   readonly SMALL_CAMERA_SIZE = 100;
   readonly FORECAST_CONFIDENCE = 0.95;
 

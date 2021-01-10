@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { CameraService } from '../../services/camera.service';
 import { ConfigService } from '../../services/config.service';
 
@@ -8,11 +9,14 @@ import { ConfigService } from '../../services/config.service';
   styleUrls: ['./config.component.scss'],
 })
 export class ConfigComponent implements OnInit {
+  @ViewChild('reportTooltip') reportTooltip: NgbTooltip;
+  isReportSent: boolean;
   direction: boolean;
   scrollSpeed: number;
   cameras: MediaDeviceInfo[];
 
   constructor(private configService: ConfigService, private cameraService: CameraService) {
+
     this.configService.scrollSpeed.subscribe((speed) => {
       this.scrollSpeed = speed;
     });
@@ -34,6 +38,12 @@ export class ConfigComponent implements OnInit {
   }
 
   updateDirection(direction: boolean): void {
-  this.configService.changeDirection(direction);
+    this.configService.changeDirection(direction);
+  }
+
+  sendReport(): void {
+    this.reportTooltip.open();
+    this.isReportSent = true;
+    this.configService.currentWebsite$.subscribe(console.log);
   }
 }

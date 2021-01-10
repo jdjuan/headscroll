@@ -8,6 +8,7 @@ import { LocalStorageService } from 'src/app/core/local-storage.service';
 export class ConfigService {
   private _scrollSpeed$ = new BehaviorSubject<number>(this.localStorageService.getSpeed());
   private _direction$ = new BehaviorSubject<boolean>(this.localStorageService.getDirection());
+  private _currentWebsite$ = new BehaviorSubject<string>('');
 
   readonly CAMERA_PERMISSION_TIMEOUT = 2000;
 
@@ -30,6 +31,9 @@ export class ConfigService {
     this.localStorageService.setDirection(direction);
     this._direction$.next(direction);
   }
+  changeCurrentWebsite(website: string): void {
+    this._currentWebsite$.next(website);
+  }
 
   // get defaultConfig(): Observable<any> {
   // return this._speed$.asObservable();
@@ -37,8 +41,10 @@ export class ConfigService {
   get scrollSpeed(): Observable<number> {
     return this._scrollSpeed$.asObservable();
   }
-
   get direction$(): Observable<boolean> {
     return this._direction$.asObservable();
+  }
+  get currentWebsite$(): Observable<string> {
+    return this._currentWebsite$.asObservable();
   }
 }
