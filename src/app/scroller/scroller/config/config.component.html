@@ -1,11 +1,5 @@
 <div class="config-option">
   <h4 class="config-title">Scrolling Speed</h4>
-  <!-- <ngb-rating class="rating-desktop" [(rate)]="scrollSpeed" (rateChange)="updateSpeed()">
-    <ng-template let-fill="fill" let-index="index">
-      <span class="star" [class.filled]="fill === 100">►</span>
-    </ng-template>
-  </ngb-rating> -->
-  
   <div
     class="btn-group btn-group-toggle rating-mobile"
     ngbRadioGroup
@@ -14,10 +8,10 @@
     [(ngModel)]="scrollSpeed"
   >
     <label ngbButtonLabel class="btn-omega"> <input ngbButton type="radio" [value]="1" />1</label>
-    <label ngbButtonLabel class="btn-omega"> <input ngbButton type="radio" [value]="2.5" />2</label>
-    <label ngbButtonLabel class="btn-omega"> <input ngbButton type="radio" [value]="5" />3</label>
-    <label ngbButtonLabel class="btn-omega"> <input ngbButton type="radio" [value]="7.5" />4</label>
-    <label ngbButtonLabel class="btn-omega"> <input ngbButton type="radio" [value]="10" />5</label>
+    <label ngbButtonLabel class="btn-omega"> <input ngbButton type="radio" [value]="5" />2</label>
+    <label ngbButtonLabel class="btn-omega"> <input ngbButton type="radio" [value]="10" />3</label>
+    <label ngbButtonLabel class="btn-omega"> <input ngbButton type="radio" [value]="15" />4</label>
+    <label ngbButtonLabel class="btn-omega"> <input ngbButton type="radio" [value]="20" />5</label>
   </div>
 </div>
 
@@ -43,7 +37,7 @@
 <div class="config-option">
   <h4 class="config-title">Website didn't load?</h4>
   <button
-    class="btn btn-omega"
+    class="btn btn-omega report-button"
     (click)="sendReport()"
     ngbTooltip="Thanks! We will take a look into this. Sometimes we can't do much about it, but we'll do our best! Now please try using another website."
     triggers="manual"
@@ -52,9 +46,4 @@
     Send Automatic Report
   </button>
   <div class="sent-label" *ngIf="isReportSent"> <i class="bi bi-check-circle-fill"></i> Sent!</div>
-  <!-- <p *ngIf="isReportSent" class="report-response">
-    We will take a look into this website. Sometimes we can't do much about it, but we'll do our best! <br /><span class="bold"
-      >For now you can try using another website.</span
-    >
-  </p> -->
 </div>

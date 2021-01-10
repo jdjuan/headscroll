@@ -24,7 +24,6 @@ import { MobileWarningComponent } from './mobile-warning/mobile-warning.componen
 export class ScrollerComponent implements OnInit {
   @ViewChild('iframeWrapper') iframeWrapper: ElementRef;
   scrollSpeed: number;
-  readonly SCROLL_SPEED_MOBILE_MULTIPLIER = 3;
   readonly RESIZE_THROTLE_TIME = 100;
   websiteSafeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
   defaultIframeHeight: number;
@@ -193,9 +192,6 @@ export class ScrollerComponent implements OnInit {
 
   performScroll(scrollDown: boolean): void {
     let speed = this.scrollSpeed;
-    if (this.isMobile) {
-      speed *= this.SCROLL_SPEED_MOBILE_MULTIPLIER;
-    }
     if (!scrollDown) {
       speed = -speed;
     }

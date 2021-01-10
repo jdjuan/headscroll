@@ -4,15 +4,14 @@
 @import "~src/assets/variables";
 
 .config-option {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   text-align: center;
 }
 
 .config-title {
   font-weight: 300;
-  font-size: 23px;
-  background-color: $beta;
-  padding: 7px 7px;
+  font-size: 20px;
+  padding: 2px;
   border-radius: 4px;
 }
 
@@ -33,6 +32,12 @@
 
 .sent-label {
   margin-top: 7px;
+}
+
+.report-button{
+  border-color: $beta;
+  color: $omega;
+  background-color: $beta;
 }
 
 .btn-omega {
