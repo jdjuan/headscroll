@@ -33,6 +33,15 @@
   text-decoration: underline;
 }
 
+.person {
+  font-weight: 200;
+  margin: 0rem;
+  font-size: 1rem;
+  &:last-child {
+    margin-bottom: 1rem;
+  }
+}
+
 @include media-breakpoint-up(lg) {
   .slide {
     text-align: inherit;
@@ -57,5 +66,8 @@
   .description {
     font-size: 1.5rem;
     font-weight: 100;
+  }
+  .person::before {
+    content: '- ';
   }
 }
