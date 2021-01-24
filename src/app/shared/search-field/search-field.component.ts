@@ -1,15 +1,14 @@
 import { Component, OnInit, Output, EventEmitter, Input, ViewChild } from '@angular/core';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ProxyService } from 'src/app/core/proxy.service';
+import { UrlService } from 'src/app/core/url.service';
 import { ConfigService } from 'src/app/scroller/services/config.service';
 
 enum ErrorMessages {
-  Cors = 'We couldn\'t display this website, please try another one.',
+  Cors = 'We could not display this website, please try another one.',
   Required = 'Enter the URL of the website you wish to scroll.',
 }
 
-@UntilDestroy()
 @Component({
   selector: 'app-search-field',
   templateUrl: './search-field.component.html',
@@ -37,7 +36,7 @@ export class SearchFieldComponent implements OnInit {
   favicon: string;
   shouldShowFavicon = true;
 
-  constructor(private proxyService: ProxyService, private configService: ConfigService) {}
+  constructor(private proxyService: ProxyService, private configService: ConfigService, private urlService: UrlService) {}
 
   ngOnInit(): void {
     // Ensure the tooltip shows a message to the user the first it is loaded with wrong url
@@ -53,27 +52,33 @@ export class SearchFieldComponent implements OnInit {
     if (this.website) {
       this.notEmbeddable = false;
       this.loading = true;
-      this.proxyService
-        .verifyWithProxy(this.website)
-        .pipe(untilDestroyed(this))
-        .subscribe(({ isEmbeddable, websiteUrl }) => {
-          this.loading = false;
-          if (isEmbeddable) {
-            this.configService.changeCurrentWebsite(websiteUrl);
-            this.favicon = this.getFavicon(this.website);
-            this.search.emit(websiteUrl);
-          } else {
-            this.fail.next();
-            this.notEmbeddable = true;
-            this.shouldShowFavicon = false;
-            this.errorTooltipMessage = ErrorMessages.Cors;
-            this.openTooltip();
-          }
-        });
+      this.website = this.urlService.normalizeUrl(this.website);
+      this.proxyService.isEmbeddable(this.website).subscribe((isEmbeddable) => {
+        this.loading = false;
+        if (isEmbeddable) {
+          this.loadWebsite();
+        } else {
+          this.showError();
+        }
+      });
     } else {
       this.errorTooltipMessage = ErrorMessages.Required;
       this.openTooltip();
     }
+  }
+
+  private showError(): void {
+    this.fail.emit();
+    this.notEmbeddable = true;
+    this.shouldShowFavicon = false;
+    this.errorTooltipMessage = ErrorMessages.Cors;
+    this.openTooltip();
+  }
+
+  private loadWebsite(): void {
+    this.configService.updateCurrentWebsite(this.website);
+    this.favicon = this.getFavicon(this.website);
+    this.search.emit(this.website);
   }
 
   openTooltip(): void {

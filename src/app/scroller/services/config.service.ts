@@ -42,7 +42,7 @@ export class ConfigService {
     this.localStorageService.setDirection(direction);
     this._direction$.next(direction);
   }
-  changeCurrentWebsite(website: string): void {
+  updateCurrentWebsite(website: string): void {
     this._currentWebsite$.next(website);
   }
 

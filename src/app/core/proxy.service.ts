@@ -1,65 +1,51 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Params, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { of } from 'rxjs';
-import { map, catchError, pluck, switchMap, tap } from 'rxjs/operators';
-
-interface ProxyResponse {
-  isEmbeddable: boolean;
-  websiteUrl: string;
-}
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProxyService {
   private readonly PROXY_URL = 'https://api.codetabs.com/v1/headers/?domain=';
-  private websitesAttempted: Record<string, boolean> = {};
+  private cachedUrls: Record<string, boolean> = {};
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient) {}
 
-  getWebsiteUrl(params: Observable<Params>): Observable<ProxyResponse> {
-    return params.pipe(pluck('website'), tap(this.validateWebsite), switchMap(this.verifyWithProxy));
+  isEmbeddable(url: string): Observable<boolean> {
+    if (this.cachedUrls[url]) {
+      return of(this.cachedUrls[url]);
+    }
+    return this.canLoadInIframe(url);
   }
 
-  verifyWithProxy = (websiteUrl: string): Observable<ProxyResponse> => {
-    if (this.websitesAttempted[websiteUrl]) {
-      return of({ isEmbeddable: this.websitesAttempted[websiteUrl], websiteUrl } as ProxyResponse);
-    }
-    return this.http.get(this.PROXY_URL + websiteUrl).pipe(
+  private canLoadInIframe(url: string): Observable<boolean> {
+    return this.http.get(this.PROXY_URL + url).pipe(
       map((responses: any[]) => {
-        const isEmbeddable = this.isEmbeddable(responses);
-        this.websitesAttempted[websiteUrl] = isEmbeddable;
-        return { isEmbeddable, websiteUrl } as ProxyResponse;
+        const isEmbeddable = !this.hasXFrameOptions(responses);
+        this.cachedUrls[url] = isEmbeddable;
+        return isEmbeddable;
       }),
       catchError(() => {
-        this.websitesAttempted[websiteUrl] = false;
-        return of({ isEmbeddable: false, websiteUrl } as ProxyResponse);
+        this.cachedUrls[url] = false;
+        return of(false);
       })
     );
   }
 
-  validateWebsite = (websiteUrl) => {
-    if (!websiteUrl) {
-      this.router.navigate(['/'], { queryParams: { error: 'No website provided' } });
-    } else if (this.websitesAttempted[websiteUrl] === false) {
-      this.router.navigate(['/'], { queryParams: { error: 'Website can not be displayed' } });
-    }
-  }
-
-  private isEmbeddable = (responses: any): boolean => {
+  private hasXFrameOptions = (responses: any): boolean => {
     if (responses.length === 0) {
-      return true;
+      return false;
     }
     if (responses.Error) {
       return false;
     }
     return responses.some((res) => {
       if (res['x-frame-options'] || res['X-Frame-Options']) {
-        return false;
+        return true;
       }
-      return true;
+      return false;
     });
   }
 }
