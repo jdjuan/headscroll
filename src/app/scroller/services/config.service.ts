@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LocalStorageService } from 'src/app/core/local-storage.service';
+import { ErrorMessages, ErrorType, ScrollerError } from 'src/app/scroller/services/error.model';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,7 @@ export class ConfigService {
   private _scrollSpeed$ = new BehaviorSubject<number>(this.localStorageService.getSpeed());
   private _direction$ = new BehaviorSubject<boolean>(this.localStorageService.getDirection());
   private _currentWebsite$ = new BehaviorSubject<string>('');
+  private _error$ = new BehaviorSubject<ScrollerError>({ type: null, message: null });
 
   readonly CAMERA_PERMISSION_TIMEOUT = 2000;
 
@@ -45,10 +47,10 @@ export class ConfigService {
   updateCurrentWebsite(website: string): void {
     this._currentWebsite$.next(website);
   }
+  throwError(type: ErrorType): void {
+    this._error$.next({ type, message: ErrorMessages[type] });
+  }
 
-  // get defaultConfig(): Observable<any> {
-  // return this._speed$.asObservable();
-  // }
   get scrollSpeed(): Observable<number> {
     return this._scrollSpeed$.asObservable();
   }
@@ -57,5 +59,8 @@ export class ConfigService {
   }
   get currentWebsite$(): Observable<string> {
     return this._currentWebsite$.asObservable();
+  }
+  get error$(): Observable<ScrollerError> {
+    return this._error$.asObservable();
   }
 }

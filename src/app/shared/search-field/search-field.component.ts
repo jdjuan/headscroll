@@ -3,11 +3,7 @@ import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { ProxyService } from 'src/app/core/proxy.service';
 import { UrlService } from 'src/app/core/url.service';
 import { ConfigService } from 'src/app/scroller/services/config.service';
-
-enum ErrorMessages {
-  Cors = 'We could not display this website, please try another one.',
-  Required = 'Enter the URL of the website you wish to scroll.',
-}
+import { ErrorMessages } from 'src/app/scroller/services/error.model';
 
 @Component({
   selector: 'app-search-field',
@@ -62,7 +58,7 @@ export class SearchFieldComponent implements OnInit {
         }
       });
     } else {
-      this.errorTooltipMessage = ErrorMessages.Required;
+      this.errorTooltipMessage = ErrorMessages.UrlIsRequired;
       this.openTooltip();
     }
   }
@@ -71,7 +67,7 @@ export class SearchFieldComponent implements OnInit {
     this.fail.emit();
     this.notEmbeddable = true;
     this.shouldShowFavicon = false;
-    this.errorTooltipMessage = ErrorMessages.Cors;
+    this.configService.error$.subscribe(({ message }) => (this.errorTooltipMessage = message));
     this.openTooltip();
   }
 

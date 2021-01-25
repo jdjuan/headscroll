@@ -8,6 +8,6 @@ export class UrlService {
   constructor() {}
 
   normalizeUrl(url: string): string {
-    return normalizeUrl(url, { forceHttps: true });
+    return normalizeUrl(url, { forceHttps: true, stripWWW: false });
   }
 }
