@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input, ViewChild } from '@angular/core';
+import { Component, Output, EventEmitter, Input, ViewChild } from '@angular/core';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { ProxyService } from 'src/app/core/proxy.service';
 import { UrlService } from 'src/app/core/url.service';
@@ -10,7 +10,7 @@ import { ErrorMessages } from 'src/app/scroller/services/error.model';
   templateUrl: './search-field.component.html',
   styleUrls: ['./search-field.component.scss'],
 })
-export class SearchFieldComponent implements OnInit {
+export class SearchFieldComponent {
   @ViewChild('tooltip') errorTooltip: NgbTooltip;
   @Input() set url(value: string) {
     if (value) {
@@ -34,19 +34,11 @@ export class SearchFieldComponent implements OnInit {
 
   constructor(private proxyService: ProxyService, private configService: ConfigService, private urlService: UrlService) {}
 
-  ngOnInit(): void {
-    // Ensure the tooltip shows a message to the user the first it is loaded with wrong url
-    if (this.notEmbeddable) {
-      this.openTooltip();
-    }
-  }
-
   onSearch(): void {
     this.errorTooltip?.close();
     this.shouldShowFavicon = false;
     this.hasSearched = true;
     if (this.website) {
-      this.notEmbeddable = false;
       this.loading = true;
       this.website = this.urlService.normalizeUrl(this.website);
       this.proxyService.isEmbeddable(this.website).subscribe((isEmbeddable) => {
@@ -59,32 +51,21 @@ export class SearchFieldComponent implements OnInit {
       });
     } else {
       this.errorTooltipMessage = ErrorMessages.UrlIsRequired;
-      this.openTooltip();
+      this.errorTooltip?.open();
     }
   }
 
   private showError(): void {
     this.fail.emit();
-    this.notEmbeddable = true;
     this.shouldShowFavicon = false;
     this.configService.error$.subscribe(({ message }) => (this.errorTooltipMessage = message));
-    this.openTooltip();
+    this.errorTooltip?.open();
   }
 
   private loadWebsite(): void {
     this.configService.updateCurrentWebsite(this.website);
     this.favicon = this.getFavicon(this.website);
     this.search.emit(this.website);
-  }
-
-  openTooltip(): void {
-    if (this.isCompactVersion) {
-      this.errorTooltip?.open();
-    }
-  }
-
-  cleanValidation(): void {
-    this.notEmbeddable = false;
   }
 
   getFavicon(website: string): string {

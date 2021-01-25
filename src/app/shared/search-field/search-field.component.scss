@@ -91,16 +91,6 @@
   left: 10px;
   top: 11px;
 }
-::ng-deep .error-tooltip {
-  opacity: 1 !important;
-  .tooltip-inner {
-    background-color: $pi;
-    color: $omega;
-  }
-  .arrow::before {
-    border-left-color: $pi;
-  }
-}
 
 @include media-breakpoint-down(md) {
   .compact {

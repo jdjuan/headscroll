@@ -8,7 +8,6 @@
       placeholder="Your URL"
       [disabled]="loading"
       [(ngModel)]="website"
-      (keydown)="cleanValidation()"
       (keydown.enter)="onSearch()"
       (focus)="isInputFocused = true"
       (blur)="isInputFocused = false"
@@ -16,7 +15,7 @@
       triggers="manual"
       #tooltip="ngbTooltip"
       tooltipClass="error-tooltip"
-      placement="left"
+      [placement]="isCompactVersion ? 'left' : 'bottom'"
       required
     />
     <button class="submit-button" type="button" [disabled]="loading" (click)="onSearch()">
@@ -26,18 +25,6 @@
       <span class="sr-only">Loading...</span>
     </div>
   </div>
-  <div *ngIf="!isCompactVersion">
-    <span class="error" *ngIf="validation.invalid && (hasSearched || validation.touched)">
-      <i class="bi bi-info-circle-fill icon"></i> {{ errorMessages.Required }}
-    </span>
-    <span class="error" *ngIf="notEmbeddable"
-      ><i class="bi bi-info-circle-fill icon"></i> {{ errorMessages.Cors }} <u [ngbTooltip]="tipContent" placement="bottom">Why?</u></span
-    >
-  </div>
-  <ng-template #tipContent
-    >Some websites have extra security that protects them from being embedded onto another website (CORS). There's nothing we can do about
-    it. We're sorry!</ng-template
-  >
 
   <ng-template #tipError>{{ errorTooltipMessage }}</ng-template>
 </div>
