@@ -1,11 +1,11 @@
 import { Component, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Webcam, CustomPoseNet, load } from '@teachablemachine/pose';
-import { Keypoint } from '@tensorflow-models/posenet';
 import { CameraService } from '../../services/camera.service';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { LARGE_BREAKPOINT } from 'src/app/core/constants';
 import { ConfigService } from '../../services/config.service';
+import { timer } from 'rxjs';
 
 export enum Classes {
   Left = 'Left',
@@ -27,11 +27,12 @@ export class CameraComponent {
   readonly DEFAULT_CAMERA_SIZE = 400;
   readonly SMALL_CAMERA_SIZE = 100;
   readonly FORECAST_CONFIDENCE = 0.95;
+  readonly DEBOUNCE_PREDICTION_TIME = 100;
 
   @Output() scrollDown = new EventEmitter();
   @Output() scrollUp = new EventEmitter();
   @Output() cameraLoaded = new EventEmitter();
-  @ViewChild('canvas') canvas: ElementRef;
+  @ViewChild('video') video: ElementRef<HTMLVideoElement>;
   cameraSize = this.DEFAULT_CAMERA_SIZE;
   isLoadingCamera = true;
   isMobile: boolean;
@@ -58,20 +59,12 @@ export class CameraComponent {
     });
   }
 
-  n;
-
   async init(deviceId: string): Promise<void> {
     if (this.isMobile) {
       this.cameraSize = this.SMALL_CAMERA_SIZE;
     }
     this.model = await load(this.MODEL_URL, this.METADATA_URL);
-    this.setCanvasContext();
     this.setupWebCam(deviceId);
-  }
-
-  setCanvasContext(): void {
-    const canvas = this.canvas.nativeElement as HTMLCanvasElement;
-    this.ctx = canvas.getContext('2d');
   }
 
   async setupWebCam(deviceId: string): Promise<void> {
@@ -79,29 +72,25 @@ export class CameraComponent {
     this.webcam = new Webcam(this.cameraSize, this.cameraSize, flip);
     try {
       await this.webcam.setup({ deviceId });
-      await this.webcam.play();
-      window.requestAnimationFrame(this.loop);
       this.isLoadingCamera = false;
       this.cameraLoaded.next();
+      this.video.nativeElement.srcObject = this.webcam.webcam.srcObject;
+      this.video.nativeElement.play();
     } catch (error) {
       console.log('Could not load the camera');
       console.log(error);
     }
   }
 
-  loop = async (timestamp: any) => {
-    this.webcam.update();
-    if (this.webcam.canvas) {
-      await this.predict();
-    }
-    window.requestAnimationFrame(this.loop);
+  startPredicting(): void{
+    timer(0, this.DEBOUNCE_PREDICTION_TIME).subscribe(this.predict);
   }
 
-  async predict(): Promise<void> {
-    const { pose, posenetOutput } = await this.model.estimatePose(this.webcam.canvas);
+  predict = async (): Promise<void> => {
+    const { heatmapScores, offsets, displacementFwd, displacementBwd } = await this.model.estimatePoseOutputs(this.video.nativeElement);
+    const posenetOutput = await this.model.poseOutputsToAray(heatmapScores, offsets, displacementFwd, displacementBwd);
     const output = await this.model.predict(posenetOutput);
     this.getForecast(output);
-    this.drawPose(pose);
   }
 
   getForecast(output: { className: string; probability: number }[]): void {
@@ -110,16 +99,16 @@ export class CameraComponent {
     if (leftForecast.probability > this.FORECAST_CONFIDENCE) {
       this.forecast = Classes.Left;
       if (this.direction) {
-        this.scrollUp.emit();
-      } else {
         this.scrollDown.emit();
+      } else {
+        this.scrollUp.emit();
       }
     } else if (rightForecast.probability > this.FORECAST_CONFIDENCE) {
       this.forecast = Classes.Right;
       if (this.direction) {
-        this.scrollDown.emit();
-      } else {
         this.scrollUp.emit();
+      } else {
+        this.scrollDown.emit();
       }
     } else {
       this.forecast = Classes.Neutral;
@@ -131,16 +120,5 @@ export class CameraComponent {
   }
   hasTiltedRight(): boolean {
     return this.forecast === Classes.Right;
-  }
-
-  drawPose(pose: { keypoints: Keypoint[] }): void {
-    if (this.webcam.canvas) {
-      this.ctx.drawImage(this.webcam.canvas, 0, 0);
-      // if (pose) {
-      //   const minPartConfidence = 0.5;
-      //   drawKeypoints(pose.keypoints, minPartConfidence, this.ctx);
-      //   drawSkeleton(pose.keypoints, minPartConfidence, this.ctx);
-      // }
-    }
   }
 }

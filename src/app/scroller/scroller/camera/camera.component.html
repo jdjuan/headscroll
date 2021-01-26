@@ -1,5 +1,3 @@
 <div class="camera">
-  <canvas #canvas class="canvas" [width]="cameraSize" [height]="cameraSize"></canvas>
-  <!-- <div class="emoji down" [class.mobile]="isMobile" *ngIf="hasTiltedLeft()">👇</div>
-  <div class="emoji up" [class.mobile]="isMobile" *ngIf="hasTiltedRight()">👆</div> -->
+  <video #video class="video" (loadeddata)="startPredicting()">Video stream not available.</video>
 </div>
