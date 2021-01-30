@@ -12,8 +12,8 @@ export const handler = async (req: NowRequest, res: NowResponse) => {
   const targetUrl = `${domainMap.protocol}://${domainMap.domain}/${targetPath}`;
 
   const response = await axios.get(targetUrl);
-  const parsedResponse = await parseResponse(response);
 
+  const parsedResponse = await parseResponse(response);
   for (const [key, value] of parsedResponse.headers) {
     res.setHeader(key, value);
   }
@@ -31,14 +31,21 @@ const parseResponse = async (response: AxiosResponse): Promise<{ body: string; h
     $('head').prepend(baseTag);
 
     const body = $.html();
-    const headers = Object.assign(response.headers, {
-      'Content-Type': 'text/html; charset=UTF-8',
-    });
+    const headers = cleanUpHeaders(response.headers);
 
-    return { body, headers: new Map(Object.entries(headers)) };
+    return { body, headers };
   } else {
     return { headers: new Map(), body: 'Sorry Only HTML Websites' };
   }
+};
+
+const cleanUpHeaders = (headers: any): Map<string, string> => {
+  const copy = Object.assign({}, headers, {
+    'content-type': 'text/html; charset=UTF-8',
+  });
+
+  delete copy['transfer-encoding'];
+  return new Map(Object.entries(copy));
 };
 
 export default handler;
