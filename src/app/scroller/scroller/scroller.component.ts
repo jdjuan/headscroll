@@ -1,20 +1,19 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
 import { AllowCameraComponent } from './allow-camera/allow-camera.component';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { merge } from 'rxjs';
 import { CameraService, CameraStates } from '../services/camera.service';
-import { pluck, take } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { BlockedCameraComponent } from './blocked-camera/blocked-camera.component';
 import { TutorialComponent } from './tutorial/tutorial.component';
-import { Location } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { LARGE_BREAKPOINT } from 'src/app/core/constants';
 import { ConfigModalComponent } from './config-modal/config-modal.component';
 import { MobileWarningComponent } from './mobile-warning/mobile-warning.component';
-import { AppState, StateService } from 'src/app/core/state.service';
+import { StateService } from 'src/app/core/state.service';
+import { AppState } from 'src/app/core/app-state';
 
 @Component({
   selector: 'app-scroller',
@@ -23,7 +22,6 @@ import { AppState, StateService } from 'src/app/core/state.service';
 })
 export class ScrollerComponent implements OnInit {
   @ViewChild('iframeWrapper') iframeWrapper: ElementRef;
-  scrollSpeed: number;
   readonly RESIZE_THROTLE_TIME = 100;
   websiteSafeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
   defaultIframeHeight: number;
@@ -31,25 +29,18 @@ export class ScrollerComponent implements OnInit {
   website: string;
   isMobile = this.breakpointObserver.isMatched(LARGE_BREAKPOINT);
   shouldRequestCam: boolean;
-  enableCameraModalRef: NgbModalRef;
   isLoading = true;
   isTutorialFinished: boolean;
   isConfigOpen: boolean;
-  hasSearchFailed: boolean;
   hasAtLeastLoadedAWebsite: boolean;
-  showShowWarning: boolean;
   isWarningAccepted: boolean;
-  orientation: boolean;
   appState: AppState;
 
   constructor(
     private sanitizer: DomSanitizer,
-    private activatedRoute: ActivatedRoute,
     private breakpointObserver: BreakpointObserver,
     private modalService: NgbModal,
     private cameraService: CameraService,
-    private location: Location,
-    private router: Router,
     private viewportRuler: ViewportRuler,
     private stateService: StateService
   ) {}
@@ -57,8 +48,6 @@ export class ScrollerComponent implements OnInit {
   ngOnInit(): void {
     this.stateService.state$.subscribe((state) => {
       this.appState = state;
-      this.scrollSpeed = state.speed;
-      this.orientation = state.orientation;
     });
     this.viewportRuler.change(this.RESIZE_THROTLE_TIME).subscribe(() => {
       // define iframe height on resize
@@ -69,8 +58,6 @@ export class ScrollerComponent implements OnInit {
       this.isMobile = matches;
       this.defineIframeHeight();
     });
-
-    this.getWebsiteFromUrl();
     this.checkCameraStatus();
   }
 
@@ -138,61 +125,42 @@ export class ScrollerComponent implements OnInit {
     }
   }
 
-  getWebsiteFromUrl(): void {
-    this.activatedRoute.queryParams.pipe(pluck('website')).subscribe((website: string) => {
-      // triggers lookup in search-field component, which later triggers searchWebsite()
-      this.website = website;
-    });
-  }
-
-  searchWebsite(website: string): void {
-    const url = this.router.createUrlTree([], { relativeTo: this.activatedRoute, queryParams: { website } }).toString();
-    this.location.go(url);
+  onSearchWebsite(website: string): void {
     this.hasAtLeastLoadedAWebsite = true;
-    this.hasSearchFailed = false;
     this.iframeWrapper?.nativeElement.scrollTo(0, 0);
     this.iframeHeight = this.defaultIframeHeight;
     this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(website);
     this.shouldRequestCam = true;
   }
 
-  onSearchFail(): void {
-    if (!this.hasAtLeastLoadedAWebsite) {
-      this.hasSearchFailed = true;
-    }
-  }
-
   onScroll(direction: boolean): void {
-    // XOR
-    if (this.orientation !== direction) {
-      this.scrollUp();
-    } else {
-      this.scrollDown();
+    if (!this.appState.error && !this.isLoading && !this.isConfigOpen) {
+      if (this.appState.orientation === direction) {
+        this.scrollDown();
+      } else {
+        this.scrollUp();
+      }
     }
   }
 
   scrollDown(): void {
-    if (!this.isLoading && !this.hasSearchFailed && !this.isConfigOpen) {
-      // buffer added when the user reaches the iframe bottom
-      const additionalBuffer = 200; // to avoid reaching the bottom
-      const { scrollTop, scrollHeight, clientHeight } = this.iframeWrapper.nativeElement;
-      const iframeHeight = scrollHeight - clientHeight - additionalBuffer;
-      const currentScroll = scrollTop;
-      if (currentScroll >= iframeHeight) {
-        this.iframeHeight += additionalBuffer;
-      }
-      this.performScroll(true);
+    // buffer added when the user reaches the iframe bottom
+    const additionalBuffer = 200; // to avoid reaching the bottom
+    const { scrollTop, scrollHeight, clientHeight } = this.iframeWrapper.nativeElement;
+    const iframeHeight = scrollHeight - clientHeight - additionalBuffer;
+    const currentScroll = scrollTop;
+    if (currentScroll >= iframeHeight) {
+      this.iframeHeight += additionalBuffer;
     }
+    this.performScroll(true);
   }
 
   scrollUp(): void {
-    if (!this.isLoading && !this.hasSearchFailed && !this.isConfigOpen) {
-      this.performScroll(false);
-    }
+    this.performScroll(false);
   }
 
   performScroll(scrollDown: boolean): void {
-    let speed = this.scrollSpeed;
+    let speed = this.appState.speed;
     if (!scrollDown) {
       speed = -speed;
     }

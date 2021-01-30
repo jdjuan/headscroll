@@ -1,25 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { take } from 'rxjs/operators';
-import { ScrollerError } from 'src/app/scroller/services/error.model';
-
-export interface AppState {
-  speed: number;
-  orientation: boolean;
-  currentWebsite: string;
-  showTutorial: boolean;
-  showMobileWarning: boolean;
-  error: ScrollerError;
-}
-
-export const initialState = {
-  speed: 5,
-  orientation: false,
-  currentWebsite: null,
-  showTutorial: true,
-  showMobileWarning: true,
-  error: null,
-};
+import { distinct, filter, map, take } from 'rxjs/operators';
+import { AppState, initialState } from 'src/app/core/app-state';
+import { ErrorMessages, ErrorType } from 'src/app/scroller/services/error.model';
 
 @Injectable({
   providedIn: 'root',
@@ -27,20 +10,35 @@ export const initialState = {
 export class StateService {
   private _state$ = new BehaviorSubject<AppState>(initialState);
   state$ = this._state$.asObservable();
+  error$ = this._state$.pipe(
+    map((state) => state.error),
+    filter((error) => !!error),
+    distinct()
+  );
 
   constructor() {
-    this.getLatestFromLocalStorate();
+    this.getLatestFromLocalStorage();
   }
 
   updateState(prop: Partial<AppState>): void {
-    this.state$.pipe(take(1)).subscribe((state) => {
-      const newState = { ...state, ...prop };
+    this.state$.pipe(take(1)).subscribe((oldState) => {
+      const newState = { ...oldState, ...prop };
       this._state$.next(newState);
-      localStorage.setItem('state', JSON.stringify(newState));
+      this.persistState(newState);
     });
   }
 
-  private getLatestFromLocalStorate(): void {
+  persistState(newState: AppState): void {
+    const { speed, orientation, showMobileWarning, showTutorial } = newState;
+    localStorage.setItem('state', JSON.stringify({ speed, orientation, showMobileWarning, showTutorial }));
+  }
+
+  dispatchError(type: ErrorType): void {
+    const error = { type, message: ErrorMessages[type] };
+    this.updateState({ error });
+  }
+
+  private getLatestFromLocalStorage(): void {
     try {
       const persistedState = JSON.parse(localStorage.getItem('state'));
       if (persistedState) {
