@@ -8,7 +8,7 @@ import { ErrorMessages, ErrorType, ScrollerError } from 'src/app/scroller/servic
 })
 export class ConfigService {
   private _scrollSpeed$ = new BehaviorSubject<number>(this.localStorageService.getSpeed());
-  private _direction$ = new BehaviorSubject<boolean>(this.localStorageService.getDirection());
+  private _orientation$ = new BehaviorSubject<boolean>(this.localStorageService.getOrientation());
   private _currentWebsite$ = new BehaviorSubject<string>('');
   private _error$ = new BehaviorSubject<ScrollerError>({ type: null, message: null });
 
@@ -40,9 +40,9 @@ export class ConfigService {
     this.localStorageService.setSpeed(speed);
     this._scrollSpeed$.next(speed);
   }
-  changeDirection(direction: boolean): void {
-    this.localStorageService.setDirection(direction);
-    this._direction$.next(direction);
+  changeOrientation(orientation: boolean): void {
+    this.localStorageService.setOrientation(orientation);
+    this._orientation$.next(orientation);
   }
   updateCurrentWebsite(website: string): void {
     this._currentWebsite$.next(website);
@@ -54,8 +54,8 @@ export class ConfigService {
   get scrollSpeed(): Observable<number> {
     return this._scrollSpeed$.asObservable();
   }
-  get direction$(): Observable<boolean> {
-    return this._direction$.asObservable();
+  get orientation$(): Observable<boolean> {
+    return this._orientation$.asObservable();
   }
   get currentWebsite$(): Observable<string> {
     return this._currentWebsite$.asObservable();

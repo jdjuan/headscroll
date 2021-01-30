@@ -31,7 +31,6 @@ export class ScrollerComponent implements OnInit {
   website: string;
   isMobile = this.breakpointObserver.isMatched(LARGE_BREAKPOINT);
   shouldRequestCam: boolean;
-  hasCameraLoaded: boolean;
   enableCameraModalRef: NgbModalRef;
   isLoading = true;
   isTutorialFinished: boolean;
@@ -40,6 +39,7 @@ export class ScrollerComponent implements OnInit {
   hasAtLeastLoadedAWebsite: boolean;
   showShowWarning: boolean;
   isWarningAccepted: boolean;
+  orientation: boolean;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -54,6 +54,9 @@ export class ScrollerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.configService.orientation$.subscribe((orientation) => {
+      this.orientation = orientation;
+    });
     this.configService.scrollSpeed.subscribe((speed) => {
       this.scrollSpeed = speed;
     });
@@ -120,13 +123,6 @@ export class ScrollerComponent implements OnInit {
     merge(ref.closed, ref.dismissed).pipe(take(1)).subscribe(this.checkCameraStatus);
   }
 
-  onCameraLoaded(): void {
-    this.hasCameraLoaded = true;
-    if (this.isTutorialFinished) {
-      this.isLoading = false;
-    }
-  }
-
   openInstructionsModal(): void {
     if (this.configService.shouldShowTutorial()) {
       const ref = this.modalService.open(TutorialComponent, { centered: true });
@@ -134,15 +130,11 @@ export class ScrollerComponent implements OnInit {
         .pipe(take(1))
         .subscribe(() => {
           this.isTutorialFinished = true;
-          if (this.hasCameraLoaded) {
-            this.isLoading = false;
-          }
+          this.isLoading = false;
         });
     } else {
       this.isTutorialFinished = true;
-      if (this.hasCameraLoaded) {
-        this.isLoading = false;
-      }
+      this.isLoading = false;
     }
   }
 
@@ -167,6 +159,15 @@ export class ScrollerComponent implements OnInit {
   onSearchFail(): void {
     if (!this.hasAtLeastLoadedAWebsite) {
       this.hasSearchFailed = true;
+    }
+  }
+
+  onScroll(direction: boolean): void {
+    // XOR
+    if (this.orientation !== direction) {
+      this.scrollUp();
+    } else {
+      this.scrollDown();
     }
   }
 

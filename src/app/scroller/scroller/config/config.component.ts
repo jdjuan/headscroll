@@ -23,7 +23,7 @@ export class ConfigComponent implements OnInit {
     this.configService.scrollSpeed.pipe(untilDestroyed(this)).subscribe((speed) => {
       this.scrollSpeed = speed;
     });
-    this.configService.direction$.pipe(untilDestroyed(this)).subscribe((direction) => {
+    this.configService.orientation$.pipe(untilDestroyed(this)).subscribe((direction) => {
       this.direction = direction;
     });
     this.cameraService.getAvailableCameras().then((cameras) => {
@@ -43,7 +43,7 @@ export class ConfigComponent implements OnInit {
   }
 
   updateDirection(direction: boolean): void {
-    this.configService.changeDirection(direction);
+    this.configService.changeOrientation(direction);
   }
 
   sendReport(): void {

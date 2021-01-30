@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 enum PropertyKeys {
   Speed = 'speed',
   ShowTutorial = 'showTutorial',
-  Direction = 'direction',
+  Orientation = 'orientation',
   ShowWarning = 'showWarning',
 }
 
@@ -11,7 +11,7 @@ enum PropertyKeys {
   providedIn: 'root',
 })
 export class LocalStorageService {
-  readonly DEFAULT_DIRECTION = false;
+  readonly DEFAULT_ORIENTATION = false;
   readonly DEFAULT_SPEED = 5;
   readonly DEFAULT_SHOW_TUTORIAL = true;
   readonly DEFAULT_SHOW_WARNING = true;
@@ -24,11 +24,11 @@ export class LocalStorageService {
     return this.getProp(PropertyKeys.ShowWarning, this.DEFAULT_SHOW_WARNING);
   }
 
-  setDirection(value: boolean): void {
-    localStorage.setItem(PropertyKeys.Direction, JSON.stringify(value));
+  setOrientation(value: boolean): void {
+    localStorage.setItem(PropertyKeys.Orientation, JSON.stringify(value));
   }
-  getDirection(): boolean {
-    return this.getProp(PropertyKeys.Direction, this.DEFAULT_DIRECTION);
+  getOrientation(): boolean {
+    return this.getProp(PropertyKeys.Orientation, this.DEFAULT_ORIENTATION);
   }
 
   setSpeed(value: number): void {

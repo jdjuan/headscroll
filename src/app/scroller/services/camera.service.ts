@@ -14,21 +14,29 @@ export enum CameraStates {
 })
 export class CameraService {
   private _selectedCamera$ = new BehaviorSubject<string>('');
-  readonly CAMERA_PERMISSION_TIMEOUT = 2000;
+  readonly CAMERA_PERMISSION_TIMEOUT = 5000;
 
   hasCameraPermission(): Observable<CameraStates> {
-    const cameraPermission$ = from(navigator.mediaDevices.getUserMedia({ video: true })).pipe(
-      mapTo(CameraStates.Allowed),
-      catchError(() => of(CameraStates.Blocked))
-    );
-    const timeout$ = interval(this.CAMERA_PERMISSION_TIMEOUT).pipe(mapTo(CameraStates.Timeout));
-    return merge(cameraPermission$, timeout$).pipe(take(1));
+    try {
+      const cameraPermission$ = from(navigator.mediaDevices.getUserMedia({ video: true })).pipe(
+        mapTo(CameraStates.Allowed),
+        catchError(() => of(CameraStates.Blocked))
+      );
+      const timeout$ = interval(this.CAMERA_PERMISSION_TIMEOUT).pipe(mapTo(CameraStates.Timeout));
+      return merge(cameraPermission$, timeout$).pipe(take(1));
+    } catch (error) {
+      return of(CameraStates.Blocked);
+    }
   }
 
   async getAvailableCameras(): Promise<MediaDeviceInfo[]> {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const cameras = devices.filter((device) => device.kind === 'videoinput');
-    return cameras;
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const cameras = devices.filter((device) => device.kind === 'videoinput');
+      return cameras;
+    } catch (error) {
+      return null;
+    }
   }
 
   changeCamera(deviceId: string): void {

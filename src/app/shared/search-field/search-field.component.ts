@@ -24,7 +24,7 @@ export class SearchFieldComponent {
   @Output() fail = new EventEmitter();
   errorTooltipMessage: string;
   errorMessages = ErrorMessages;
-  website: string;
+  website = 'https://tabs.ultimate-guitar.com/tab/the-lumineers/stubborn-love-chords-1157323';
   loading: boolean;
   notEmbeddable: boolean;
   hasSearched: boolean;
