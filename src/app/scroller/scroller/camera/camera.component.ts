@@ -1,10 +1,9 @@
-import { Component, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, ElementRef, ViewChild, Output, EventEmitter, OnInit } from '@angular/core';
 import { Webcam, CustomPoseNet, load } from '@teachablemachine/pose';
 import { CameraService } from '../../services/camera.service';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { LARGE_BREAKPOINT } from 'src/app/core/constants';
-import { ConfigService } from '../../services/config.service';
 import { timer } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -14,14 +13,17 @@ import { filter } from 'rxjs/operators';
   templateUrl: './camera.component.html',
   styleUrls: ['./camera.component.scss'],
 })
-export class CameraComponent {
+export class CameraComponent implements OnInit {
   @ViewChild('video') video: ElementRef<HTMLVideoElement>;
   @Output() scrolling = new EventEmitter<boolean>();
   readonly DEBOUNCE_PREDICTION_TIME = 100;
+  // source: MediaProvider;
   model: CustomPoseNet;
 
-  constructor(private breakpointObserver: BreakpointObserver, private cameraService: CameraService, private configService: ConfigService) {
-    this.cameraService.selectedCamera$.pipe(filter((deviceId) => !!deviceId)).subscribe(this.setupWebCam);
+  constructor(private breakpointObserver: BreakpointObserver, private cameraService: CameraService) {
+    this.cameraService.selectedCamera$.pipe(filter((deviceId) => !!deviceId)).subscribe(this.setupWebcam);
+  }
+  ngOnInit(): void {
     this.init();
   }
 
@@ -32,11 +34,11 @@ export class CameraComponent {
       const [firstCamera] = cameras;
       const { deviceId } = firstCamera;
       this.model = await load(MODEL_URL, METADATA_URL);
-      this.setupWebCam(deviceId);
+      this.setupWebcam(deviceId);
     }
   }
 
-  setupWebCam = async (deviceId: string): Promise<void> => {
+  setupWebcam = async (deviceId: string): Promise<void> => {
     try {
       const isMobile = this.breakpointObserver.isMatched(LARGE_BREAKPOINT);
       const DEFAULT_CAMERA_SIZE = 400;

@@ -1,18 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConfigService } from '../../services/config.service';
+import { StateService } from 'src/app/core/state.service';
 
 @Component({
   selector: 'app-tutorial',
   templateUrl: './tutorial.component.html',
   styleUrls: ['./tutorial.component.scss'],
 })
-export class TutorialComponent implements OnInit {
-  constructor(public activeModal: NgbActiveModal, private configService: ConfigService) {}
-
-  ngOnInit(): void {
-    this.configService.stopShowingTutorial();
-  }
+export class TutorialComponent {
+  constructor(public activeModal: NgbActiveModal, private stateService: StateService) {}
 
   done(): void {
     this.activeModal.close();
@@ -20,9 +16,9 @@ export class TutorialComponent implements OnInit {
 
   updateTutorialStatus(selected: boolean): void {
     if (selected) {
-      this.configService.stopShowingTutorial();
+      this.stateService.updateState({ showTutorial: false });
     } else {
-      this.configService.keepShowingTutorial();
+      this.stateService.updateState({ showTutorial: true });
     }
   }
 }

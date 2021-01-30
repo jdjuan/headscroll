@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { of } from 'rxjs';
 import { map, catchError, timeout } from 'rxjs/operators';
-import { ConfigService } from 'src/app/scroller/services/config.service';
-import { ErrorType } from 'src/app/scroller/services/error.model';
+import { StateService } from 'src/app/core/state.service';
+import { ErrorMessages, ErrorType } from 'src/app/scroller/services/error.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,7 @@ export class ProxyService {
   private readonly PROXY_URL = 'https://api.codetabs.com/v1/headers/?domain=';
   private cachedUrls: Record<string, boolean> = {};
 
-  constructor(private http: HttpClient, private configService: ConfigService) {}
+  constructor(private http: HttpClient, private stateService: StateService) {}
 
   isEmbeddable(url: string): Observable<boolean> {
     if (this.cachedUrls[url]) {
@@ -31,9 +31,8 @@ export class ProxyService {
         return isEmbeddable;
       }),
       timeout(this.TIMEOUT),
-      catchError((error: { name: ErrorType }) => {
-        this.configService.throwError(error.name);
-        console.log(error);
+      catchError(({ name: type }: { name: ErrorType }) => {
+        this.stateService.updateState({ error: { type, message: ErrorMessages[type] } });
         this.cachedUrls[url] = false;
         return of(false);
       })

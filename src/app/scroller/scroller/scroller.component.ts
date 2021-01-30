@@ -13,8 +13,8 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { LARGE_BREAKPOINT } from 'src/app/core/constants';
 import { ConfigModalComponent } from './config-modal/config-modal.component';
-import { ConfigService } from '../services/config.service';
 import { MobileWarningComponent } from './mobile-warning/mobile-warning.component';
+import { AppState, StateService } from 'src/app/core/state.service';
 
 @Component({
   selector: 'app-scroller',
@@ -40,6 +40,7 @@ export class ScrollerComponent implements OnInit {
   showShowWarning: boolean;
   isWarningAccepted: boolean;
   orientation: boolean;
+  appState: AppState;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -49,16 +50,15 @@ export class ScrollerComponent implements OnInit {
     private cameraService: CameraService,
     private location: Location,
     private router: Router,
-    private configService: ConfigService,
-    private viewportRuler: ViewportRuler
+    private viewportRuler: ViewportRuler,
+    private stateService: StateService
   ) {}
 
   ngOnInit(): void {
-    this.configService.orientation$.subscribe((orientation) => {
-      this.orientation = orientation;
-    });
-    this.configService.scrollSpeed.subscribe((speed) => {
-      this.scrollSpeed = speed;
+    this.stateService.state$.subscribe((state) => {
+      this.appState = state;
+      this.scrollSpeed = state.speed;
+      this.orientation = state.orientation;
     });
     this.viewportRuler.change(this.RESIZE_THROTLE_TIME).subscribe(() => {
       // define iframe height on resize
@@ -93,7 +93,7 @@ export class ScrollerComponent implements OnInit {
           this.openBlockedCameraModal();
           break;
         case CameraStates.Allowed:
-          if (this.isMobile && !this.isWarningAccepted && this.configService.shouldShowWarning()) {
+          if (this.isMobile && !this.isWarningAccepted && this.appState.showMobileWarning) {
             this.openMobileWarning();
           } else {
             this.openInstructionsModal();
@@ -124,7 +124,7 @@ export class ScrollerComponent implements OnInit {
   }
 
   openInstructionsModal(): void {
-    if (this.configService.shouldShowTutorial()) {
+    if (this.appState.showTutorial) {
       const ref = this.modalService.open(TutorialComponent, { centered: true });
       merge(ref.closed, ref.dismissed)
         .pipe(take(1))

@@ -1,8 +1,8 @@
 import { Component, Output, EventEmitter, Input, ViewChild } from '@angular/core';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { ProxyService } from 'src/app/core/proxy.service';
+import { AppState, StateService } from 'src/app/core/state.service';
 import { UrlService } from 'src/app/core/url.service';
-import { ConfigService } from 'src/app/scroller/services/config.service';
 import { ErrorMessages } from 'src/app/scroller/services/error.model';
 
 @Component({
@@ -31,10 +31,12 @@ export class SearchFieldComponent {
   isInputFocused: boolean;
   favicon: string;
   shouldShowFavicon = true;
+  appState: AppState;
 
-  constructor(private proxyService: ProxyService, private configService: ConfigService, private urlService: UrlService) {}
+  constructor(private proxyService: ProxyService, private urlService: UrlService, private stateService: StateService) {}
 
   onSearch(): void {
+    this.stateService.state$.subscribe((state) => (this.appState = state));
     this.errorTooltip?.close();
     this.shouldShowFavicon = false;
     this.hasSearched = true;
@@ -58,12 +60,12 @@ export class SearchFieldComponent {
   private showError(): void {
     this.fail.emit();
     this.shouldShowFavicon = false;
-    this.configService.error$.subscribe(({ message }) => (this.errorTooltipMessage = message));
+    this.errorTooltipMessage = this.appState.error.message;
     this.errorTooltip?.open();
   }
 
   private loadWebsite(): void {
-    this.configService.updateCurrentWebsite(this.website);
+    this.stateService.updateState({ currentWebsite: this.website });
     this.favicon = this.getFavicon(this.website);
     this.search.emit(this.website);
   }

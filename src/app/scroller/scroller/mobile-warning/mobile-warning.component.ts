@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConfigService } from '../../services/config.service';
+import { StateService } from 'src/app/core/state.service';
 
 @Component({
   selector: 'app-mobile-warning',
@@ -8,7 +8,7 @@ import { ConfigService } from '../../services/config.service';
   styleUrls: ['./mobile-warning.component.scss'],
 })
 export class MobileWarningComponent {
-  constructor(public activeModal: NgbActiveModal, private configService: ConfigService) {}
+  constructor(public activeModal: NgbActiveModal, private stateService: StateService) {}
 
   done(): void {
     this.activeModal.close();
@@ -16,9 +16,9 @@ export class MobileWarningComponent {
 
   updateWarningStatus(selected: boolean): void {
     if (selected) {
-      this.configService.stopShowingWarning();
+      this.stateService.updateState({ showMobileWarning: false });
     } else {
-      this.configService.keepShowingWarning();
+      this.stateService.updateState({ showMobileWarning: true });
     }
   }
 }

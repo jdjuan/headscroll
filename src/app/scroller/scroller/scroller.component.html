@@ -4,7 +4,7 @@
     <span class="sr-only">Loading...</span>
   </div>
 </div>
-<div class="container-fluid" [class.hide]="isLoading" *ngIf="!isLoading">
+<div class="container-fluid px-4" [class.hide]="isLoading" *ngIf="!isLoading">
   <div class="row align-items-center header">
     <div class="col-lg-2 header-left">
       <h1 class="logo">
@@ -17,11 +17,11 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-lg-2" *ngIf="!isMobile">
+    <div class="col-lg-2 d-flex flex-column justify-content-between" *ngIf="!isMobile">
       <app-config></app-config>
       <app-camera (scrolling)="onScroll($event)"></app-camera>
     </div>
-    <div class="col-lg-10 content" >
+    <div class="col-lg content" >
       <app-camera *ngIf="isMobile" (scrolling)="onScroll($event)"></app-camera>
       <div #iframeWrapper class="iframe-wrapper" [style.height.px]="defaultIframeHeight" [class.mobile]="isMobile">
         <iframe class="iframe" [src]="websiteSafeUrl" [height]="iframeHeight"></iframe>

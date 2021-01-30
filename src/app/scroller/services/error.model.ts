@@ -12,5 +12,5 @@ export const ErrorMessages: Record<ErrorType, string> = {
 
 export interface ScrollerError {
   type: ErrorType;
-  message: string;
+  message?: string;
 }

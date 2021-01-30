@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { StateService } from 'src/app/core/state.service';
 import { CameraService } from '../../services/camera.service';
-import { ConfigService } from '../../services/config.service';
 
 @UntilDestroy()
 @Component({
@@ -13,18 +13,16 @@ import { ConfigService } from '../../services/config.service';
 export class ConfigComponent implements OnInit {
   @ViewChild('reportTooltip') reportTooltip: NgbTooltip;
   isReportSent: boolean;
-  direction: boolean;
+  orientation: boolean;
   scrollSpeed: number;
   cameras: MediaDeviceInfo[];
   selectedCamera: string;
 
-  constructor(private configService: ConfigService, private cameraService: CameraService) {}
+  constructor(private cameraService: CameraService, private stateService: StateService) {}
   ngOnInit(): void {
-    this.configService.scrollSpeed.pipe(untilDestroyed(this)).subscribe((speed) => {
-      this.scrollSpeed = speed;
-    });
-    this.configService.orientation$.pipe(untilDestroyed(this)).subscribe((direction) => {
-      this.direction = direction;
+    this.stateService.state$.subscribe((state) => {
+      this.scrollSpeed = state.speed;
+      this.orientation = state.orientation;
     });
     this.cameraService.getAvailableCameras().then((cameras) => {
       this.cameras = cameras;
@@ -35,23 +33,14 @@ export class ConfigComponent implements OnInit {
   }
 
   updateSpeed(): void {
-    this.configService.changeSpeed(this.scrollSpeed);
+    this.stateService.updateState({ speed: this.scrollSpeed });
   }
 
   updateCamera(deviceId: string): void {
     this.cameraService.changeCamera(deviceId);
   }
 
-  updateDirection(direction: boolean): void {
-    this.configService.changeOrientation(direction);
-  }
-
-  sendReport(): void {
-    this.reportTooltip.open();
-    this.isReportSent = true;
-    this.configService.currentWebsite$.pipe(untilDestroyed(this)).subscribe(console.log);
-    setTimeout(() => {
-      this.isReportSent = false;
-    }, 4000);
+  updateDirection(orientation: boolean): void {
+    this.stateService.updateState({ orientation });
   }
 }
