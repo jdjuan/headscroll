@@ -19,7 +19,7 @@ export class DomainMap {
     this.id = data.id;
     this.domain = data.domain;
     this.protocol = data.protocol ?? 'https';
-    this.state = data.state ?? DomainState.InRevision;
+    this.state = data.state ?? DomainState.Pending;
     this.requests = data.requests ?? 1;
   }
 
@@ -36,5 +36,5 @@ export class DomainMap {
 export enum DomainState {
   Approved = 'Approved',
   Dennied = 'Denied',
-  InRevision = 'InRevision',
+  Pending = 'Pending',
 }
