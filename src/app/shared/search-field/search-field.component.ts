@@ -58,6 +58,8 @@ export class SearchFieldComponent implements OnInit {
       if (this.proxyService.validateWebsite(this.website)) {
         this.urlService.updateUrl(this.website);
         this.loadWebsite();
+      } else {
+        this.stateService.dispatchError(ErrorType.NotSupported);
       }
     });
   }
@@ -69,6 +71,8 @@ export class SearchFieldComponent implements OnInit {
       this.isLoading = true;
       if (this.proxyService.validateWebsite(this.website)) {
         this.loadWebsite();
+      } else {
+        this.stateService.dispatchError(ErrorType.NotSupported);
       }
     } else {
       this.errorTooltipMessage = ErrorMessages.UrlIsRequired;

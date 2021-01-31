@@ -1,28 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { of } from 'rxjs';
-import { map, catchError, timeout } from 'rxjs/operators';
 import { StateService } from 'src/app/core/state.service';
 import { UrlService } from 'src/app/core/url.service';
-import { ErrorMessages, ErrorType } from 'src/app/scroller/services/error.model';
-
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProxyService {
   private readonly TIMEOUT = 9000;
-  private readonly PROXY_URL = 'https://api.codetabs.com/v1/headers/?domain=';
   private cachedUrls: Record<string, boolean> = {};
 
-  constructor(
-    private http: HttpClient,
-    private stateService: StateService,
-    private urlService: UrlService,
-
-  ) {}
+  constructor(private http: HttpClient, private stateService: StateService, private urlService: UrlService) {}
 
   validateWebsite(website: string): boolean {
     website = this.urlService.normalizeUrl(website);
@@ -30,7 +18,6 @@ export class ProxyService {
     if (website) {
       return true;
     } else {
-      this.stateService.dispatchError(ErrorType.NotSupported);
       return false;
     }
   }
