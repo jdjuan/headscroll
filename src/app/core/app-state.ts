@@ -7,13 +7,15 @@ export interface AppState {
   showTutorial: boolean;
   showMobileWarning: boolean;
   error: ScrollerError;
+  selectedCameraId: string;
 }
 
-export const initialState = {
+export const initialState: AppState = {
   speed: 20,
   orientation: false,
   currentWebsite: null,
   showTutorial: true,
   showMobileWarning: true,
   error: null,
+  selectedCameraId: null,
 };

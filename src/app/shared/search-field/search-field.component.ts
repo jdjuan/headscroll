@@ -40,12 +40,14 @@ export class SearchFieldComponent implements OnInit {
   }
 
   onError(): void {
-    this.stateService.error$.subscribe((error) => {
-      const errors = [ErrorType.Required, ErrorType.NotSupported];
-      if (errors.includes(error.type)) {
-        this.showError(error.message);
-      }
-    });
+    this.stateService
+      .select((state) => state.error)
+      .subscribe((error) => {
+        const errors = [ErrorType.Required, ErrorType.NotSupported];
+        if (errors.includes(error.type)) {
+          this.showError(error.message);
+        }
+      });
   }
 
   onBookmarkletSearch(): void {
@@ -75,6 +77,7 @@ export class SearchFieldComponent implements OnInit {
   }
 
   private showError(message: string): void {
+    this.isLoading = false;
     this.shouldShowFavicon = false;
     this.errorTooltipMessage = message;
     setTimeout(() => {

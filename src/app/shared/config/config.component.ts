@@ -23,12 +23,10 @@ export class ConfigComponent implements OnInit {
     this.stateService.state$.subscribe((state) => {
       this.scrollSpeed = state.speed;
       this.orientation = state.orientation;
+      this.selectedCamera = state.selectedCameraId;
     });
     this.cameraService.getAvailableCameras().then((cameras) => {
       this.cameras = cameras;
-    });
-    this.cameraService.selectedCamera$.pipe(untilDestroyed(this)).subscribe((deviceId) => {
-      this.selectedCamera = deviceId;
     });
   }
 
@@ -36,8 +34,9 @@ export class ConfigComponent implements OnInit {
     this.stateService.updateState({ speed: this.scrollSpeed });
   }
 
-  updateCamera(deviceId: string): void {
-    this.cameraService.changeCamera(deviceId);
+  updateCamera(selectedCameraId: string): void {
+    this.stateService.updateState({ selectedCameraId });
+    // this.cameraService.changeCamera(deviceId);
   }
 
   updateDirection(orientation: boolean): void {

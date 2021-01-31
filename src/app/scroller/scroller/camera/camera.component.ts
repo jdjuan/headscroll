@@ -5,7 +5,10 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { LARGE_BREAKPOINT } from 'src/app/core/constants';
 import { timer } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { StateService } from 'src/app/core/state.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { ErrorType } from 'src/app/scroller/services/error.model';
 
 @UntilDestroy()
 @Component({
@@ -19,9 +22,15 @@ export class CameraComponent implements OnInit {
   readonly DEBOUNCE_PREDICTION_TIME = 100;
   // source: MediaProvider;
   model: CustomPoseNet;
+  onCameraChange$ = new Subject();
 
-  constructor(private breakpointObserver: BreakpointObserver, private cameraService: CameraService) {
-    this.cameraService.selectedCamera$.pipe(filter((deviceId) => !!deviceId)).subscribe(this.setupWebcam);
+  constructor(private breakpointObserver: BreakpointObserver, private cameraService: CameraService, private stateService: StateService) {
+    this.stateService
+      .select<string>((state) => state.selectedCameraId)
+      .subscribe((selectedCameraId) => {
+        this.onCameraChange$.next();
+        this.setupWebcam(selectedCameraId);
+      });
   }
   ngOnInit(): void {
     this.init();
@@ -49,13 +58,14 @@ export class CameraComponent implements OnInit {
       this.video.nativeElement.srcObject = webcam.webcam.srcObject;
       this.video.nativeElement.play();
     } catch (error) {
+      this.stateService.dispatchError(ErrorType.CameraNotLoaded);
       console.log('Could not load the camera');
       console.log(error);
     }
   }
 
   startPredicting(): void {
-    timer(0, this.DEBOUNCE_PREDICTION_TIME).subscribe(this.predict);
+    timer(0, this.DEBOUNCE_PREDICTION_TIME).pipe(takeUntil(this.onCameraChange$)).subscribe(this.predict);
   }
 
   predict = async (): Promise<void> => {

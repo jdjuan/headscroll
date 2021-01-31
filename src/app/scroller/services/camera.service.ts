@@ -1,32 +1,49 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { from, merge, Observable, Subject, interval, of } from 'rxjs';
-import { catchError, mapTo, take } from 'rxjs/operators';
-
-export enum CameraStates {
-  Allowed = 'Camera is allowed',
-  Blocked = 'Camera is blocked',
-  Timeout = 'Camera request timed out',
-}
+import { from, Observable } from 'rxjs';
+import { interval, of } from 'rxjs';
+import { catchError, mapTo, tap, timeout } from 'rxjs/operators';
+import { StateService } from 'src/app/core/state.service';
+import { ErrorType } from 'src/app/scroller/services/error.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CameraService {
-  private _selectedCamera$ = new BehaviorSubject<string>('');
-  readonly CAMERA_PERMISSION_TIMEOUT = 5000;
+  readonly CAMERA_PERMISSION_TIMEOUT = 3000;
 
-  hasCameraPermission(): Observable<CameraStates> {
+  constructor(private stateService: StateService) {}
+
+  hasCameraPermissions(): Observable<boolean> {
     try {
-      const cameraPermission$ = from(navigator.mediaDevices.getUserMedia({ video: true })).pipe(
-        mapTo(CameraStates.Allowed),
-        catchError(() => of(CameraStates.Blocked))
+      return from(navigator.mediaDevices.getUserMedia({ video: { frameRate: 24, facingMode: 'user' } })).pipe(
+        mapTo(true),
+        catchError((error) => {
+          console.log(error);
+          this.stateService.dispatchError(ErrorType.CameraBlocked);
+          return of(false);
+        }),
+        timeout(this.CAMERA_PERMISSION_TIMEOUT),
+        catchError((error) => {
+          console.log(error);
+          this.stateService.dispatchError(ErrorType.CameraRequestTimedOut);
+          return of(false);
+        })
       );
-      const timeout$ = interval(this.CAMERA_PERMISSION_TIMEOUT).pipe(mapTo(CameraStates.Timeout));
-      return merge(cameraPermission$, timeout$).pipe(take(1));
     } catch (error) {
-      return of(CameraStates.Blocked);
+      console.log(error);
+      this.stateService.dispatchError(ErrorType.CameraBlocked);
+      return of(false);
     }
+    // try {
+    //   const cameraPermission$ = from(navigator.mediaDevices.getUserMedia({ video: true })).pipe(
+    //     mapTo(CameraStatus.Allowed),
+    //     catchError(() => of(CameraStatus.Blocked))
+    //   );
+    //   const timeout$ = interval(this.CAMERA_PERMISSION_TIMEOUT).pipe(mapTo(CameraStatus.Timeout));
+    //   return merge(cameraPermission$, timeout$).pipe(take(1));
+    // } catch (error) {
+    //   return of(CameraStatus.Blocked);
+    // }
   }
 
   async getAvailableCameras(): Promise<MediaDeviceInfo[]> {
@@ -37,13 +54,5 @@ export class CameraService {
     } catch (error) {
       return null;
     }
-  }
-
-  changeCamera(deviceId: string): void {
-    this._selectedCamera$.next(deviceId);
-  }
-
-  get selectedCamera$(): Observable<string> {
-    return this._selectedCamera$.asObservable();
   }
 }

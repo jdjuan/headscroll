@@ -2,9 +2,9 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { AllowCameraComponent } from './allow-camera/allow-camera.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { merge } from 'rxjs';
-import { CameraService, CameraStates } from '../services/camera.service';
-import { take } from 'rxjs/operators';
+import { merge, of } from 'rxjs';
+import { CameraService } from '../services/camera.service';
+import { delay, filter, switchMap, take } from 'rxjs/operators';
 import { BlockedCameraComponent } from './blocked-camera/blocked-camera.component';
 import { TutorialComponent } from './tutorial/tutorial.component';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -14,6 +14,8 @@ import { ConfigModalComponent } from './config-modal/config-modal.component';
 import { MobileWarningComponent } from './mobile-warning/mobile-warning.component';
 import { StateService } from 'src/app/core/state.service';
 import { AppState } from 'src/app/core/app-state';
+import { ErrorType } from 'src/app/scroller/services/error.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-scroller',
@@ -28,12 +30,8 @@ export class ScrollerComponent implements OnInit {
   iframeHeight: number;
   website: string;
   isMobile = this.breakpointObserver.isMatched(LARGE_BREAKPOINT);
-  shouldRequestCam: boolean;
   isLoading = true;
-  isTutorialFinished: boolean;
   isConfigOpen: boolean;
-  hasAtLeastLoadedAWebsite: boolean;
-  isWarningAccepted: boolean;
   appState: AppState;
 
   constructor(
@@ -58,6 +56,7 @@ export class ScrollerComponent implements OnInit {
       this.isMobile = matches;
       this.defineIframeHeight();
     });
+    this.displayModals();
     this.checkCameraStatus();
   }
 
@@ -70,43 +69,46 @@ export class ScrollerComponent implements OnInit {
     this.iframeHeight = this.defaultIframeHeight;
   }
 
-  checkCameraStatus = (): void => {
-    this.cameraService.hasCameraPermission().subscribe((isCameraAvailable) => {
-      switch (isCameraAvailable) {
-        case CameraStates.Timeout:
-          this.openEnableCameraModal();
-          break;
-        case CameraStates.Blocked:
-          this.openBlockedCameraModal();
-          break;
-        case CameraStates.Allowed:
-          if (this.isMobile && !this.isWarningAccepted && this.appState.showMobileWarning) {
-            this.openMobileWarning();
-          } else {
-            this.openInstructionsModal();
-          }
-          break;
-      }
-    });
-  }
-
-  openMobileWarning(): void {
-    const ref = this.modalService.open(MobileWarningComponent, { centered: true });
-    merge(ref.closed, ref.dismissed)
-      .pipe(take(1))
-      .subscribe(() => {
-        this.isWarningAccepted = true;
-        this.checkCameraStatus();
+  displayModals(): void {
+    this.stateService
+      .select((state) => state.error)
+      .subscribe((error) => {
+        switch (error.type) {
+          case ErrorType.CameraBlocked:
+            this.openBlockedCameraModal();
+            break;
+          case ErrorType.CameraRequestTimedOut:
+            this.openEnableCameraModal();
+            break;
+        }
       });
   }
 
-  openEnableCameraModal(): void {
-    const ref = this.modalService.open(AllowCameraComponent, { centered: true });
-    merge(ref.closed, ref.dismissed).pipe(take(1)).subscribe(this.checkCameraStatus);
+  checkCameraStatus = (): void => {
+    this.cameraService
+      .hasCameraPermissions()
+      .pipe(filter(Boolean), switchMap(this.openMobileWarning))
+      .subscribe(() => {
+        this.openInstructionsModal();
+      });
   }
 
   openBlockedCameraModal(): void {
     const ref = this.modalService.open(BlockedCameraComponent, { centered: true });
+    merge(ref.closed, ref.dismissed).pipe(take(1), delay(1000)).subscribe(this.checkCameraStatus);
+  }
+
+  openMobileWarning = (): Observable<boolean> => {
+    if (this.isMobile && this.appState.showMobileWarning) {
+      const ref = this.modalService.open(MobileWarningComponent, { centered: true });
+      return merge(ref.closed, ref.dismissed).pipe(take(1));
+    } else {
+      return of(true);
+    }
+  }
+
+  openEnableCameraModal(): void {
+    const ref = this.modalService.open(AllowCameraComponent, { centered: true });
     merge(ref.closed, ref.dismissed).pipe(take(1)).subscribe(this.checkCameraStatus);
   }
 
@@ -116,21 +118,17 @@ export class ScrollerComponent implements OnInit {
       merge(ref.closed, ref.dismissed)
         .pipe(take(1))
         .subscribe(() => {
-          this.isTutorialFinished = true;
           this.isLoading = false;
         });
     } else {
-      this.isTutorialFinished = true;
       this.isLoading = false;
     }
   }
 
   onSearchWebsite(website: string): void {
-    this.hasAtLeastLoadedAWebsite = true;
     this.iframeWrapper?.nativeElement.scrollTo(0, 0);
     this.iframeHeight = this.defaultIframeHeight;
     this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(website);
-    this.shouldRequestCam = true;
   }
 
   onScroll(direction: boolean): void {
