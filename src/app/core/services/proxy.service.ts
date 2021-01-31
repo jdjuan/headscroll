@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { StateService } from 'src/app/core/state.service';
-import { UrlService } from 'src/app/core/url.service';
+import { StateService } from 'src/app/core/services/state.service';
+import { UrlService } from 'src/app/core/services/url.service';
 
 @Injectable({
   providedIn: 'root',

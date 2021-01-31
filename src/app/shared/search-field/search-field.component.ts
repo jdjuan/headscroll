@@ -2,11 +2,11 @@ import { Component, Output, EventEmitter, Input, ViewChild, OnInit } from '@angu
 import { ActivatedRoute } from '@angular/router';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { filter, pluck } from 'rxjs/operators';
-import { StateService } from 'src/app/core/state.service';
-import { ErrorMessages, ErrorType, ScrollerError } from 'src/app/scroller/services/error.model';
-import { ProxyService } from 'src/app/core/proxy.service';
-import { UrlService } from 'src/app/core/url.service';
-import { AppState } from 'src/app/core/app-state';
+import { StateService } from 'src/app/core/services/state.service';
+import { ErrorMessages, ErrorType, ScrollerError } from 'src/app/core/models/error.model';
+import { ProxyService } from 'src/app/core/services/proxy.service';
+import { UrlService } from 'src/app/core/services/url.service';
+import { AppState } from 'src/app/core/models/app-state.model';
 
 @Component({
   selector: 'app-search-field',

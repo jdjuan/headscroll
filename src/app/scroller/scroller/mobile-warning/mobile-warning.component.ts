@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { StateService } from 'src/app/core/state.service';
+import { StateService } from 'src/app/core/services/state.service';
 
 @Component({
   selector: 'app-mobile-warning',

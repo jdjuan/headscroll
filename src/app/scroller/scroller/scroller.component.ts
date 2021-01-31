@@ -1,21 +1,18 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { AllowCameraComponent } from './allow-camera/allow-camera.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { merge, of } from 'rxjs';
-import { CameraService } from '../services/camera.service';
-import { delay, filter, switchMap, take } from 'rxjs/operators';
-import { BlockedCameraComponent } from './blocked-camera/blocked-camera.component';
-import { TutorialComponent } from './tutorial/tutorial.component';
-import { BreakpointObserver } from '@angular/cdk/layout';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { combineLatest, merge } from 'rxjs';
+import { CameraService } from '../../core/services/camera.service';
+import { filter } from 'rxjs/operators';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ViewportRuler } from '@angular/cdk/scrolling';
-import { LARGE_BREAKPOINT } from 'src/app/core/constants';
-import { ConfigModalComponent } from './config-modal/config-modal.component';
-import { MobileWarningComponent } from './mobile-warning/mobile-warning.component';
-import { StateService } from 'src/app/core/state.service';
-import { AppState } from 'src/app/core/app-state';
-import { ErrorType } from 'src/app/scroller/services/error.model';
-import { Observable } from 'rxjs';
+import { LARGE_BREAKPOINT } from 'src/app/core/models/constants';
+import { StateService } from 'src/app/core/services/state.service';
+import { AppState } from 'src/app/core/models/app-state.model';
+import { CameraStatus } from 'src/app/core/models/camera-status.model';
+import { ModalService } from 'src/app/core/services/modal.service';
+import { WebglService } from 'src/app/core/services/webgl.service';
+import { WebglStatus } from 'src/app/core/models/webgl-status.model';
 
 @Component({
   selector: 'app-scroller',
@@ -37,30 +34,29 @@ export class ScrollerComponent implements OnInit {
   constructor(
     private sanitizer: DomSanitizer,
     private breakpointObserver: BreakpointObserver,
-    private modalService: NgbModal,
+    private modalService: ModalService,
     private cameraService: CameraService,
+    private webglService: WebglService,
     private viewportRuler: ViewportRuler,
     private stateService: StateService
   ) {}
 
   ngOnInit(): void {
-    this.stateService.state$.subscribe((state) => {
-      this.appState = state;
-    });
-    this.viewportRuler.change(this.RESIZE_THROTLE_TIME).subscribe(() => {
-      // define iframe height on resize
-      this.defineIframeHeight();
-    });
-    this.breakpointObserver.observe([LARGE_BREAKPOINT]).subscribe(({ matches }) => {
-      // define iframe height on breakpoint change
-      this.isMobile = matches;
-      this.defineIframeHeight();
-    });
-    this.displayModals();
+    this.stateService.state$.subscribe((state) => (this.appState = state));
+    const resize$ = this.viewportRuler.change(this.RESIZE_THROTLE_TIME);
+    const breakpointChange$ = this.breakpointObserver.observe([LARGE_BREAKPOINT]);
+    merge(resize$, breakpointChange$).subscribe(this.setIframeHeight);
     this.checkCameraStatus();
+    this.checkWebglStatus();
+    this.displayInstructions();
   }
 
-  defineIframeHeight(): void {
+  // define iframe height on resize and breakpoint change
+  setIframeHeight = (result: Event | BreakpointState): void => {
+    const isMobile = (result as BreakpointState).matches;
+    if (isMobile !== undefined) {
+      this.isMobile = isMobile;
+    }
     if (this.isMobile) {
       this.defaultIframeHeight = window.innerHeight * 0.86 - 64;
     } else {
@@ -69,57 +65,61 @@ export class ScrollerComponent implements OnInit {
     this.iframeHeight = this.defaultIframeHeight;
   }
 
-  displayModals(): void {
-    this.stateService
-      .select((state) => state.error)
-      .subscribe((error) => {
-        switch (error.type) {
-          case ErrorType.CameraBlocked:
-            this.openBlockedCameraModal();
-            break;
-          case ErrorType.CameraRequestTimedOut:
-            this.openEnableCameraModal();
-            break;
-        }
-      });
+  checkCameraStatus(): void {
+    let modalRef: NgbModalRef;
+    const cameraStatus$ = this.stateService.select((state) => state.cameraStatus);
+    cameraStatus$.subscribe((cameraStatus) => {
+      switch (cameraStatus) {
+        case CameraStatus.Blocked:
+          this.modalService.openBlockedCameraModal();
+          break;
+        case CameraStatus.TimedOut:
+          modalRef = this.modalService.openEnableCameraModal();
+          break;
+        case CameraStatus.Ready:
+          modalRef?.close();
+          break;
+      }
+    });
+    this.cameraService.requestCameraAccess();
   }
 
-  checkCameraStatus = (): void => {
-    this.cameraService
-      .hasCameraPermissions()
-      .pipe(filter(Boolean), switchMap(this.openMobileWarning))
-      .subscribe(() => {
-        this.openInstructionsModal();
-      });
+  checkWebglStatus(): void {
+    const isCameraReady = (status: CameraStatus) => status === CameraStatus.Ready;
+    const cameraStatus$ = this.stateService.select((state) => state.cameraStatus).pipe(filter(isCameraReady));
+    const webglStatus$ = this.stateService.select((state) => state.webglStatus);
+    combineLatest([cameraStatus$, webglStatus$]).subscribe(([cameraStatus, webglStatus]) => {
+      switch (webglStatus) {
+        case WebglStatus.Unknow:
+          this.webglService.detectWebGLContext();
+          break;
+        case WebglStatus.NotSupported:
+          this.modalService.openWebglNotSupportedModal();
+          break;
+        case WebglStatus.Supported:
+          this.displayInstructions();
+          break;
+      }
+    });
   }
 
-  openBlockedCameraModal(): void {
-    const ref = this.modalService.open(BlockedCameraComponent, { centered: true });
-    merge(ref.closed, ref.dismissed).pipe(take(1), delay(1000)).subscribe(this.checkCameraStatus);
+  displayInstructions(): void {
+    const isWebglSupported = (status: WebglStatus) => status === WebglStatus.Supported;
+    const webglStatus$ = this.stateService.select((state) => state.webglStatus).pipe(filter(isWebglSupported));
+    webglStatus$.subscribe(() => {
+      if (this.isMobile && this.appState.showMobileWarning) {
+        this.modalService.openMobileWarning().subscribe(this.displayTutorial);
+      } else {
+        this.displayTutorial();
+      }
+    });
   }
 
-  openMobileWarning = (): Observable<boolean> => {
-    if (this.isMobile && this.appState.showMobileWarning) {
-      const ref = this.modalService.open(MobileWarningComponent, { centered: true });
-      return merge(ref.closed, ref.dismissed).pipe(take(1));
-    } else {
-      return of(true);
-    }
-  }
-
-  openEnableCameraModal(): void {
-    const ref = this.modalService.open(AllowCameraComponent, { centered: true });
-    merge(ref.closed, ref.dismissed).pipe(take(1)).subscribe(this.checkCameraStatus);
-  }
-
-  openInstructionsModal(): void {
+  displayTutorial = (): void => {
     if (this.appState.showTutorial) {
-      const ref = this.modalService.open(TutorialComponent, { centered: true });
-      merge(ref.closed, ref.dismissed)
-        .pipe(take(1))
-        .subscribe(() => {
-          this.isLoading = false;
-        });
+      this.modalService.openInstructionsModal().subscribe(() => {
+        this.isLoading = false;
+      });
     } else {
       this.isLoading = false;
     }
@@ -166,13 +166,13 @@ export class ScrollerComponent implements OnInit {
     this.iframeWrapper.nativeElement.scrollBy(0, speed);
   }
 
-  openConfig(): void {
-    this.isConfigOpen = true;
-    const ref = this.modalService.open(ConfigModalComponent, { scrollable: true, windowClass: 'config-modal' });
-    merge(ref.closed, ref.dismissed)
-      .pipe(take(1))
-      .subscribe(() => {
-        this.isConfigOpen = false;
-      });
-  }
+  // openConfig(): void {
+  //   this.isConfigOpen = true;
+  //   const ref = this.modalService.open(ConfigModalComponent, { scrollable: true, windowClass: 'config-modal' });
+  //   merge(ref.closed, ref.dismissed)
+  //     .pipe(take(1))
+  //     .subscribe(() => {
+  //       this.isConfigOpen = false;
+  //     });
+  // }
 }

@@ -1,4 +1,6 @@
-import { ScrollerError } from 'src/app/scroller/services/error.model';
+import { CameraStatus } from 'src/app/core/models/camera-status.model';
+import { WebglStatus } from 'src/app/core/models/webgl-status.model';
+import { ScrollerError } from 'src/app/core/models/error.model';
 
 export interface AppState {
   speed: number;
@@ -7,6 +9,8 @@ export interface AppState {
   showTutorial: boolean;
   showMobileWarning: boolean;
   error: ScrollerError;
+  cameraStatus: CameraStatus;
+  webglStatus: WebglStatus;
   selectedCameraId: string;
 }
 
@@ -17,5 +21,7 @@ export const initialState: AppState = {
   showTutorial: true,
   showMobileWarning: true,
   error: null,
+  webglStatus: WebglStatus.Unknow,
+  cameraStatus: CameraStatus.Unknown,
   selectedCameraId: null,
 };

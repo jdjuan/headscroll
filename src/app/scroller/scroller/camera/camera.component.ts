@@ -1,14 +1,14 @@
 import { Component, ElementRef, ViewChild, Output, EventEmitter, OnInit } from '@angular/core';
 import { Webcam, CustomPoseNet, load } from '@teachablemachine/pose';
-import { CameraService } from '../../services/camera.service';
+import { CameraService } from '../../../core/services/camera.service';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { LARGE_BREAKPOINT } from 'src/app/core/constants';
+import { LARGE_BREAKPOINT } from 'src/app/core/models/constants';
 import { timer } from 'rxjs';
-import { StateService } from 'src/app/core/state.service';
+import { StateService } from 'src/app/core/services/state.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ErrorType } from 'src/app/scroller/services/error.model';
+import { ErrorType } from 'src/app/core/models/error.model';
 
 @UntilDestroy()
 @Component({
