@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { StateService } from 'src/app/core/state.service';
 import { CameraService } from '../../scroller/services/camera.service';
 
@@ -26,7 +26,9 @@ export class ConfigComponent implements OnInit {
       this.selectedCamera = state.selectedCameraId;
     });
     this.cameraService.getAvailableCameras().then((cameras) => {
-      this.cameras = cameras;
+      if (cameras?.length > 1) {
+        this.cameras = cameras;
+      }
     });
   }
 
@@ -36,7 +38,6 @@ export class ConfigComponent implements OnInit {
 
   updateCamera(selectedCameraId: string): void {
     this.stateService.updateState({ selectedCameraId });
-    // this.cameraService.changeCamera(deviceId);
   }
 
   updateDirection(orientation: boolean): void {

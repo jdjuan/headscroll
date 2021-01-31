@@ -34,16 +34,6 @@ export class CameraService {
       this.stateService.dispatchError(ErrorType.CameraBlocked);
       return of(false);
     }
-    // try {
-    //   const cameraPermission$ = from(navigator.mediaDevices.getUserMedia({ video: true })).pipe(
-    //     mapTo(CameraStatus.Allowed),
-    //     catchError(() => of(CameraStatus.Blocked))
-    //   );
-    //   const timeout$ = interval(this.CAMERA_PERMISSION_TIMEOUT).pipe(mapTo(CameraStatus.Timeout));
-    //   return merge(cameraPermission$, timeout$).pipe(take(1));
-    // } catch (error) {
-    //   return of(CameraStatus.Blocked);
-    // }
   }
 
   async getAvailableCameras(): Promise<MediaDeviceInfo[]> {
@@ -52,6 +42,7 @@ export class CameraService {
       const cameras = devices.filter((device) => device.kind === 'videoinput');
       return cameras;
     } catch (error) {
+      this.stateService.dispatchError(ErrorType.CameraBlocked);
       return null;
     }
   }
