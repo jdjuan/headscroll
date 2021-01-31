@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { StateService } from 'src/app/core/services/state.service';
+import { StoreService } from 'src/app/core/services/store.service';
 
 @Component({
   selector: 'app-tutorial',
@@ -8,7 +8,7 @@ import { StateService } from 'src/app/core/services/state.service';
   styleUrls: ['./tutorial.component.scss'],
 })
 export class TutorialComponent {
-  constructor(public activeModal: NgbActiveModal, private stateService: StateService) {}
+  constructor(public activeModal: NgbActiveModal, private storeService: StoreService) {}
 
   done(): void {
     this.activeModal.close();
@@ -16,9 +16,9 @@ export class TutorialComponent {
 
   updateTutorialStatus(selected: boolean): void {
     if (selected) {
-      this.stateService.updateState({ showTutorial: false });
+      this.storeService.updateState({ showTutorial: false });
     } else {
-      this.stateService.updateState({ showTutorial: true });
+      this.storeService.updateState({ showTutorial: true });
     }
   }
 }

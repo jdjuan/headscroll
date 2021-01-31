@@ -7,7 +7,7 @@ import { filter } from 'rxjs/operators';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { LARGE_BREAKPOINT } from 'src/app/core/models/constants';
-import { StateService } from 'src/app/core/services/state.service';
+import { StoreService } from 'src/app/core/services/store.service';
 import { AppState } from 'src/app/core/models/app-state.model';
 import { CameraStatus } from 'src/app/core/models/camera-status.model';
 import { ModalService } from 'src/app/core/services/modal.service';
@@ -38,11 +38,11 @@ export class ScrollerComponent implements OnInit {
     private cameraService: CameraService,
     private webglService: WebglService,
     private viewportRuler: ViewportRuler,
-    private stateService: StateService
+    private storeService: StoreService
   ) {}
 
   ngOnInit(): void {
-    this.stateService.state$.subscribe((state) => (this.appState = state));
+    this.storeService.state$.subscribe((state) => (this.appState = state));
     const resize$ = this.viewportRuler.change(this.RESIZE_THROTLE_TIME);
     const breakpointChange$ = this.breakpointObserver.observe([LARGE_BREAKPOINT]);
     merge(resize$, breakpointChange$).subscribe(this.setIframeHeight);
@@ -67,7 +67,7 @@ export class ScrollerComponent implements OnInit {
 
   checkCameraStatus(): void {
     let modalRef: NgbModalRef;
-    const cameraStatus$ = this.stateService.select((state) => state.cameraStatus);
+    const cameraStatus$ = this.storeService.select((state) => state.cameraStatus);
     cameraStatus$.subscribe((cameraStatus) => {
       switch (cameraStatus) {
         case CameraStatus.Blocked:
@@ -86,8 +86,8 @@ export class ScrollerComponent implements OnInit {
 
   checkWebglStatus(): void {
     const isCameraReady = (status: CameraStatus) => status === CameraStatus.Ready;
-    const cameraStatus$ = this.stateService.select((state) => state.cameraStatus).pipe(filter(isCameraReady));
-    const webglStatus$ = this.stateService.select((state) => state.webglStatus);
+    const cameraStatus$ = this.storeService.select((state) => state.cameraStatus).pipe(filter(isCameraReady));
+    const webglStatus$ = this.storeService.select((state) => state.webglStatus);
     combineLatest([cameraStatus$, webglStatus$]).subscribe(([cameraStatus, webglStatus]) => {
       switch (webglStatus) {
         case WebglStatus.Unknow:
@@ -105,7 +105,7 @@ export class ScrollerComponent implements OnInit {
 
   displayInstructions(): void {
     const isWebglSupported = (status: WebglStatus) => status === WebglStatus.Supported;
-    const webglStatus$ = this.stateService.select((state) => state.webglStatus).pipe(filter(isWebglSupported));
+    const webglStatus$ = this.storeService.select((state) => state.webglStatus).pipe(filter(isWebglSupported));
     webglStatus$.subscribe(() => {
       if (this.isMobile && this.appState.showMobileWarning) {
         this.modalService.openMobileWarning().subscribe(this.displayTutorial);

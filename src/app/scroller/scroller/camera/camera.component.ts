@@ -5,7 +5,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { LARGE_BREAKPOINT } from 'src/app/core/models/constants';
 import { timer } from 'rxjs';
-import { StateService } from 'src/app/core/services/state.service';
+import { StoreService } from 'src/app/core/services/store.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ErrorType } from 'src/app/core/models/error.model';
@@ -24,8 +24,8 @@ export class CameraComponent implements OnInit {
   model: CustomPoseNet;
   onCameraChange$ = new Subject();
 
-  constructor(private breakpointObserver: BreakpointObserver, private cameraService: CameraService, private stateService: StateService) {
-    this.stateService
+  constructor(private breakpointObserver: BreakpointObserver, private cameraService: CameraService, private storeService: StoreService) {
+    this.storeService
       .select<string>((state) => state.selectedCameraId)
       .subscribe((selectedCameraId) => {
         this.onCameraChange$.next();
@@ -58,7 +58,7 @@ export class CameraComponent implements OnInit {
       this.video.nativeElement.srcObject = webcam.webcam.srcObject;
       this.video.nativeElement.play();
     } catch (error) {
-      this.stateService.dispatchError(ErrorType.CameraNotLoaded);
+      this.storeService.dispatchError(ErrorType.CameraNotLoaded);
       console.log('Could not load the camera');
       console.log(error);
     }

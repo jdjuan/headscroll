@@ -8,7 +8,7 @@ import { ErrorMessages, ErrorType } from 'src/app/core/models/error.model';
 @Injectable({
   providedIn: 'root',
 })
-export class StateService {
+export class StoreService {
   private _state$ = new BehaviorSubject<AppState>(initialState);
   state$ = this._state$.asObservable();
 

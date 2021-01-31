@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { StateService } from 'src/app/core/services/state.service';
+import { StoreService } from 'src/app/core/services/store.service';
 import { CameraService } from '../../core/services/camera.service';
 
 @UntilDestroy()
@@ -18,9 +18,9 @@ export class ConfigComponent implements OnInit {
   cameras: MediaDeviceInfo[];
   selectedCamera: string;
 
-  constructor(private cameraService: CameraService, private stateService: StateService) {}
+  constructor(private cameraService: CameraService, private storeService: StoreService) {}
   ngOnInit(): void {
-    this.stateService.state$.subscribe((state) => {
+    this.storeService.state$.subscribe((state) => {
       this.scrollSpeed = state.speed;
       this.orientation = state.orientation;
       this.selectedCamera = state.selectedCameraId;
@@ -33,14 +33,14 @@ export class ConfigComponent implements OnInit {
   }
 
   updateSpeed(): void {
-    this.stateService.updateState({ speed: this.scrollSpeed });
+    this.storeService.updateState({ speed: this.scrollSpeed });
   }
 
   updateCamera(selectedCameraId: string): void {
-    this.stateService.updateState({ selectedCameraId });
+    this.storeService.updateState({ selectedCameraId });
   }
 
   updateDirection(orientation: boolean): void {
-    this.stateService.updateState({ orientation });
+    this.storeService.updateState({ orientation });
   }
 }

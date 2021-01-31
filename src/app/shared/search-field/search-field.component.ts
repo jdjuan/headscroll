@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter, Input, ViewChild, OnInit } from '@angu
 import { ActivatedRoute } from '@angular/router';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { filter, pluck } from 'rxjs/operators';
-import { StateService } from 'src/app/core/services/state.service';
+import { StoreService } from 'src/app/core/services/store.service';
 import { ErrorMessages, ErrorType, ScrollerError } from 'src/app/core/models/error.model';
 import { ProxyService } from 'src/app/core/services/proxy.service';
 import { UrlService } from 'src/app/core/services/url.service';
@@ -29,18 +29,18 @@ export class SearchFieldComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private proxyService: ProxyService,
-    private stateService: StateService,
+    private storeService: StoreService,
     private urlService: UrlService
   ) {}
 
   ngOnInit(): void {
-    this.stateService.state$.subscribe((state) => (this.appState = state));
+    this.storeService.state$.subscribe((state) => (this.appState = state));
     this.onError();
     this.onBookmarkletSearch();
   }
 
   onError(): void {
-    this.stateService
+    this.storeService
       .select((state) => state.error)
       .subscribe((error) => {
         const errors = [ErrorType.Required, ErrorType.NotSupported];
@@ -59,7 +59,7 @@ export class SearchFieldComponent implements OnInit {
         this.urlService.updateUrl(this.website);
         this.loadWebsite();
       } else {
-        this.stateService.dispatchError(ErrorType.NotSupported);
+        this.storeService.dispatchError(ErrorType.NotSupported);
       }
     });
   }
@@ -72,11 +72,11 @@ export class SearchFieldComponent implements OnInit {
       if (this.proxyService.validateWebsite(this.website)) {
         this.loadWebsite();
       } else {
-        this.stateService.dispatchError(ErrorType.NotSupported);
+        this.storeService.dispatchError(ErrorType.NotSupported);
       }
     } else {
       this.errorTooltipMessage = ErrorMessages.UrlIsRequired;
-      this.stateService.dispatchError(ErrorType.Required);
+      this.storeService.dispatchError(ErrorType.Required);
     }
   }
 
@@ -91,7 +91,7 @@ export class SearchFieldComponent implements OnInit {
 
   private loadWebsite(): void {
     this.isLoading = false;
-    this.stateService.updateState({ currentWebsite: this.website });
+    this.storeService.updateState({ currentWebsite: this.website });
     this.favicon = this.getFavicon(this.website);
     this.search.emit(this.website);
   }

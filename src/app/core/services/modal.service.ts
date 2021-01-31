@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { merge, Observable } from 'rxjs';
 import { delay, take, withLatestFrom } from 'rxjs/operators';
-import { StateService } from 'src/app/core/services/state.service';
+import { StoreService } from 'src/app/core/services/store.service';
 import { AllowCameraComponent } from 'src/app/scroller/scroller/allow-camera/allow-camera.component';
 import { BlockedCameraComponent } from 'src/app/scroller/scroller/blocked-camera/blocked-camera.component';
 import { MobileWarningComponent } from 'src/app/scroller/scroller/mobile-warning/mobile-warning.component';
@@ -12,9 +12,9 @@ import { TutorialComponent } from 'src/app/scroller/scroller/tutorial/tutorial.c
   providedIn: 'root',
 })
 export class ModalService {
-  private cameraStatus$ = this.stateService.select((state) => state.cameraStatus);
+  private cameraStatus$ = this.storeService.select((state) => state.cameraStatus);
 
-  constructor(private bootstrapModalService: NgbModal, private stateService: StateService) {}
+  constructor(private bootstrapModalService: NgbModal, private storeService: StoreService) {}
 
   openEnableCameraModal(): NgbModalRef {
     const ref = this.bootstrapModalService.open(AllowCameraComponent, { centered: true });
@@ -45,6 +45,6 @@ export class ModalService {
 
   triggerCameraStatusCheck = ([, cameraStatus]) => {
     // Trigger state reload to run modal display logic
-    this.stateService.updateState({ cameraStatus });
+    this.storeService.updateState({ cameraStatus });
   }
 }

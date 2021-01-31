@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { StateService } from 'src/app/core/services/state.service';
+import { StoreService } from 'src/app/core/services/store.service';
 import { UrlService } from 'src/app/core/services/url.service';
 
 @Injectable({
@@ -10,7 +10,7 @@ export class ProxyService {
   private readonly TIMEOUT = 9000;
   private cachedUrls: Record<string, boolean> = {};
 
-  constructor(private http: HttpClient, private stateService: StateService, private urlService: UrlService) {}
+  constructor(private http: HttpClient, private storeService: StoreService, private urlService: UrlService) {}
 
   validateWebsite(website: string): boolean {
     website = this.urlService.normalizeUrl(website);
