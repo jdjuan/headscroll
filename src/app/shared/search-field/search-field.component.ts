@@ -6,7 +6,6 @@ import { StoreService } from 'src/app/core/services/store.service';
 import { ErrorMessages, ErrorType, ScrollerError } from 'src/app/core/models/error.model';
 import { ProxyService } from 'src/app/core/services/proxy.service';
 import { UrlService } from 'src/app/core/services/url.service';
-import { AppState } from 'src/app/core/models/app-state.model';
 
 @Component({
   selector: 'app-search-field',
@@ -19,11 +18,10 @@ export class SearchFieldComponent implements OnInit {
   @Output() search = new EventEmitter();
   errorTooltipMessage: string;
   website = 'https://tabs.ultimate-guitar.com/tab/the-lumineers/stubborn-love-chords-1157323';
-  isLoading: boolean;
+  isLoading = true;
   isInputFocused: boolean;
   favicon: string;
   shouldShowFavicon = true;
-  appState: AppState;
   error: ScrollerError;
 
   constructor(
@@ -34,9 +32,14 @@ export class SearchFieldComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.storeService.state$.subscribe((state) => (this.appState = state));
     this.onError();
-    this.onBookmarkletSearch();
+    this.storeService
+      .select((state) => state.whitelist)
+      .pipe(filter(Boolean))
+      .subscribe(() => {
+        this.isLoading = false;
+        this.onBookmarkletSearch();
+      });
   }
 
   onError(): void {
@@ -55,12 +58,14 @@ export class SearchFieldComponent implements OnInit {
       this.website = website;
       this.favicon = this.getFavicon(website);
       this.isLoading = true;
-      if (this.proxyService.validateWebsite(this.website)) {
-        this.urlService.updateUrl(this.website);
-        this.loadWebsite();
-      } else {
-        this.storeService.dispatchError(ErrorType.NotSupported);
-      }
+      this.proxyService.validateWebsite(this.website).subscribe((isValid) => {
+        if (isValid) {
+          this.urlService.updateUrl(this.website);
+          this.loadWebsite();
+        } else {
+          this.storeService.dispatchError(ErrorType.NotSupported);
+        }
+      });
     });
   }
 
@@ -69,11 +74,13 @@ export class SearchFieldComponent implements OnInit {
       this.errorTooltip?.close();
       this.shouldShowFavicon = false;
       this.isLoading = true;
-      if (this.proxyService.validateWebsite(this.website)) {
-        this.loadWebsite();
-      } else {
-        this.storeService.dispatchError(ErrorType.NotSupported);
-      }
+      this.proxyService.validateWebsite(this.website).subscribe((isValid) => {
+        if (isValid) {
+          this.loadWebsite();
+        } else {
+          this.storeService.dispatchError(ErrorType.NotSupported);
+        }
+      });
     } else {
       this.errorTooltipMessage = ErrorMessages.UrlIsRequired;
       this.storeService.dispatchError(ErrorType.Required);
@@ -91,7 +98,6 @@ export class SearchFieldComponent implements OnInit {
 
   private loadWebsite(): void {
     this.isLoading = false;
-    this.storeService.updateState({ currentWebsite: this.website });
     this.favicon = this.getFavicon(this.website);
     this.search.emit(this.website);
   }

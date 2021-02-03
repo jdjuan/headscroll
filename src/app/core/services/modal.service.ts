@@ -47,7 +47,7 @@ export class ModalService {
   openWebglNotSupportedModal(): void {
     const ref = this.bootstrapModalService.open(WebglBlockedComponent, { centered: true });
     merge(ref.closed, ref.dismissed)
-      .pipe(take(1), delay(1000), withLatestFrom(this.webglStatus$), tap(console.log))
+      .pipe(take(1), delay(1000), withLatestFrom(this.webglStatus$))
       .subscribe(([, webglStatus]) => {
         if (webglStatus === WebglStatus.NotSupported) {
           this.openWebglNotSupportedModal();

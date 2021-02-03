@@ -59,8 +59,6 @@ export class CameraComponent implements OnInit {
       this.video.nativeElement.play();
     } catch (error) {
       this.storeService.dispatchError(ErrorType.CameraNotLoaded);
-      console.log('Could not load the camera');
-      console.log(error);
     }
   }
 

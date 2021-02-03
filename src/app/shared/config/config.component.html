@@ -9,9 +9,9 @@
   </div>
 </div>
 
-<div class="config-option">
+<div class="config-option" *ngIf="cameras">
   <h4 class="config-title">Switch Camera</h4>
-  <select *ngIf="cameras" (change)="updateCamera($event.target.value)" class="custom-select camera-select text-center">
+  <select (change)="updateCamera($event.target.value)" class="custom-select camera-select text-center">
     <option [selected]="selectedCamera === cam.deviceId" [value]="cam.deviceId" *ngFor="let cam of cameras">{{ cam.label }}</option>
   </select>
 </div>

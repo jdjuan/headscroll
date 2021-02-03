@@ -3,7 +3,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { combineLatest, merge } from 'rxjs';
 import { CameraService } from '../../core/services/camera.service';
-import { filter, tap } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { LARGE_BREAKPOINT } from 'src/app/core/models/constants';
@@ -87,10 +87,8 @@ export class ScrollerComponent implements OnInit {
   checkWebglStatus(): void {
     const isCameraReady = (status: CameraStatus) => status === CameraStatus.Ready;
     const cameraStatus$ = this.storeService.select((state) => state.cameraStatus).pipe(filter(isCameraReady));
-    const webglStatus$ = this.storeService.select((state) => state.webglStatus).pipe(tap(console.log));
+    const webglStatus$ = this.storeService.select((state) => state.webglStatus);
     combineLatest([cameraStatus$, webglStatus$]).subscribe(([cameraStatus, webglStatus]) => {
-      console.log(webglStatus);
-
       switch (webglStatus) {
         case WebglStatus.Unknow:
           this.webglService.detectWebGLContext();
@@ -124,10 +122,11 @@ export class ScrollerComponent implements OnInit {
     }
   }
 
-  onSearchWebsite(website: string): void {
+  onSearchWebsite(): void {
     this.iframeWrapper?.nativeElement.scrollTo(0, 0);
     this.iframeHeight = this.defaultIframeHeight;
-    this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(website);
+    const { proxyUrl } = this.appState.currentWebsite;
+    this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(proxyUrl);
   }
 
   onScroll(direction: boolean): void {

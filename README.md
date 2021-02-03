@@ -26,9 +26,3 @@
    2. If supported, check if it's mobile
       1. If it's mobile then display modal, and wait for ref to change loading to false
       2. If not, then change loading to false
-
-{
-    supportWebGL
-    cameraStatus: ready | blocked | timedout
-    searchError
-}

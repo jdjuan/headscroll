@@ -6,6 +6,7 @@ export enum ErrorType {
   CameraNotLoaded = 'CameraNotLoaded',
   CameraBlocked = 'CameraBlocked',
   CameraRequestTimedOut = 'CameraRequestTimedOut',
+  WhitelistFetchError = 'WhitelistFetchError',
 }
 
 export const ErrorMessages: Record<ErrorType, string> = {
@@ -16,6 +17,7 @@ export const ErrorMessages: Record<ErrorType, string> = {
   [ErrorType.CameraNotLoaded]: 'We could not load your camera. Please reload the website',
   [ErrorType.CameraBlocked]: 'We could not access your camera. Please allow it in your browser',
   [ErrorType.CameraRequestTimedOut]: 'It took very long to access your camera. Please check your camera settings',
+  [ErrorType.WhitelistFetchError]: 'We could not retrieve the whitelist from our servers',
 };
 
 export interface ScrollerError {

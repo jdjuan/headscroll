@@ -1,5 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
+import { CurrentWebsite } from 'src/app/core/models/current-website.model';
+import { ErrorType } from 'src/app/core/models/error.model';
+import { WhitelistItem } from 'src/app/core/models/whitelist.model';
 import { StoreService } from 'src/app/core/services/store.service';
 import { UrlService } from 'src/app/core/services/url.service';
 
@@ -7,50 +12,45 @@ import { UrlService } from 'src/app/core/services/url.service';
   providedIn: 'root',
 })
 export class ProxyService {
-  private readonly TIMEOUT = 9000;
-  private cachedUrls: Record<string, boolean> = {};
+  private whitelistEndpoint = 'https://headscroll.io/api/domain/';
+  private PROXY = 'https://headscroll.io/api/proxy/';
 
   constructor(private http: HttpClient, private storeService: StoreService, private urlService: UrlService) {}
 
-  validateWebsite(website: string): boolean {
+  validateWebsite(website: string): Observable<boolean> {
     website = this.urlService.normalizeUrl(website);
-    // Check if it is whitelisted
-    if (website) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.storeService
+      .select((state) => state.whitelist)
+      .pipe(
+        map((whitelist) => {
+          const currentWebsite = this.getCurrentWebsite(website, whitelist);
+          this.storeService.updateState({ currentWebsite });
+          return true;
+        }),
+        catchError(() => {
+          return of(false);
+        })
+      );
   }
 
-  // isEmbeddable(url: string): Observable<boolean> {
-  //   if (this.cachedUrls[url]) {
-  //     return of(this.cachedUrls[url]);
-  //   }
-  //   return this.canLoadInIframe(url);
-  // }
+  fetchWhitelist(): Observable<WhitelistItem[]> {
+    return this.http.get<WhitelistItem[]>(this.whitelistEndpoint).pipe(
+      // return of(proxyMock).pipe(
+      tap((whitelist) => {
+        this.storeService.updateState({ whitelist });
+      }),
+      catchError(() => {
+        this.storeService.dispatchError(ErrorType.WhitelistFetchError);
+        return of([]);
+      })
+    );
+  }
 
-  // private canLoadInIframe(url: string): Observable<boolean> {
-  //   return this.http.get(this.PROXY_URL + url).pipe(
-  //     map((responses: any[]) => {
-  //       const isEmbeddable = !this.hasXFrameOptions(responses);
-  //       this.cachedUrls[url] = isEmbeddable;
-  //       return isEmbeddable;
-  //     }),
-  //     timeout(this.TIMEOUT),
-  //     catchError(({ name: type }: { name: ErrorType }) => {
-  //       this.stateService.updateState({ error: { type, message: ErrorMessages[type] } });
-  //       this.cachedUrls[url] = false;
-  //       return of(false);
-  //     })
-  //   );
-  // }
-
-  // private hasXFrameOptions = (responses: any): boolean => {
-  //   return responses.some((res) => {
-  //     if (res['x-frame-options'] || res['X-Frame-Options']) {
-  //       return true;
-  //     }
-  //     return false;
-  //   });
-  // };
+  getCurrentWebsite(website: string, whitelist: WhitelistItem[]): CurrentWebsite {
+    const hostname = new URL(website).hostname;
+    const { id } = whitelist.find((whitelistItem) => whitelistItem.domain === hostname);
+    const path = website.slice(website.indexOf(hostname) + hostname.length, website.length);
+    const proxyUrl = `${this.PROXY}${id}${path}`;
+    return { id, website, proxyUrl };
+  }
 }
