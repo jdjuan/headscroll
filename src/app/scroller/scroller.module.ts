@@ -10,6 +10,7 @@ import { TutorialComponent } from './scroller/tutorial/tutorial.component';
 import { ConfigModalComponent } from './scroller/config-modal/config-modal.component';
 import { MobileWarningComponent } from './scroller/mobile-warning/mobile-warning.component';
 import { LoadingSpinnerComponent } from './scroller/loading-spinner/loading-spinner.component';
+import { WebglBlockedComponent } from './scroller/webgl-blocked/webgl-blocked.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { LoadingSpinnerComponent } from './scroller/loading-spinner/loading-spin
     ConfigModalComponent,
     MobileWarningComponent,
     LoadingSpinnerComponent,
+    WebglBlockedComponent,
   ],
   imports: [CommonModule, ScrollerRoutingModule, SharedModule],
 })
