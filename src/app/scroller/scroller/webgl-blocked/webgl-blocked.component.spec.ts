@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LandingComponent } from './landing.component';
+import { WebglBlockedComponent } from './webgl-blocked.component';
 
-describe('LandingComponent', () => {
-  let component: LandingComponent;
-  let fixture: ComponentFixture<LandingComponent>;
+describe('WebglBlockedComponent', () => {
+  let component: WebglBlockedComponent;
+  let fixture: ComponentFixture<WebglBlockedComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LandingComponent ]
+      declarations: [ WebglBlockedComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LandingComponent);
+    fixture = TestBed.createComponent(WebglBlockedComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

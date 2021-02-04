@@ -1,69 +1,103 @@
-import { Component, Output, EventEmitter, Input, ViewChild } from '@angular/core';
+import { Component, Output, EventEmitter, Input, ViewChild, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { ProxyService } from 'src/app/core/proxy.service';
-import { UrlService } from 'src/app/core/url.service';
-import { ConfigService } from 'src/app/scroller/services/config.service';
-import { ErrorMessages } from 'src/app/scroller/services/error.model';
+import { filter, pluck } from 'rxjs/operators';
+import { StoreService } from 'src/app/core/services/store.service';
+import { ErrorMessages, ErrorType, ScrollerError } from 'src/app/core/models/error.model';
+import { ProxyService } from 'src/app/core/services/proxy.service';
+import { UrlService } from 'src/app/core/services/url.service';
 
 @Component({
   selector: 'app-search-field',
   templateUrl: './search-field.component.html',
   styleUrls: ['./search-field.component.scss'],
 })
-export class SearchFieldComponent {
+export class SearchFieldComponent implements OnInit {
   @ViewChild('tooltip') errorTooltip: NgbTooltip;
-  @Input() set url(value: string) {
-    if (value) {
-      this.favicon = this.getFavicon(value);
-      this.website = value;
-      this.onSearch();
-    }
-  }
   @Input() isCompactVersion = false;
   @Output() search = new EventEmitter();
-  @Output() fail = new EventEmitter();
   errorTooltipMessage: string;
-  errorMessages = ErrorMessages;
-  website: string;
-  loading: boolean;
-  notEmbeddable: boolean;
-  hasSearched: boolean;
+  website = 'https://tabs.ultimate-guitar.com/tab/the-lumineers/stubborn-love-chords-1157323';
+  isLoading = true;
   isInputFocused: boolean;
   favicon: string;
   shouldShowFavicon = true;
+  error: ScrollerError;
 
-  constructor(private proxyService: ProxyService, private configService: ConfigService, private urlService: UrlService) {}
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private proxyService: ProxyService,
+    private storeService: StoreService,
+    private urlService: UrlService
+  ) {}
 
-  onSearch(): void {
-    this.errorTooltip?.close();
-    this.shouldShowFavicon = false;
-    this.hasSearched = true;
-    if (this.website) {
-      this.loading = true;
-      this.website = this.urlService.normalizeUrl(this.website);
-      this.proxyService.isEmbeddable(this.website).subscribe((isEmbeddable) => {
-        this.loading = false;
-        if (isEmbeddable) {
+  ngOnInit(): void {
+    this.onError();
+    this.storeService
+      .select((state) => state.whitelist)
+      .pipe(filter(Boolean))
+      .subscribe(() => {
+        this.isLoading = false;
+        this.onBookmarkletSearch();
+      });
+  }
+
+  onError(): void {
+    this.storeService
+      .select((state) => state.error)
+      .subscribe((error) => {
+        const errors = [ErrorType.Required, ErrorType.NotSupported];
+        if (errors.includes(error.type)) {
+          this.showError(error.message);
+        }
+      });
+  }
+
+  onBookmarkletSearch(): void {
+    this.activatedRoute.queryParams.pipe(pluck('website'), filter<string>(Boolean)).subscribe((website: string) => {
+      this.website = website;
+      this.favicon = this.getFavicon(website);
+      this.isLoading = true;
+      this.proxyService.validateWebsite(this.website).subscribe((isValid) => {
+        if (isValid) {
+          this.urlService.updateUrl(this.website);
           this.loadWebsite();
         } else {
-          this.showError();
+          this.storeService.dispatchError(ErrorType.NotSupported);
+        }
+      });
+    });
+  }
+
+  onInputSearch(): void {
+    if (this.website) {
+      this.errorTooltip?.close();
+      this.shouldShowFavicon = false;
+      this.isLoading = true;
+      this.proxyService.validateWebsite(this.website).subscribe((isValid) => {
+        if (isValid) {
+          this.loadWebsite();
+        } else {
+          this.storeService.dispatchError(ErrorType.NotSupported);
         }
       });
     } else {
       this.errorTooltipMessage = ErrorMessages.UrlIsRequired;
-      this.errorTooltip?.open();
+      this.storeService.dispatchError(ErrorType.Required);
     }
   }
 
-  private showError(): void {
-    this.fail.emit();
+  private showError(message: string): void {
+    this.isLoading = false;
     this.shouldShowFavicon = false;
-    this.configService.error$.subscribe(({ message }) => (this.errorTooltipMessage = message));
-    this.errorTooltip?.open();
+    this.errorTooltipMessage = message;
+    setTimeout(() => {
+      this.errorTooltip?.open();
+    }, 0);
   }
 
   private loadWebsite(): void {
-    this.configService.updateCurrentWebsite(this.website);
+    this.isLoading = false;
     this.favicon = this.getFavicon(this.website);
     this.search.emit(this.website);
   }

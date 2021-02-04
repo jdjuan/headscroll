@@ -1,17 +1,14 @@
-import { Component, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, ElementRef, ViewChild, Output, EventEmitter, OnInit } from '@angular/core';
 import { Webcam, CustomPoseNet, load } from '@teachablemachine/pose';
-import { CameraService } from '../../services/camera.service';
+import { CameraService } from '../../../core/services/camera.service';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { LARGE_BREAKPOINT } from 'src/app/core/constants';
-import { ConfigService } from '../../services/config.service';
+import { LARGE_BREAKPOINT } from 'src/app/core/models/constants';
 import { timer } from 'rxjs';
-
-export enum Classes {
-  Left = 'Left',
-  Right = 'Right',
-  Neutral = 'Neutral',
-}
+import { StoreService } from 'src/app/core/services/store.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { ErrorType } from 'src/app/core/models/error.model';
 
 @UntilDestroy()
 @Component({
@@ -19,106 +16,72 @@ export enum Classes {
   templateUrl: './camera.component.html',
   styleUrls: ['./camera.component.scss'],
 })
-export class CameraComponent {
-  readonly MODEL_URL = 'assets/model.json';
-  // readonly MODEL_URL = 'https://teachablemachine.withgoogle.com/models/l5fbLAKJu/model.json';
-  readonly METADATA_URL = 'assets/metadata.json';
-  // readonly METADATA_URL = 'https://teachablemachine.withgoogle.com/models/l5fbLAKJu/metadata.json';
-  readonly DEFAULT_CAMERA_SIZE = 400;
-  readonly SMALL_CAMERA_SIZE = 100;
-  readonly FORECAST_CONFIDENCE = 0.95;
-  readonly DEBOUNCE_PREDICTION_TIME = 100;
-
-  @Output() scrollDown = new EventEmitter();
-  @Output() scrollUp = new EventEmitter();
-  @Output() cameraLoaded = new EventEmitter();
+export class CameraComponent implements OnInit {
   @ViewChild('video') video: ElementRef<HTMLVideoElement>;
-  cameraSize = this.DEFAULT_CAMERA_SIZE;
-  isLoadingCamera = true;
-  isMobile: boolean;
-  forecast: Classes;
-  webcam: Webcam;
+  @Output() scrolling = new EventEmitter<boolean>();
+  readonly DEBOUNCE_PREDICTION_TIME = 100;
+  // source: MediaProvider;
   model: CustomPoseNet;
-  ctx: CanvasRenderingContext2D;
-  direction: boolean;
+  onCameraChange$ = new Subject();
 
-  constructor(private breakpointObserver: BreakpointObserver, private cameraService: CameraService, private configService: ConfigService) {
-    this.isMobile = this.breakpointObserver.isMatched(LARGE_BREAKPOINT);
-    this.cameraService.getAvailableCameras().then((cameras) => {
+  constructor(private breakpointObserver: BreakpointObserver, private cameraService: CameraService, private storeService: StoreService) {
+    this.storeService
+      .select<string>((state) => state.selectedCameraId)
+      .subscribe((selectedCameraId) => {
+        this.onCameraChange$.next();
+        this.setupWebcam(selectedCameraId);
+      });
+  }
+  ngOnInit(): void {
+    this.init();
+  }
+
+  async init(): Promise<void> {
+    const [MODEL_URL, METADATA_URL] = ['assets/model.json', 'assets/metadata.json'];
+    const cameras = await this.cameraService.getAvailableCameras();
+    if (cameras) {
       const [firstCamera] = cameras;
       const { deviceId } = firstCamera;
-      this.init(deviceId);
-    });
-    this.cameraService.selectedCamera$.subscribe((deviceId) => {
-      if (deviceId) {
-        this.setupWebCam(deviceId);
-      }
-    });
-    this.configService.direction$.subscribe((direction) => {
-      this.direction = direction;
-    });
-  }
-
-  async init(deviceId: string): Promise<void> {
-    if (this.isMobile) {
-      this.cameraSize = this.SMALL_CAMERA_SIZE;
+      this.model = await load(MODEL_URL, METADATA_URL);
+      this.setupWebcam(deviceId);
     }
-    this.model = await load(this.MODEL_URL, this.METADATA_URL);
-    this.setupWebCam(deviceId);
   }
 
-  async setupWebCam(deviceId: string): Promise<void> {
-    const flip = true;
-    this.webcam = new Webcam(this.cameraSize, this.cameraSize, flip);
+  setupWebcam = async (deviceId: string): Promise<void> => {
     try {
-      await this.webcam.setup({ deviceId });
-      this.isLoadingCamera = false;
-      this.cameraLoaded.next();
-      this.video.nativeElement.srcObject = this.webcam.webcam.srcObject;
+      const isMobile = this.breakpointObserver.isMatched(LARGE_BREAKPOINT);
+      const DEFAULT_CAMERA_SIZE = 400;
+      const SMALL_CAMERA_SIZE = 100;
+      const cameraSize = isMobile ? SMALL_CAMERA_SIZE : DEFAULT_CAMERA_SIZE;
+      const webcam = new Webcam(cameraSize, cameraSize);
+      await webcam.setup({ deviceId });
+      this.video.nativeElement.srcObject = webcam.webcam.srcObject;
       this.video.nativeElement.play();
     } catch (error) {
-      console.log('Could not load the camera');
-      console.log(error);
+      this.storeService.dispatchError(ErrorType.CameraNotLoaded);
     }
   }
 
-  startPredicting(): void{
-    timer(0, this.DEBOUNCE_PREDICTION_TIME).subscribe(this.predict);
+  startPredicting(): void {
+    timer(0, this.DEBOUNCE_PREDICTION_TIME).pipe(takeUntil(this.onCameraChange$)).subscribe(this.predict);
   }
 
   predict = async (): Promise<void> => {
     const { heatmapScores, offsets, displacementFwd, displacementBwd } = await this.model.estimatePoseOutputs(this.video.nativeElement);
     const posenetOutput = await this.model.poseOutputsToAray(heatmapScores, offsets, displacementFwd, displacementBwd);
     const output = await this.model.predict(posenetOutput);
-    this.getForecast(output);
+    this.forecast(output);
   }
 
-  getForecast(output: { className: string; probability: number }[]): void {
-    const leftForecast = output.find((entry) => entry.className === Classes.Left);
-    const rightForecast = output.find((entry) => entry.className === Classes.Right);
-    if (leftForecast.probability > this.FORECAST_CONFIDENCE) {
-      this.forecast = Classes.Left;
-      if (this.direction) {
-        this.scrollDown.emit();
-      } else {
-        this.scrollUp.emit();
-      }
-    } else if (rightForecast.probability > this.FORECAST_CONFIDENCE) {
-      this.forecast = Classes.Right;
-      if (this.direction) {
-        this.scrollUp.emit();
-      } else {
-        this.scrollDown.emit();
-      }
-    } else {
-      this.forecast = Classes.Neutral;
+  forecast(output: { className: string; probability: number }[]): void {
+    const [LEFT, RIGHT] = ['Left', 'Right'];
+    const FORECAST_CONFIDENCE = 0.95;
+    const leftForecast = output.find((entry) => entry.className === LEFT);
+    const rightForecast = output.find((entry) => entry.className === RIGHT);
+    if (leftForecast.probability > FORECAST_CONFIDENCE) {
+      this.scrolling.emit(false);
+    } else if (rightForecast.probability > FORECAST_CONFIDENCE) {
+      this.scrolling.emit(true);
     }
-  }
-
-  hasTiltedLeft(): boolean {
-    return this.forecast === Classes.Left;
-  }
-  hasTiltedRight(): boolean {
-    return this.forecast === Classes.Right;
   }
 }

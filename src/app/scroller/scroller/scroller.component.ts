@@ -1,20 +1,18 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AllowCameraComponent } from './allow-camera/allow-camera.component';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { merge } from 'rxjs';
-import { CameraService, CameraStates } from '../services/camera.service';
-import { pluck, take } from 'rxjs/operators';
-import { BlockedCameraComponent } from './blocked-camera/blocked-camera.component';
-import { TutorialComponent } from './tutorial/tutorial.component';
-import { Location } from '@angular/common';
-import { BreakpointObserver } from '@angular/cdk/layout';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { combineLatest, merge } from 'rxjs';
+import { CameraService } from '../../core/services/camera.service';
+import { filter } from 'rxjs/operators';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ViewportRuler } from '@angular/cdk/scrolling';
-import { LARGE_BREAKPOINT } from 'src/app/core/constants';
-import { ConfigModalComponent } from './config-modal/config-modal.component';
-import { ConfigService } from '../services/config.service';
-import { MobileWarningComponent } from './mobile-warning/mobile-warning.component';
+import { LARGE_BREAKPOINT } from 'src/app/core/models/constants';
+import { StoreService } from 'src/app/core/services/store.service';
+import { AppState } from 'src/app/core/models/app-state.model';
+import { CameraStatus } from 'src/app/core/models/camera-status.model';
+import { ModalService } from 'src/app/core/services/modal.service';
+import { WebglService } from 'src/app/core/services/webgl.service';
+import { WebglStatus } from 'src/app/core/models/webgl-status.model';
 
 @Component({
   selector: 'app-scroller',
@@ -23,55 +21,42 @@ import { MobileWarningComponent } from './mobile-warning/mobile-warning.componen
 })
 export class ScrollerComponent implements OnInit {
   @ViewChild('iframeWrapper') iframeWrapper: ElementRef;
-  scrollSpeed: number;
   readonly RESIZE_THROTLE_TIME = 100;
   websiteSafeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
   defaultIframeHeight: number;
   iframeHeight: number;
   website: string;
   isMobile = this.breakpointObserver.isMatched(LARGE_BREAKPOINT);
-  shouldRequestCam: boolean;
-  hasCameraLoaded: boolean;
-  enableCameraModalRef: NgbModalRef;
   isLoading = true;
-  isTutorialFinished: boolean;
   isConfigOpen: boolean;
-  hasSearchFailed: boolean;
-  hasAtLeastLoadedAWebsite: boolean;
-  showShowWarning: boolean;
-  isWarningAccepted: boolean;
+  appState: AppState;
 
   constructor(
     private sanitizer: DomSanitizer,
-    private activatedRoute: ActivatedRoute,
     private breakpointObserver: BreakpointObserver,
-    private modalService: NgbModal,
+    private modalService: ModalService,
     private cameraService: CameraService,
-    private location: Location,
-    private router: Router,
-    private configService: ConfigService,
-    private viewportRuler: ViewportRuler
+    private webglService: WebglService,
+    private viewportRuler: ViewportRuler,
+    private storeService: StoreService
   ) {}
 
   ngOnInit(): void {
-    this.configService.scrollSpeed.subscribe((speed) => {
-      this.scrollSpeed = speed;
-    });
-    this.viewportRuler.change(this.RESIZE_THROTLE_TIME).subscribe(() => {
-      // define iframe height on resize
-      this.defineIframeHeight();
-    });
-    this.breakpointObserver.observe([LARGE_BREAKPOINT]).subscribe(({ matches }) => {
-      // define iframe height on breakpoint change
-      this.isMobile = matches;
-      this.defineIframeHeight();
-    });
-
-    this.getWebsiteFromUrl();
+    this.storeService.state$.subscribe((state) => (this.appState = state));
+    const resize$ = this.viewportRuler.change(this.RESIZE_THROTLE_TIME);
+    const breakpointChange$ = this.breakpointObserver.observe([LARGE_BREAKPOINT]);
+    merge(resize$, breakpointChange$).subscribe(this.setIframeHeight);
     this.checkCameraStatus();
+    this.checkWebglStatus();
+    this.displayInstructions();
   }
 
-  defineIframeHeight(): void {
+  // define iframe height on resize and breakpoint change
+  setIframeHeight = (result: Event | BreakpointState): void => {
+    const isMobile = (result as BreakpointState).matches;
+    if (isMobile !== undefined) {
+      this.isMobile = isMobile;
+    }
     if (this.isMobile) {
       this.defaultIframeHeight = window.innerHeight * 0.86 - 64;
     } else {
@@ -80,118 +65,98 @@ export class ScrollerComponent implements OnInit {
     this.iframeHeight = this.defaultIframeHeight;
   }
 
-  checkCameraStatus = (): void => {
-    this.cameraService.hasCameraPermission().subscribe((isCameraAvailable) => {
-      switch (isCameraAvailable) {
-        case CameraStates.Timeout:
-          this.openEnableCameraModal();
+  checkCameraStatus(): void {
+    let modalRef: NgbModalRef;
+    const cameraStatus$ = this.storeService.select((state) => state.cameraStatus);
+    cameraStatus$.subscribe((cameraStatus) => {
+      switch (cameraStatus) {
+        case CameraStatus.Blocked:
+          this.modalService.openBlockedCameraModal();
           break;
-        case CameraStates.Blocked:
-          this.openBlockedCameraModal();
+        case CameraStatus.TimedOut:
+          modalRef = this.modalService.openEnableCameraModal();
           break;
-        case CameraStates.Allowed:
-          if (this.isMobile && !this.isWarningAccepted && this.configService.shouldShowWarning()) {
-            this.openMobileWarning();
-          } else {
-            this.openInstructionsModal();
-          }
+        case CameraStatus.Ready:
+          modalRef?.close();
+          break;
+      }
+    });
+    this.cameraService.requestCameraAccess();
+  }
+
+  checkWebglStatus(): void {
+    const isCameraReady = (status: CameraStatus) => status === CameraStatus.Ready;
+    const cameraStatus$ = this.storeService.select((state) => state.cameraStatus).pipe(filter(isCameraReady));
+    const webglStatus$ = this.storeService.select((state) => state.webglStatus);
+    combineLatest([cameraStatus$, webglStatus$]).subscribe(([cameraStatus, webglStatus]) => {
+      switch (webglStatus) {
+        case WebglStatus.Unknow:
+          this.webglService.detectWebGLContext();
+          break;
+        case WebglStatus.NotSupported:
+          this.modalService.openWebglNotSupportedModal();
           break;
       }
     });
   }
 
-  openMobileWarning(): void {
-    const ref = this.modalService.open(MobileWarningComponent, { centered: true });
-    merge(ref.closed, ref.dismissed)
-      .pipe(take(1))
-      .subscribe(() => {
-        this.isWarningAccepted = true;
-        this.checkCameraStatus();
+  displayInstructions(): void {
+    const isWebglSupported = (status: WebglStatus) => status === WebglStatus.Supported;
+    const webglStatus$ = this.storeService.select((state) => state.webglStatus).pipe(filter(isWebglSupported));
+    webglStatus$.subscribe(() => {
+      if (this.isMobile && this.appState.showMobileWarning) {
+        this.modalService.openMobileWarning().subscribe(this.displayTutorial);
+      } else {
+        this.displayTutorial();
+      }
+    });
+  }
+
+  displayTutorial = (): void => {
+    if (this.appState.showTutorial) {
+      this.modalService.openInstructionsModal().subscribe(() => {
+        this.isLoading = false;
       });
-  }
-
-  openEnableCameraModal(): void {
-    const ref = this.modalService.open(AllowCameraComponent, { centered: true });
-    merge(ref.closed, ref.dismissed).pipe(take(1)).subscribe(this.checkCameraStatus);
-  }
-
-  openBlockedCameraModal(): void {
-    const ref = this.modalService.open(BlockedCameraComponent, { centered: true });
-    merge(ref.closed, ref.dismissed).pipe(take(1)).subscribe(this.checkCameraStatus);
-  }
-
-  onCameraLoaded(): void {
-    this.hasCameraLoaded = true;
-    if (this.isTutorialFinished) {
+    } else {
       this.isLoading = false;
     }
   }
 
-  openInstructionsModal(): void {
-    if (this.configService.shouldShowTutorial()) {
-      const ref = this.modalService.open(TutorialComponent, { centered: true });
-      merge(ref.closed, ref.dismissed)
-        .pipe(take(1))
-        .subscribe(() => {
-          this.isTutorialFinished = true;
-          if (this.hasCameraLoaded) {
-            this.isLoading = false;
-          }
-        });
-    } else {
-      this.isTutorialFinished = true;
-      if (this.hasCameraLoaded) {
-        this.isLoading = false;
-      }
-    }
-  }
-
-  getWebsiteFromUrl(): void {
-    this.activatedRoute.queryParams.pipe(pluck('website')).subscribe((website: string) => {
-      // triggers lookup in search-field component, which later triggers searchWebsite()
-      this.website = website;
-    });
-  }
-
-  searchWebsite(website: string): void {
-    const url = this.router.createUrlTree([], { relativeTo: this.activatedRoute, queryParams: { website } }).toString();
-    this.location.go(url);
-    this.hasAtLeastLoadedAWebsite = true;
-    this.hasSearchFailed = false;
+  onSearchWebsite(): void {
     this.iframeWrapper?.nativeElement.scrollTo(0, 0);
     this.iframeHeight = this.defaultIframeHeight;
-    this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(website);
-    this.shouldRequestCam = true;
+    const { proxyUrl } = this.appState.currentWebsite;
+    this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(proxyUrl);
   }
 
-  onSearchFail(): void {
-    if (!this.hasAtLeastLoadedAWebsite) {
-      this.hasSearchFailed = true;
+  onScroll(direction: boolean): void {
+    if (!this.appState.error && !this.isLoading && !this.isConfigOpen) {
+      if (this.appState.orientation === direction) {
+        this.scrollDown();
+      } else {
+        this.scrollUp();
+      }
     }
   }
 
   scrollDown(): void {
-    if (!this.isLoading && !this.hasSearchFailed && !this.isConfigOpen) {
-      // buffer added when the user reaches the iframe bottom
-      const additionalBuffer = 200; // to avoid reaching the bottom
-      const { scrollTop, scrollHeight, clientHeight } = this.iframeWrapper.nativeElement;
-      const iframeHeight = scrollHeight - clientHeight - additionalBuffer;
-      const currentScroll = scrollTop;
-      if (currentScroll >= iframeHeight) {
-        this.iframeHeight += additionalBuffer;
-      }
-      this.performScroll(true);
+    // buffer added when the user reaches the iframe bottom
+    const additionalBuffer = 200; // to avoid reaching the bottom
+    const { scrollTop, scrollHeight, clientHeight } = this.iframeWrapper.nativeElement;
+    const iframeHeight = scrollHeight - clientHeight - additionalBuffer;
+    const currentScroll = scrollTop;
+    if (currentScroll >= iframeHeight) {
+      this.iframeHeight += additionalBuffer;
     }
+    this.performScroll(true);
   }
 
   scrollUp(): void {
-    if (!this.isLoading && !this.hasSearchFailed && !this.isConfigOpen) {
-      this.performScroll(false);
-    }
+    this.performScroll(false);
   }
 
   performScroll(scrollDown: boolean): void {
-    let speed = this.scrollSpeed;
+    let speed = this.appState.speed;
     if (!scrollDown) {
       speed = -speed;
     }
@@ -201,11 +166,8 @@ export class ScrollerComponent implements OnInit {
 
   openConfig(): void {
     this.isConfigOpen = true;
-    const ref = this.modalService.open(ConfigModalComponent, { scrollable: true, windowClass: 'config-modal' });
-    merge(ref.closed, ref.dismissed)
-      .pipe(take(1))
-      .subscribe(() => {
-        this.isConfigOpen = false;
-      });
+    this.modalService.openConfigModal().subscribe(() => {
+      this.isConfigOpen = false;
+    });
   }
 }

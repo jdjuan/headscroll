@@ -3,14 +3,6 @@
 @import "~bootstrap/scss/mixins";
 @import "~src/assets/variables";
 
-.spinner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  text-align: center;
-  transform: translate(-50%, -50%);
-}
-
 .content {
   position: relative;
 }
