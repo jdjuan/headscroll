@@ -48,9 +48,15 @@ const cleanUpHeaders = (headers: any): Map<string, string> => {
     'content-type': 'text/html; charset=UTF-8',
   });
 
-  delete copy['transfer-encoding'];
-  delete copy['X-Frame-Options'];
-  delete copy['x-frame-options'];
+  const deleteHeader = (headerName: string) => {
+    delete copy[headerName];
+    delete copy[headerName.toLowerCase()];
+  };
+
+  deleteHeader('Transfer-Encoding');
+  deleteHeader('X-Frame-Options');
+  deleteHeader('Content-Security-Policy');
+
   return new Map(Object.entries(copy));
 };
 
