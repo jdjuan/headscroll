@@ -9,7 +9,11 @@ export const handler = async (req: NowRequest, res: NowResponse) => {
 
   const repo = new DomainRepository();
   const domainMap = await repo.get(domainId);
-  const targetUrl = `${domainMap.protocol}://${domainMap.domain}/${targetPath}`;
+  // if (domainMap.state === DomainState.Dennied || domainMap.state === DomainState.Pending) {
+  //   res.send(' TODO ERROR ');
+  // };
+
+  const targetUrl = `${domainMap.protocol}//${domainMap.domain}/${targetPath}`;
 
   const response = await axios.get(targetUrl);
 
@@ -45,6 +49,8 @@ const cleanUpHeaders = (headers: any): Map<string, string> => {
   });
 
   delete copy['transfer-encoding'];
+  delete copy['X-Frame-Options'];
+  delete copy['x-frame-options'];
   return new Map(Object.entries(copy));
 };
 
