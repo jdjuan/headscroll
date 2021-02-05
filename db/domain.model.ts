@@ -37,4 +37,5 @@ export enum DomainState {
   Approved = 'Approved',
   Dennied = 'Denied',
   Pending = 'Pending',
+  Limited = 'Limited',
 }
