@@ -1,11 +1,11 @@
-<div class="embed-responsive embed-responsive-1by1 video" *ngIf="!isCameraReady">
+<div class="embed-responsive embed-responsive-1by1 video loading" *ngIf="!isCameraReady">
     <ngb-progressbar
       type="warning"
       class="embed-responsive-item"
       [striped]="true"
       [animated]="true"
       [value]="100" 
-    ></ngb-progressbar>
+    >Loading...</ngb-progressbar>
 </div>
 
 <video #video class="video" [class.d-none]="!isCameraReady" (loadeddata)="startPredicting()">Video stream not available.</video>

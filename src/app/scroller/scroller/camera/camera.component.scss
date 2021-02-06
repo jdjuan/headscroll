@@ -15,6 +15,14 @@
   background-color: $alpha;
 }
 
+.loading {
+  transform: rotateY(0deg);
+}
+
+::ng-deep .progress-bar {
+  font-size: 2rem;
+}
+
 @include media-breakpoint-up(lg) {
   .video {
     position: static;

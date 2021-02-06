@@ -31,8 +31,6 @@ export class CameraComponent implements OnInit {
       .subscribe(({ id }) => {
         this.onCameraChange$.next();
         this.isCameraReady = false;
-        console.log(11111);
-
         this.setupWebcam(id);
       });
   }

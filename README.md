@@ -1,5 +1,7 @@
 ## Image Processing
 
+>  open -na Google\ Chrome --args --user-data-dir=/tmp/temporary-chrome-profile-dir --disable-web-security
+
 1. Source: Shutterstock
 2. PNG: https://cloudconvert.com/eps-to-png
 3. Background: https://pixlr.com/remove-background/
