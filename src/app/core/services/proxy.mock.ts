@@ -1,4 +1,4 @@
-export const proxyMock: any = [
+export const allDomains: any[] = [
   {
     id: 'fd32590c-8cf9-43f0-87ae-a85ac2084580',
     domain: 'heute.at',

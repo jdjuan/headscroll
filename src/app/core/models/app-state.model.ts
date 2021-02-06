@@ -2,7 +2,7 @@ import { CameraStatus } from 'src/app/core/models/camera-status.model';
 import { WebglStatus } from 'src/app/core/models/webgl-status.model';
 import { ScrollerError } from 'src/app/core/models/error.model';
 import { CurrentWebsite } from 'src/app/core/models/current-website.model';
-import { ProxyResponse } from 'src/app/core/models/whitelist.model';
+import { ProxyResponse } from 'src/app/core/models/proxy-response.model';
 
 export interface AppState {
   speed: number;

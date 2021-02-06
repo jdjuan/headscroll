@@ -20,15 +20,16 @@ import { WebglStatus } from 'src/app/core/models/webgl-status.model';
   styleUrls: ['./scroller.component.scss'],
 })
 export class ScrollerComponent implements OnInit {
-  @ViewChild('iframeWrapper') iframeWrapper: ElementRef;
+  @ViewChild('iframeWrapper') iframeWrapper: ElementRef<HTMLIFrameElement>;
   readonly RESIZE_THROTLE_TIME = 100;
-  websiteSafeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
+  websiteSafeUrl: SafeResourceUrl;
   defaultIframeHeight: number;
   iframeHeight: number;
   isMobile = this.breakpointObserver.isMatched(LARGE_BREAKPOINT);
   isLoading = true;
   isConfigOpen: boolean;
   appState: AppState;
+  hasIframeLoaded = false;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -123,10 +124,17 @@ export class ScrollerComponent implements OnInit {
   }
 
   onSearchWebsite(): void {
+    this.hasIframeLoaded = false;
     this.iframeWrapper?.nativeElement.scrollTo(0, 0);
     this.iframeHeight = this.defaultIframeHeight;
     const { proxyUrl } = this.appState.currentWebsite;
     this.websiteSafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(proxyUrl);
+  }
+
+  onIframeLoaded(iframe: HTMLIFrameElement): void {
+    if (iframe.src) {
+      this.hasIframeLoaded = true;
+    }
   }
 
   onScroll(direction: boolean): void {

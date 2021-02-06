@@ -20,7 +20,8 @@
 }
 
 ::ng-deep .progress-bar {
-  font-size: 2rem;
+  font-size: 0.8rem;
+  font-weight: 300;
 }
 
 @include media-breakpoint-up(lg) {
@@ -28,5 +29,9 @@
     position: static;
     width: 100%;
     margin-right: 0;
+  }
+  ::ng-deep .progress-bar {
+    font-size: 2rem;
+    font-weight: 200;
   }
 }
