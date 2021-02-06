@@ -35,7 +35,7 @@ export class DomainMap {
 
 export enum DomainState {
   Approved = 'Approved',
-  Dennied = 'Denied',
+  Denied = 'Denied',
   Pending = 'Pending',
   Limited = 'Limited',
 }

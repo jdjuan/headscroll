@@ -1,4 +1,4 @@
-import { DomainRepository } from '../../db/index';
+import { DomainRepository, DomainState } from '../../db/index';
 import { NowRequest, NowResponse } from '@vercel/node';
 import axios, { AxiosResponse } from 'axios';
 import * as cheerio from 'cheerio';
@@ -9,9 +9,11 @@ export const handler = async (req: NowRequest, res: NowResponse) => {
 
   const repo = new DomainRepository();
   const domainMap = await repo.get(domainId);
-  // if (domainMap.state === DomainState.Dennied || domainMap.state === DomainState.Pending) {
-  //   res.send(' TODO ERROR ');
-  // };
+
+  if (domainMap.state === DomainState.Denied) {
+    res.statusCode = 423;
+    return res.send({ error: 'This website is blocked' });
+  }
 
   const targetUrl = `${domainMap.protocol}//${domainMap.domain}/${targetPath}`;
 
