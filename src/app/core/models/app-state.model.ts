@@ -2,7 +2,7 @@ import { CameraStatus } from 'src/app/core/models/camera-status.model';
 import { WebglStatus } from 'src/app/core/models/webgl-status.model';
 import { ScrollerError } from 'src/app/core/models/error.model';
 import { CurrentWebsite } from 'src/app/core/models/current-website.model';
-import { WhitelistItem } from 'src/app/core/models/whitelist.model';
+import { ProxyResponse } from 'src/app/core/models/whitelist.model';
 
 export interface AppState {
   speed: number;
@@ -15,7 +15,7 @@ export interface AppState {
   webglStatus: WebglStatus;
   selectedCamera: { id: string };
   isMobile: boolean;
-  whitelist: WhitelistItem[];
+  proxyResponse: ProxyResponse;
 }
 
 export const initialState: AppState = {
@@ -29,5 +29,5 @@ export const initialState: AppState = {
   cameraStatus: CameraStatus.Unknown,
   selectedCamera: null,
   isMobile: undefined,
-  whitelist: null,
+  proxyResponse: null,
 };

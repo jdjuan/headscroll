@@ -18,7 +18,7 @@ export class SearchFieldComponent implements OnInit {
   @Output() search = new EventEmitter();
   errorTooltipMessage: string;
   website = 'https://tabs.ultimate-guitar.com/tab/the-lumineers/stubborn-love-chords-1157323';
-  isLoading = true;
+  isLoading: boolean;
   isInputFocused: boolean;
   favicon: string;
   shouldShowFavicon = true;
@@ -32,14 +32,8 @@ export class SearchFieldComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.onBookmarkletSearch();
     this.onError();
-    this.storeService
-      .select((state) => state.whitelist)
-      .pipe(filter(Boolean))
-      .subscribe(() => {
-        this.isLoading = false;
-        this.onBookmarkletSearch();
-      });
   }
 
   onBookmarkletSearch(): void {

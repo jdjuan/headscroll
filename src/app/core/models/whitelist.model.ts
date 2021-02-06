@@ -1,7 +1,6 @@
-export interface WhitelistItem {
+export interface ProxyResponse {
   id: string;
-  domain: string;
-  protocol: string;
   state: string;
   requests: number;
+  proxyUrl: string;
 }
