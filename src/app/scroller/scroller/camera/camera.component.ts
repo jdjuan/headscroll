@@ -20,6 +20,7 @@ export class CameraComponent implements OnInit {
   @ViewChild('video') video: ElementRef<HTMLVideoElement>;
   @Output() scrolling = new EventEmitter<boolean>();
   readonly DEBOUNCE_PREDICTION_TIME = 100;
+  isCameraReady = false;
   // source: MediaProvider;
   model: CustomPoseNet;
   onCameraChange$ = new Subject();
@@ -63,6 +64,7 @@ export class CameraComponent implements OnInit {
   }
 
   startPredicting(): void {
+    this.isCameraReady = true;
     timer(0, this.DEBOUNCE_PREDICTION_TIME).pipe(takeUntil(this.onCameraChange$)).subscribe(this.predict);
   }
 

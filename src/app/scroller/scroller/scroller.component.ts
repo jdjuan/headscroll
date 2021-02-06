@@ -25,7 +25,6 @@ export class ScrollerComponent implements OnInit {
   websiteSafeUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
   defaultIframeHeight: number;
   iframeHeight: number;
-  website: string;
   isMobile = this.breakpointObserver.isMatched(LARGE_BREAKPOINT);
   isLoading = true;
   isConfigOpen: boolean;
