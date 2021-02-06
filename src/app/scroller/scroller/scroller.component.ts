@@ -55,6 +55,7 @@ export class ScrollerComponent implements OnInit {
   setIframeHeight = (result: Event | BreakpointState): void => {
     const isMobile = (result as BreakpointState).matches;
     if (isMobile !== undefined) {
+      this.storeService.updateState({ isMobile });
       this.isMobile = isMobile;
     }
     if (this.isMobile) {
@@ -90,8 +91,8 @@ export class ScrollerComponent implements OnInit {
     const webglStatus$ = this.storeService.select((state) => state.webglStatus);
     combineLatest([cameraStatus$, webglStatus$]).subscribe(([cameraStatus, webglStatus]) => {
       switch (webglStatus) {
-        case WebglStatus.Unknow:
-          this.webglService.detectWebGLContext();
+        case WebglStatus.Unknown:
+          this.webglService.detectWebGLContext().subscribe();
           break;
         case WebglStatus.NotSupported:
           this.modalService.openWebglNotSupportedModal();

@@ -14,6 +14,7 @@ export interface AppState {
   cameraStatus: CameraStatus;
   webglStatus: WebglStatus;
   selectedCameraId: string;
+  isMobile: boolean;
   whitelist: WhitelistItem[];
 }
 
@@ -24,8 +25,9 @@ export const initialState: AppState = {
   showTutorial: true,
   showMobileWarning: true,
   error: null,
-  webglStatus: WebglStatus.Unknow,
+  webglStatus: WebglStatus.Unknown,
   cameraStatus: CameraStatus.Unknown,
   selectedCameraId: null,
+  isMobile: undefined,
   whitelist: null,
 };

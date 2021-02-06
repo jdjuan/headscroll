@@ -42,6 +42,12 @@ export class SearchFieldComponent implements OnInit {
       });
   }
 
+  onBookmarkletSearch(): void {
+    this.activatedRoute.queryParams.pipe(pluck('website'), filter<string>(Boolean)).subscribe((website: string) => {
+      this.onSearch(website);
+    });
+  }
+
   onError(): void {
     this.storeService
       .select((state) => state.error)
@@ -53,29 +59,16 @@ export class SearchFieldComponent implements OnInit {
       });
   }
 
-  onBookmarkletSearch(): void {
-    this.activatedRoute.queryParams.pipe(pluck('website'), filter<string>(Boolean)).subscribe((website: string) => {
-      this.website = website;
-      this.favicon = this.getFavicon(website);
+  onSearch(website: string): void {
+    if (this.website) {
       this.isLoading = true;
+      this.website = website;
+      this.errorTooltip?.close();
+      this.shouldShowFavicon = false;
+      this.favicon = this.getFavicon(website);
       this.proxyService.validateWebsite(this.website).subscribe((isValid) => {
         if (isValid) {
           this.urlService.updateUrl(this.website);
-          this.loadWebsite();
-        } else {
-          this.storeService.dispatchError(ErrorType.NotSupported);
-        }
-      });
-    });
-  }
-
-  onInputSearch(): void {
-    if (this.website) {
-      this.errorTooltip?.close();
-      this.shouldShowFavicon = false;
-      this.isLoading = true;
-      this.proxyService.validateWebsite(this.website).subscribe((isValid) => {
-        if (isValid) {
           this.loadWebsite();
         } else {
           this.storeService.dispatchError(ErrorType.NotSupported);

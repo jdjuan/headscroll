@@ -5,6 +5,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { CurrentWebsite } from 'src/app/core/models/current-website.model';
 import { ErrorType } from 'src/app/core/models/error.model';
 import { WhitelistItem } from 'src/app/core/models/whitelist.model';
+import { proxyMock } from 'src/app/core/services/proxy.mock';
 import { StoreService } from 'src/app/core/services/store.service';
 import { UrlService } from 'src/app/core/services/url.service';
 

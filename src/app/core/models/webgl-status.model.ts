@@ -1,5 +1,5 @@
 export enum WebglStatus {
-  Unknow = 'Unnkonwn',
+  Unknown = 'Unknown',
   Supported = 'Supported',
   NotSupported = 'NotSupported',
 }

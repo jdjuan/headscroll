@@ -8,7 +8,7 @@
       placeholder="Your URL"
       [disabled]="isLoading"
       [(ngModel)]="website"
-      (keydown.enter)="onInputSearch()"
+      (keydown.enter)="onSearch(website)"
       (focus)="isInputFocused = true"
       (blur)="isInputFocused = false"
       [ngbTooltip]="tipError"
@@ -18,7 +18,7 @@
       [placement]="isCompactVersion ? 'left' : 'bottom'"
       required
     />
-    <button class="submit-button" type="button" [disabled]="isLoading" (click)="onInputSearch()">
+    <button class="submit-button" type="button" [disabled]="isLoading" (click)="onSearch(website)">
       {{ isLoading ? "" : "Go" }}
     </button>
     <div *ngIf="isLoading" class="spinner-border spinner" role="status">
