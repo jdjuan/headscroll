@@ -27,10 +27,13 @@ export class CameraComponent implements OnInit {
 
   constructor(private breakpointObserver: BreakpointObserver, private cameraService: CameraService, private storeService: StoreService) {
     this.storeService
-      .select<string>((state) => state.selectedCameraId)
-      .subscribe((selectedCameraId) => {
+      .select<{ id: string }>((state) => state.selectedCamera)
+      .subscribe(({ id }) => {
         this.onCameraChange$.next();
-        this.setupWebcam(selectedCameraId);
+        this.isCameraReady = false;
+        console.log(11111);
+
+        this.setupWebcam(id);
       });
   }
   ngOnInit(): void {

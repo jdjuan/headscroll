@@ -28,13 +28,14 @@
   cursor: pointer;
   font-weight: 300;
   background-color: $omega;
+  max-width: 17rem;
 }
 
 .sent-label {
   margin-top: 7px;
 }
 
-.report-button{
+.report-button {
   border-color: $beta;
   color: $omega;
   background-color: $beta;

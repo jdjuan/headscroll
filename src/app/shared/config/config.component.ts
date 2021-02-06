@@ -23,7 +23,7 @@ export class ConfigComponent implements OnInit {
     this.storeService.state$.subscribe((state) => {
       this.scrollSpeed = state.speed;
       this.orientation = state.orientation;
-      this.selectedCamera = state.selectedCameraId;
+      this.selectedCamera = state.selectedCamera?.id;
     });
     this.cameraService.getAvailableCameras().then((cameras) => {
       if (cameras?.length > 1) {
@@ -37,7 +37,7 @@ export class ConfigComponent implements OnInit {
   }
 
   updateCamera(selectedCameraId: string): void {
-    this.storeService.updateState({ selectedCameraId });
+    this.storeService.updateState({ selectedCamera: { id: selectedCameraId } });
   }
 
   updateDirection(orientation: boolean): void {

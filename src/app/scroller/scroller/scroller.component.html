@@ -14,7 +14,15 @@
   <div class="row">
     <div class="col-lg-2 d-flex flex-column justify-content-between" *ngIf="!isMobile">
       <app-config></app-config>
-      <app-camera (scrolling)="onScroll($event)"></app-camera>
+      <div>
+        <div class="row d-flex justify-content-center">
+          <picture class="picture mb-3 mx-2">
+            <source [srcset]="'assets/tilt.webp'" type="image/webp" />
+            <img class="image w-100" [src]="'assets/tilt.png'" alt="Woman tilting her head" />
+          </picture>
+        </div>
+        <app-camera (scrolling)="onScroll($event)"></app-camera>
+      </div>
     </div>
     <div class="col-lg content">
       <app-camera *ngIf="isMobile" (scrolling)="onScroll($event)"></app-camera>

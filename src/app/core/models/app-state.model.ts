@@ -13,7 +13,7 @@ export interface AppState {
   error: ScrollerError;
   cameraStatus: CameraStatus;
   webglStatus: WebglStatus;
-  selectedCameraId: string;
+  selectedCamera: { id: string };
   isMobile: boolean;
   whitelist: WhitelistItem[];
 }
@@ -27,7 +27,7 @@ export const initialState: AppState = {
   error: null,
   webglStatus: WebglStatus.Unknown,
   cameraStatus: CameraStatus.Unknown,
-  selectedCameraId: null,
+  selectedCamera: null,
   isMobile: undefined,
   whitelist: null,
 };
