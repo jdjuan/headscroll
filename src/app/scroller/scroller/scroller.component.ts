@@ -138,7 +138,7 @@ export class ScrollerComponent implements OnInit {
   }
 
   onScroll(direction: boolean): void {
-    if (!this.appState.error && !this.isLoading && !this.isConfigOpen) {
+    if (!this.appState.error && !this.isLoading && !this.isConfigOpen && this.hasIframeLoaded) {
       if (this.appState.orientation === direction) {
         this.scrollDown();
       } else {

@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0",
-    "start-secure": "ng serve --host 0.0.0.0 --ssl true",
+    "start-secure": "ng serve --configuration=ssl --host 0.0.0.0 --ssl true",
     "build": "ng build --prod --sourceMap=true",
     "test": "ng test",
     "lint": "ng lint",

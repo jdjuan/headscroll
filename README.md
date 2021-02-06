@@ -1,6 +1,10 @@
-## Image Processing
+## Development Serve
 
->  open -na Google\ Chrome --args --user-data-dir=/tmp/temporary-chrome-profile-dir --disable-web-security
+- Run `npx vercel dev` and go `localhost:3000`
+- If you need to test in your phone, use `npm run start-secure`
+  - This is because the camera can only be accessed through HTTPS and vercel doesn't support it. So a mock implementation needs to be used instead
+
+## Image Processing
 
 1. Source: Shutterstock
 2. PNG: https://cloudconvert.com/eps-to-png

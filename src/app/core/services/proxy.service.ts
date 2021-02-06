@@ -8,13 +8,14 @@ import { ProxyResponse } from 'src/app/core/models/proxy-response.model';
 import { allDomains } from 'src/app/core/services/proxy.mock';
 import { StoreService } from 'src/app/core/services/store.service';
 import { UrlService } from 'src/app/core/services/url.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProxyService {
-  private proxyEndpoint = 'https://headscroll.io/api/domain/';
-  private readonly PROXY_BASE_URL = 'https://headscroll.io';
+  private proxyEndpoint = `${environment.baseUrl}api/domain/`;
+  private readonly IFRAME_BASE_URL = environment.baseUrl;
 
   constructor(private http: HttpClient, private storeService: StoreService, private urlService: UrlService) {}
 
@@ -32,25 +33,28 @@ export class ProxyService {
   }
 
   fetchProxyResponse(url: string): Observable<ProxyResponse> {
-    return (
-      this.mockResponse(url)
-        // return this.http
-        //   .post<ProxyResponse>(this.proxyEndpoint, { url })
-        .pipe(
-          map((proxyResponse) => {
-            if (proxyResponse.state === DomainState.Denied) {
-              throw null;
-            } else {
-              proxyResponse.proxyUrl = this.PROXY_BASE_URL + proxyResponse.proxyUrl;
-              this.storeService.updateState({ proxyResponse });
-              return proxyResponse;
-            }
-          }),
-          catchError(() => {
-            this.storeService.dispatchError(ErrorType.ProxyFetchError);
-            return of(null);
-          })
-        )
+    let request$: Observable<ProxyResponse>;
+    if (environment.ssl) {
+      console.log('SSL');
+
+      request$ = this.mockResponse(url);
+    } else {
+      request$ = this.http.post<ProxyResponse>(this.proxyEndpoint, { url });
+    }
+    return request$.pipe(
+      map((proxyResponse) => {
+        if (proxyResponse.state === DomainState.Denied) {
+          throw null;
+        } else {
+          proxyResponse.proxyUrl = this.IFRAME_BASE_URL + proxyResponse.proxyUrl;
+          this.storeService.updateState({ proxyResponse });
+          return proxyResponse;
+        }
+      }),
+      catchError(() => {
+        this.storeService.dispatchError(ErrorType.ProxyFetchError);
+        return of(null);
+      })
     );
   }
 

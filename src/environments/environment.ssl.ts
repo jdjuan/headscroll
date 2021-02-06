@@ -1,5 +1,5 @@
 export const environment = {
-  production: true,
+  production: false,
   baseUrl: 'https://headscroll.io/',
-  ssl: false,
+  ssl: true,
 };
