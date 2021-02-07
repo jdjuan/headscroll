@@ -58,6 +58,7 @@ const cleanUpHeaders = (headers: any): Map<string, string> => {
   deleteHeader('Transfer-Encoding');
   deleteHeader('X-Frame-Options');
   deleteHeader('Content-Security-Policy');
+  deleteHeader('Referer');
 
   return new Map(Object.entries(copy));
 };
