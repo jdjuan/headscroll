@@ -12,7 +12,7 @@ export class UseCaseComponent implements OnInit {
   instrument: string;
   readonly WRITE_SPEED = 200;
   readonly ERASE_SPEED = 150;
-  readonly CHANGE_SPEED = 5000;
+  readonly CHANGE_SPEED = 4000;
   constructor() {
     this.instrument = this.instruments.shift();
     this.instruments.push(this.instrument);

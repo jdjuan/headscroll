@@ -35,8 +35,6 @@ export class ProxyService {
   fetchProxyResponse(url: string): Observable<ProxyResponse> {
     let request$: Observable<ProxyResponse>;
     if (environment.ssl) {
-      console.log('SSL');
-
       request$ = this.mockResponse(url);
     } else {
       request$ = this.http.post<ProxyResponse>(this.proxyEndpoint, { url });

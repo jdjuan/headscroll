@@ -32,6 +32,16 @@
   border-radius: 6px;
   font-weight: 300;
   white-space: nowrap;
+  position: relative;
+  display: inline-block;
+  width: 9rem;
+  height: 3rem;
+  vertical-align: middle;
+  .instrument {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }
 
 @include media-breakpoint-up(lg) {
@@ -54,5 +64,8 @@
   }
   .dynamic {
     padding: 0px 12px 7px 4px;
+    width: 12.5rem;
+    height: 4rem;
+    vertical-align: top;
   }
 }

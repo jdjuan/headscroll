@@ -11,15 +11,28 @@
     <div class="steps text-left">
       <p class="description">
         1. Drag
-        <a
-          (click)="prevent($event)"
-          class="bookmarklet"
-          href="javascript: window.open('https://headscroll.io/scroller?website=' + encodeURIComponent(location.href));"
-          >this</a
-        >
+        <span class="bookmarklet">
+          <a
+            (click)="prevent($event)"
+            class=""
+            href="javascript: window.open('https://headscroll.io/scroller?website=' + encodeURIComponent(location.href));"
+            >this</a
+          >
+          <a
+            (click)="prevent($event)"
+            class="bookmarklet-text"
+            href="javascript: window.open('https://headscroll.io/scroller?website=' + encodeURIComponent(location.href));"
+            >HeadScroll</a
+          >
+          <!-- <a
+            (click)="prevent($event)"
+            class="bookmarklet-text"
+            href="javascript: window.open('http://localhost:3000/scroller?website=' + encodeURIComponent(location.href));"
+            >HeadScroll</a
+          > -->
+        </span>
         into your bookmarks
       </p>
-      <!-- <p class="description">1. Drag <a (click)="prevent($event)" class="bookmarklet" href="javascript: window.open('http://localhost:4200/scroller?website=' + encodeURIComponent(location.href));">this</a> into your bookmarks</p> -->
       <p class="description">2. Open a website you'd like to scroll</p>
       <p class="description">3. Press the bookmarklet!</p>
     </div>

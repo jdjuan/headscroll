@@ -49,13 +49,23 @@
 }
 
 .bookmarklet {
+  position: relative;
   background-color: $beta;
-  padding: 0px 6px;
+  padding: 2px 8px;
   border-radius: 6px;
   box-shadow: 0px 0px 11px 0px #3c346a;
   font-weight: 200;
   transition: background-color 0.25s cubic-bezier(0.39, 0.58, 0.57, 1);
   cursor: grab;
+  .bookmarklet-text {
+    height: 3rem;
+    position: absolute;
+    width: 5rem;
+    left: 0;
+    font-size: 1rem;
+    z-index: 100;
+    opacity: 0;
+  }
   &:hover {
     text-decoration: none;
     background-color: darken($beta, 5);
