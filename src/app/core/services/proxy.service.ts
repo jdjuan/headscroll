@@ -15,13 +15,14 @@ import { environment } from 'src/environments/environment';
 })
 export class ProxyService {
   private proxyEndpoint = `${environment.baseUrl}api/domain/`;
+  private cachedResponses: Record<string, ProxyResponse> = {};
   private readonly IFRAME_BASE_URL = environment.baseUrl;
 
   constructor(private http: HttpClient, private storeService: StoreService, private urlService: UrlService) {}
 
   validateWebsite(website: string): Observable<boolean> {
     website = this.urlService.normalizeUrl(website);
-    return this.fetchProxyResponse(website).pipe(
+    return this.getProxyResponse(website).pipe(
       map(({ id, proxyUrl }) => {
         this.storeService.updateState({ currentWebsite: { id, website, proxyUrl } });
         return true;
@@ -32,7 +33,17 @@ export class ProxyService {
     );
   }
 
-  fetchProxyResponse(url: string): Observable<ProxyResponse> {
+  getProxyResponse(url: string): Observable<ProxyResponse> {
+    const cachedReponse = this.cachedResponses[url];
+    if (cachedReponse) {
+      this.storeService.updateState({ proxyResponse: cachedReponse });
+      return of(cachedReponse);
+    } else {
+      return this.fetchProxyResponse(url);
+    }
+  }
+
+  private fetchProxyResponse(url: string): Observable<ProxyResponse> {
     let request$: Observable<ProxyResponse>;
     if (environment.ssl) {
       request$ = this.mockResponse(url);
@@ -45,6 +56,7 @@ export class ProxyService {
           throw null;
         } else {
           proxyResponse.proxyUrl = this.IFRAME_BASE_URL + proxyResponse.proxyUrl;
+          this.cachedResponses[url] = proxyResponse;
           this.storeService.updateState({ proxyResponse });
           return proxyResponse;
         }
