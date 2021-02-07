@@ -40,12 +40,15 @@ export class DomainRepository {
     return items.resources.map((r) => DomainMap.fromDb(r));
   }
 
-  async findByDomain(domain: string) {
+  async findByDomain(domainMap: Pick<DomainMap, 'domain' | 'protocol'>) {
     const container = await this.getContainer();
     const { resources } = await container.items
       .query<DomainMap>({
-        query: 'SELECT * from c WHERE c.domain = @domain',
-        parameters: [{ name: '@domain', value: domain }],
+        query: 'SELECT * from c WHERE c.domain = @domain AND c.protocol = @protocol ',
+        parameters: [
+          { name: '@domain', value: domainMap.domain },
+          { name: '@protocol', value: domainMap.protocol },
+        ],
       })
       .fetchAll();
 

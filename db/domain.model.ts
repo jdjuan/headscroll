@@ -5,13 +5,12 @@ export interface DomainMap {
   id?: string;
   requests: number;
 }
-
 export class DomainMap {
   static fromDb(domain: DomainMap): DomainMap {
     return new DomainMap(domain);
   }
 
-  static Create(data: Pick<DomainMap, 'domain' & 'protocol'>): DomainMap {
+  static Create(data: Pick<DomainMap, 'domain' | 'protocol'> & Partial<DomainMap>): DomainMap {
     return new DomainMap(data);
   }
 
@@ -23,8 +22,11 @@ export class DomainMap {
     this.requests = data.requests ?? 1;
   }
 
-  update(newValues: Pick<DomainMap, 'domain' | 'protocol'>) {
+  incrementRequests() {
     this.requests++;
+  }
+
+  update(newValues: Partial<DomainMap>) {
     Object.assign(this, newValues);
   }
 

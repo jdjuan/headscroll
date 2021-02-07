@@ -10,7 +10,7 @@ export const handler = async (req: NowRequest, res: NowResponse) => {
     protocol: requestUrl.protocol,
   };
 
-  const existingRecord = await repo.findByDomain(data.domain);
+  const existingRecord = await repo.findByDomain(data);
 
   const sendResponse = (entity: DomainMap) => {
     const proxyUrl = `/api/proxy/${entity.id}${requestUrl.pathname}${requestUrl.search}${requestUrl.hash}`;
@@ -19,7 +19,7 @@ export const handler = async (req: NowRequest, res: NowResponse) => {
   };
 
   if (existingRecord) {
-    existingRecord.update(data);
+    existingRecord.incrementRequests();
     const stored = await await repo.save(existingRecord);
     sendResponse(stored);
   } else {
