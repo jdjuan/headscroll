@@ -42,6 +42,10 @@
     margin-bottom: 1rem;
     font-weight: 100;
   }
+
+  .demo {
+    padding: 5px 6px;
+  }
 }
 
 @include media-breakpoint-up(lg) {
@@ -62,14 +66,17 @@
     .description {
       margin-bottom: 10rem;
       line-height: 2rem;
-      font-size: max(20px, 1vw);
+      font-size: max(25px, 1.1vw);
       padding: 0px;
       padding-right: 6vw;
     }
     .call-to-action {
       font-size: 2.5rem;
     }
-
+    .demo {
+      padding: 2px 10px 6px;
+      margin: 0 3px;
+    }
     .wave {
       display: block;
       position: absolute;

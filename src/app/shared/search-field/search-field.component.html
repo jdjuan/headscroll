@@ -1,11 +1,11 @@
 <div [class.compact]="isCompactVersion">
   <div class="url" [class.disabled]="isLoading">
-    <img [src]="favicon" *ngIf="shouldShowFavicon" class="favicon" (error)="shouldShowFavicon = true" alt="" />
-    <i class="bi bi-link-45deg link-icon" [class.focused]="isInputFocused" aria-hidden="false" aria-label="link icon"></i>
+    <img [src]="favicon" *ngIf="shouldShowFavicon" class="favicon" (error)="shouldShowFavicon = false" alt="" />
+    <i *ngIf="!shouldShowFavicon" class="bi bi-link-45deg link-icon" [class.focused]="isInputFocused" aria-hidden="false" aria-label="link icon"></i>
     <input
       type="url"
       #validation="ngModel"
-      placeholder="Your URL"
+      placeholder="https://www.ultimate-guitar.com/"
       [disabled]="isLoading"
       [(ngModel)]="website"
       (keydown.enter)="onSearch(website)"

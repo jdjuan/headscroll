@@ -17,7 +17,7 @@ export class SearchFieldComponent implements OnInit {
   @Input() isCompactVersion = false;
   @Output() search = new EventEmitter();
   errorTooltipMessage: string;
-  website = 'https://tabs.ultimate-guitar.com/tab/the-lumineers/stubborn-love-chords-1157323';
+  website;
   isLoading: boolean;
   isInputFocused: boolean;
   favicon: string;
@@ -54,7 +54,7 @@ export class SearchFieldComponent implements OnInit {
   }
 
   onSearch(website: string): void {
-    if (this.website) {
+    if (website) {
       this.isLoading = true;
       this.website = website;
       this.errorTooltip?.close();

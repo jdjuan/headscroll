@@ -16,12 +16,19 @@
       <div class="square mobile">
         <video width="100%" controls muted autoplay loop src="assets/demo.mp4" type="video/mp4"></video>
       </div>
-      <h2 class="title">Scroll websites with your head</h2>
-      <p class="description">
-        Navigate websites up and down by simply tilting your head – perfect for playing an instrument or reading a recipe while cutting
-        onions.
+      <h2 class="title">Scroll music tabs with your head</h2>
+      <p class="description">Navigate up and down by simply tilting your head. Perfect for playing an instrument!</p>
+
+      <p class="call-to-action">
+        Try the
+        <a
+          [routerLink]="['/scroller']"
+          [queryParams]="{ website: 'https://tabs.ultimate-guitar.com/tab/foo-fighters/times-like-these-chords-1211863' }"
+          class="call-to-action button demo"
+          >demo</a
+        >
+        or enter a website:
       </p>
-      <p class="call-to-action">Enter a website below and click go:</p>
       <div class="url-field">
         <app-search-field (search)="search($event)"></app-search-field>
       </div>
