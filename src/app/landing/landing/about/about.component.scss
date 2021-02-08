@@ -6,6 +6,7 @@
 .pre-slide {
   background-color: $omega;
   margin-top: 5rem;
+  padding-bottom: 2rem;
   .col {
     padding: 0;
   }
@@ -15,7 +16,6 @@
   background-color: $omega;
   color: $alpha;
   text-align: center;
-  padding-top: 3rem;
 }
 
 .picture {
@@ -23,10 +23,10 @@
   display: inline-block;
   margin-bottom: 1rem;
   border-radius: 20px;
-  max-width: 100%;
+  max-width: 26rem;
   width: 90%;
   height: auto;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 
 .title {
@@ -53,13 +53,13 @@
 
 .summary {
   font-size: min(6.2vw, 2.2rem);
-  font-weight: 100;
+  font-weight: 200;
   text-align: center;
 }
 
 .description {
   font-size: min(5vw, 1.6rem);
-  font-weight: 300;
+  font-weight: 200;
 }
 
 .external-link {
@@ -74,6 +74,7 @@
 @include media-breakpoint-up(lg) {
   .slide {
     text-align: inherit;
+    padding-bottom: 2vw;
   }
   .square {
     width: 40vw;
@@ -88,11 +89,12 @@
 
   .summary {
     text-align: inherit;
+    font-weight: 200;
   }
 
   .description {
     font-size: 1.5rem;
-    font-weight: 300;
+    font-weight: 100;
   }
   .subtitle {
     padding: 0.5rem 3rem;
