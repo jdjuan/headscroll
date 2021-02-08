@@ -10,8 +10,7 @@ export class UrlService {
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private location: Location) {}
 
   normalizeUrl(url: string): string {
-    return normalizeUrl(url, { forceHttps: false, stripWWW: false });
-    // return normalizeUrl(url, { forceHttps: true, stripWWW: false });
+    return normalizeUrl(url, { defaultProtocol: 'https:', stripWWW: false });
   }
 
   updateUrl(website: string): void {

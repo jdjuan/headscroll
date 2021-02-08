@@ -19,7 +19,7 @@ export class SearchFieldComponent implements OnInit {
   @Input() isCompactVersion = false;
   @Output() search = new EventEmitter();
   errorTooltipMessage: string;
-  website;
+  website: string;
   isLoading: boolean;
   isInputFocused: boolean;
   favicon: string;
@@ -34,6 +34,7 @@ export class SearchFieldComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.storeService.updateState({ error: null });
     this.onBookmarkletSearch();
     this.onError();
   }
@@ -62,17 +63,19 @@ export class SearchFieldComponent implements OnInit {
   onSearch(website: string): void {
     if (website) {
       this.isLoading = true;
+      website = this.urlService.normalizeUrl(website);
       this.website = website;
       this.errorTooltip?.close();
       this.shouldShowFavicon = false;
       this.favicon = this.getFavicon(website);
       this.proxyService
-        .validateWebsite(this.website)
+        .validateWebsite(website)
         .pipe(untilDestroyed(this))
         .subscribe((isValid) => {
           if (isValid) {
-            this.urlService.updateUrl(this.website);
-            this.loadWebsite();
+            this.storeService.updateState({ error: null });
+            this.urlService.updateUrl(website);
+            this.loadWebsite(website);
           } else {
             this.storeService.dispatchError(ErrorType.NotSupported);
           }
@@ -92,10 +95,10 @@ export class SearchFieldComponent implements OnInit {
     }, 0);
   }
 
-  private loadWebsite(): void {
+  private loadWebsite(website: string): void {
     this.isLoading = false;
-    this.favicon = this.getFavicon(this.website);
-    this.search.emit(this.website);
+    this.favicon = this.getFavicon(website);
+    this.search.emit(website);
   }
 
   getFavicon(website: string): string {

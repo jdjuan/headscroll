@@ -19,7 +19,7 @@ export interface AppState {
 }
 
 export const initialState: AppState = {
-  speed: 20,
+  speed: 20, // 1/30
   orientation: false,
   currentWebsite: null,
   showTutorial: true,

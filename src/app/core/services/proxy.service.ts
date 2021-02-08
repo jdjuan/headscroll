@@ -21,7 +21,6 @@ export class ProxyService {
   constructor(private http: HttpClient, private storeService: StoreService, private urlService: UrlService) {}
 
   validateWebsite(website: string): Observable<boolean> {
-    website = this.urlService.normalizeUrl(website);
     return this.getProxyResponse(website).pipe(
       map(({ id, proxyUrl }) => {
         this.storeService.updateState({ currentWebsite: { id, website, proxyUrl } });
