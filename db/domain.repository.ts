@@ -34,10 +34,22 @@ export class DomainRepository {
     return createdDomain.resource;
   }
 
-  async list() {
+  async list(query: Partial<DomainMap> = {}) {
+    const queryKeys = Object.entries(query).filter(([, value]) => value);
+    const whereParameters = queryKeys.map(([key]) => `c.${key} = @${key}`);
+    const whereClause = `WHERE ${whereParameters}`;
+    const sqlQuery = `SELECT * from c ${whereParameters.length > 0 ? whereClause : ''}`;
+    const parameters = queryKeys.map(([key, value]) => ({ name: `@${key}`, value: value.toString() }));
+
     const container = await this.getContainer();
-    const items = await container.items.readAll<DomainMap>().fetchAll();
-    return items.resources.map((r) => DomainMap.fromDb(r));
+    const { resources } = await container.items
+      .query<DomainMap>({
+        query: sqlQuery,
+        parameters,
+      })
+      .fetchAll();
+
+    return resources.map((r) => DomainMap.fromDb(r));
   }
 
   async findByDomain(domainMap: Pick<DomainMap, 'domain' | 'protocol'>) {
