@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { StoreService } from 'src/app/core/services/store.service';
 import { CameraService } from '../../core/services/camera.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()
 @Component({
@@ -20,7 +20,7 @@ export class ConfigComponent implements OnInit {
 
   constructor(private cameraService: CameraService, private storeService: StoreService) {}
   ngOnInit(): void {
-    this.storeService.state$.subscribe((state) => {
+    this.storeService.state$.pipe(untilDestroyed(this)).subscribe((state) => {
       this.scrollSpeed = state.speed;
       this.orientation = state.orientation;
       this.selectedCamera = state.selectedCamera?.id;

@@ -1,7 +1,6 @@
 import { Component, ElementRef, ViewChild, Output, EventEmitter, OnInit } from '@angular/core';
 import { Webcam, CustomPoseNet, load } from '@teachablemachine/pose';
 import { CameraService } from '../../../core/services/camera.service';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { LARGE_BREAKPOINT } from 'src/app/core/models/constants';
 import { timer } from 'rxjs';
@@ -9,6 +8,7 @@ import { StoreService } from 'src/app/core/services/store.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ErrorType } from 'src/app/core/models/error.model';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()
 @Component({
@@ -28,6 +28,7 @@ export class CameraComponent implements OnInit {
   constructor(private breakpointObserver: BreakpointObserver, private cameraService: CameraService, private storeService: StoreService) {
     this.storeService
       .select<{ id: string }>((state) => state.selectedCamera)
+      .pipe(untilDestroyed(this))
       .subscribe(({ id }) => {
         this.onCameraChange$.next();
         this.isCameraReady = false;
@@ -66,7 +67,7 @@ export class CameraComponent implements OnInit {
 
   startPredicting(): void {
     this.isCameraReady = true;
-    timer(0, this.DEBOUNCE_PREDICTION_TIME).pipe(takeUntil(this.onCameraChange$)).subscribe(this.predict);
+    timer(0, this.DEBOUNCE_PREDICTION_TIME).pipe(takeUntil(this.onCameraChange$)).pipe(untilDestroyed(this)).subscribe(this.predict);
   }
 
   predict = async (): Promise<void> => {

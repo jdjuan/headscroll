@@ -13,7 +13,9 @@ import { CameraStatus } from 'src/app/core/models/camera-status.model';
 import { ModalService } from 'src/app/core/services/modal.service';
 import { WebglService } from 'src/app/core/services/webgl.service';
 import { WebglStatus } from 'src/app/core/models/webgl-status.model';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-scroller',
   templateUrl: './scroller.component.html',
@@ -42,10 +44,10 @@ export class ScrollerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.storeService.state$.subscribe((state) => (this.appState = state));
+    this.storeService.state$.pipe(untilDestroyed(this)).subscribe((state) => (this.appState = state));
     const resize$ = this.viewportRuler.change(this.RESIZE_THROTLE_TIME);
     const breakpointChange$ = this.breakpointObserver.observe([LARGE_BREAKPOINT]);
-    merge(resize$, breakpointChange$).subscribe(this.setIframeHeight);
+    merge(resize$, breakpointChange$).pipe(untilDestroyed(this)).subscribe(this.setIframeHeight);
     this.checkCameraStatus();
     this.checkWebglStatus();
     this.displayInstructions();
@@ -68,7 +70,7 @@ export class ScrollerComponent implements OnInit {
 
   checkCameraStatus(): void {
     let modalRef: NgbModalRef;
-    const cameraStatus$ = this.storeService.select((state) => state.cameraStatus);
+    const cameraStatus$ = this.storeService.select((state) => state.cameraStatus).pipe(untilDestroyed(this));
     cameraStatus$.subscribe((cameraStatus) => {
       switch (cameraStatus) {
         case CameraStatus.Blocked:
@@ -89,24 +91,26 @@ export class ScrollerComponent implements OnInit {
     const isCameraReady = (status: CameraStatus) => status === CameraStatus.Ready;
     const cameraStatus$ = this.storeService.select((state) => state.cameraStatus).pipe(filter(isCameraReady));
     const webglStatus$ = this.storeService.select((state) => state.webglStatus);
-    combineLatest([cameraStatus$, webglStatus$]).subscribe(([cameraStatus, webglStatus]) => {
-      switch (webglStatus) {
-        case WebglStatus.Unknown:
-          this.webglService.detectWebGLContext().subscribe();
-          break;
-        case WebglStatus.NotSupported:
-          this.modalService.openWebglNotSupportedModal();
-          break;
-      }
-    });
+    combineLatest([cameraStatus$, webglStatus$])
+      .pipe(untilDestroyed(this))
+      .subscribe(([cameraStatus, webglStatus]) => {
+        switch (webglStatus) {
+          case WebglStatus.Unknown:
+            this.webglService.detectWebGLContext().pipe(untilDestroyed(this)).subscribe();
+            break;
+          case WebglStatus.NotSupported:
+            this.modalService.openWebglNotSupportedModal();
+            break;
+        }
+      });
   }
 
   displayInstructions(): void {
     const isWebglSupported = (status: WebglStatus) => status === WebglStatus.Supported;
-    const webglStatus$ = this.storeService.select((state) => state.webglStatus).pipe(filter(isWebglSupported));
+    const webglStatus$ = this.storeService.select((state) => state.webglStatus).pipe(filter(isWebglSupported), untilDestroyed(this));
     webglStatus$.subscribe(() => {
       if (this.isMobile && this.appState.showMobileWarning) {
-        this.modalService.openMobileWarning().subscribe(this.displayTutorial);
+        this.modalService.openMobileWarning().pipe(untilDestroyed(this)).subscribe(this.displayTutorial);
       } else {
         this.displayTutorial();
       }
@@ -115,9 +119,12 @@ export class ScrollerComponent implements OnInit {
 
   displayTutorial = (): void => {
     if (this.appState.showTutorial) {
-      this.modalService.openInstructionsModal().subscribe(() => {
-        this.isLoading = false;
-      });
+      this.modalService
+        .openInstructionsModal()
+        .pipe(untilDestroyed(this))
+        .subscribe(() => {
+          this.isLoading = false;
+        });
     } else {
       this.isLoading = false;
     }
@@ -174,8 +181,11 @@ export class ScrollerComponent implements OnInit {
 
   openConfig(): void {
     this.isConfigOpen = true;
-    this.modalService.openConfigModal().subscribe(() => {
-      this.isConfigOpen = false;
-    });
+    this.modalService
+      .openConfigModal()
+      .pipe(untilDestroyed(this))
+      .subscribe(() => {
+        this.isConfigOpen = false;
+      });
   }
 }

@@ -6,7 +6,9 @@ import { StoreService } from 'src/app/core/services/store.service';
 import { ErrorMessages, ErrorType, ScrollerError } from 'src/app/core/models/error.model';
 import { ProxyService } from 'src/app/core/services/proxy.service';
 import { UrlService } from 'src/app/core/services/url.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-search-field',
   templateUrl: './search-field.component.html',
@@ -37,14 +39,18 @@ export class SearchFieldComponent implements OnInit {
   }
 
   onBookmarkletSearch(): void {
-    this.activatedRoute.queryParams.pipe(pluck('website'), filter<string>(Boolean)).subscribe((website: string) => {
-      this.onSearch(website);
-    });
+    this.activatedRoute.queryParams
+      .pipe(pluck('website'), filter<string>(Boolean))
+      .pipe(untilDestroyed(this))
+      .subscribe((website: string) => {
+        this.onSearch(website);
+      });
   }
 
   onError(): void {
     this.storeService
       .select((state) => state.error)
+      .pipe(untilDestroyed(this))
       .subscribe((error) => {
         const errors = [ErrorType.Required, ErrorType.NotSupported];
         if (errors.includes(error.type)) {
@@ -60,14 +66,17 @@ export class SearchFieldComponent implements OnInit {
       this.errorTooltip?.close();
       this.shouldShowFavicon = false;
       this.favicon = this.getFavicon(website);
-      this.proxyService.validateWebsite(this.website).subscribe((isValid) => {
-        if (isValid) {
-          this.urlService.updateUrl(this.website);
-          this.loadWebsite();
-        } else {
-          this.storeService.dispatchError(ErrorType.NotSupported);
-        }
-      });
+      this.proxyService
+        .validateWebsite(this.website)
+        .pipe(untilDestroyed(this))
+        .subscribe((isValid) => {
+          if (isValid) {
+            this.urlService.updateUrl(this.website);
+            this.loadWebsite();
+          } else {
+            this.storeService.dispatchError(ErrorType.NotSupported);
+          }
+        });
     } else {
       this.errorTooltipMessage = ErrorMessages.UrlIsRequired;
       this.storeService.dispatchError(ErrorType.Required);

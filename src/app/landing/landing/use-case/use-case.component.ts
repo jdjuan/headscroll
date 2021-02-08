@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { concat, from, of, timer } from 'rxjs';
 import { concatMap, delay, exhaustMap, tap } from 'rxjs/operators';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-use-case',
   templateUrl: './use-case.component.html',
@@ -25,7 +27,8 @@ export class UseCaseComponent implements OnInit {
           const nextInstrument = this.instruments.shift();
           this.instruments.push(nextInstrument);
           return concat(this.erase$(this.instrument), this.write$(nextInstrument));
-        })
+        }),
+        untilDestroyed(this)
       )
       .subscribe();
   }
