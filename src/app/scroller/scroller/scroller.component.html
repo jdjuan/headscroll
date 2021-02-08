@@ -5,7 +5,7 @@
       <h1 class="logo">
         <a routerLink="/">HeadScroll.io <span class="bold bg-beta rounded px-1">beta</span></a>
       </h1>
-      <button *ngIf="isMobile" class="btn config-button" (click)="openConfig()"><i class="bi bi-gear-fill"></i></button>
+      <button *ngIf="isMobile" class="btn config-button" aria-label="Configuration" (click)="openConfig()"><i class="bi bi-gear-fill"></i></button>
     </div>
     <div class="col-lg-10 text-right">
       <app-search-field [isCompactVersion]="true" (search)="onSearchWebsite($event)"></app-search-field>
@@ -32,6 +32,7 @@
         >
         <iframe
           class="iframe"
+          title="Website to be scrolled"
           *ngIf="websiteSafeUrl"
           [src]="websiteSafeUrl"
           (load)="onIframeLoaded($event.target)"

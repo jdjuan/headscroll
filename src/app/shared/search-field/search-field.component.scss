@@ -13,11 +13,9 @@
   }
   .link-icon {
     position: absolute;
-
     left: 12px;
-    top: 6px;
+    top: 8%;
     font-size: 25px;
-
     color: $delta;
     z-index: 10;
     &.focused {
@@ -107,7 +105,6 @@
     .url {
       .link-icon {
         left: 7px;
-        top: 5px;
         font-size: 21px;
       }
       input {
