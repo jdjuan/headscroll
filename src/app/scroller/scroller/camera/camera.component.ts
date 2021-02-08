@@ -67,7 +67,7 @@ export class CameraComponent implements OnInit {
 
   startPredicting(): void {
     this.isCameraReady = true;
-    timer(0, this.DEBOUNCE_PREDICTION_TIME).pipe(takeUntil(this.onCameraChange$)).pipe(untilDestroyed(this)).subscribe(this.predict);
+    timer(0, this.DEBOUNCE_PREDICTION_TIME).pipe(takeUntil(this.onCameraChange$), untilDestroyed(this)).subscribe(this.predict);
   }
 
   predict = async (): Promise<void> => {
