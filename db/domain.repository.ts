@@ -37,7 +37,7 @@ export class DomainRepository {
   async list(query: Partial<DomainMap> = {}) {
     const queryKeys = Object.entries(query).filter(([, value]) => value);
     const whereParameters = queryKeys.map(([key]) => `c.${key} = @${key}`);
-    const whereClause = `WHERE ${whereParameters}`;
+    const whereClause = `WHERE ${whereParameters.join(' AND ')}`;
     const sqlQuery = `SELECT * from c ${whereParameters.length > 0 ? whereClause : ''}`;
     const parameters = queryKeys.map(([key, value]) => ({ name: `@${key}`, value: value.toString() }));
 
