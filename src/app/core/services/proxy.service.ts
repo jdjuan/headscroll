@@ -14,7 +14,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class ProxyService {
-  private proxyEndpoint = `./api/domain/`;
+  private proxyEndpoint = `/api/domain/`;
   private cachedResponses: Record<string, ProxyResponse> = {};
   private readonly IFRAME_BASE_URL = environment.baseUrl;
 
