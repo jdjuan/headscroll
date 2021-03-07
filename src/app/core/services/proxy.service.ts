@@ -54,8 +54,7 @@ export class ProxyService {
         if (proxyResponse.state === DomainState.Denied) {
           throw null;
         } else {
-          proxyResponse.proxyUrl = url;
-          // proxyResponse.proxyUrl = this.IFRAME_BASE_URL + proxyResponse.proxyUrl;
+          proxyResponse.proxyUrl = this.IFRAME_BASE_URL + proxyResponse.proxyUrl;
           this.cachedResponses[url] = proxyResponse;
           this.storeService.updateState({ proxyResponse });
           return proxyResponse;

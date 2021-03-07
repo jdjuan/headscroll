@@ -7,7 +7,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { DashboardModule } from './landing/dashboard.module';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from './shared/shared.module';
-
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -16,7 +15,6 @@ import { SharedModule } from './shared/shared.module';
     BrowserAnimationsModule,
     DashboardModule,
     AppRoutingModule,
-    DashboardModule,
     HttpClientModule,
     SharedModule,
   ],
