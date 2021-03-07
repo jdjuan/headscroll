@@ -76,7 +76,7 @@ export class ProxyService {
     if (!response) {
       throw null;
     }
-    response.proxyUrl = `/api/proxy/${response.id}/${path}`;
+    response.proxyUrl = `api/proxy/${response.id}/${path}`;
 
     return of(response);
   }
