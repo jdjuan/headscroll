@@ -14,7 +14,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class ProxyService {
-  private proxyEndpoint = `${environment.baseUrl}api/domain/`;
+  private proxyEndpoint = `${environment.baseUrl}/api/domain/`;
   private cachedResponses: Record<string, ProxyResponse> = {};
   private readonly IFRAME_BASE_URL = environment.baseUrl;
 
@@ -54,8 +54,8 @@ export class ProxyService {
         if (proxyResponse.state === DomainState.Denied) {
           throw null;
         } else {
-          proxyResponse.proxyUrl = url;
-          // proxyResponse.proxyUrl = this.IFRAME_BASE_URL + proxyResponse.proxyUrl;
+          // proxyResponse.proxyUrl = url;
+          proxyResponse.proxyUrl = this.IFRAME_BASE_URL + proxyResponse.proxyUrl;
           this.cachedResponses[url] = proxyResponse;
           this.storeService.updateState({ proxyResponse });
           return proxyResponse;
