@@ -2,11 +2,11 @@ import { Component, Output, EventEmitter, Input, ViewChild, OnInit } from '@angu
 import { ActivatedRoute } from '@angular/router';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { filter, pluck } from 'rxjs/operators';
-import { StoreService } from 'src/app/core/services/store.service';
-import { ErrorMessages, ErrorType, ScrollerError } from 'src/app/core/models/error.model';
-import { ProxyService } from 'src/app/core/services/proxy.service';
-import { UrlService } from 'src/app/core/services/url.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ScrollerError, ErrorType, ErrorMessages } from '@core/models/error.model';
+import { ProxyService } from '@core/services/proxy.service';
+import { StoreService } from '@core/services/store.service';
+import { UrlService } from '@core/services/url.service';
 
 @UntilDestroy()
 @Component({

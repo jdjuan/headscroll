@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host 0.0.0.0",
+    "start": "npx vercel dev",
     "start-secure": "ng serve --configuration=ssl --host 0.0.0.0 --ssl true",
     "build": "ng build --prod --sourceMap=true",
     "test": "ng test",

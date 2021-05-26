@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
+import { AppState, initialState } from '@core/models/app-state.model';
+import { ErrorType, ErrorMessages } from '@core/models/error.model';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { distinct, filter, map, take } from 'rxjs/operators';
-import { AppState, initialState } from 'src/app/core/models/app-state.model';
-import { ErrorMessages, ErrorType } from 'src/app/core/models/error.model';
 
 @Injectable({
   providedIn: 'root',

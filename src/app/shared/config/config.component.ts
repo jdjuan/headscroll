@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { CameraService } from '@core/services/camera.service';
+import { StoreService } from '@core/services/store.service';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { StoreService } from 'src/app/core/services/store.service';
-import { CameraService } from '../../core/services/camera.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()

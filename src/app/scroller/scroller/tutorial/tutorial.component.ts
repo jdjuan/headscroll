@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
+import { StoreService } from '@core/services/store.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { StoreService } from 'src/app/core/services/store.service';
 
 @Component({
   selector: 'app-tutorial',

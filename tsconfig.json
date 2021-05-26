@@ -12,9 +12,12 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "es2020",
-    "lib": [
-      "es2018",
-      "dom"
-    ]
+    "lib": ["es2018", "dom"],
+    "paths": {
+      "@shared/*": ["src/app/shared/*"],
+      "@store/*": ["src/app/store/*"],
+      "@core/*": ["src/app/core/*"],
+      "@scroller/*": ["src/app/scroller/*"],
+    }
   }
 }
