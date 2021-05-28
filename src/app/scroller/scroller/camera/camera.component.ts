@@ -20,6 +20,7 @@ export class CameraComponent implements OnInit {
   @ViewChild('video') video: ElementRef<HTMLVideoElement>;
   @Output() scrolling = new EventEmitter<boolean>();
   readonly DEBOUNCE_PREDICTION_TIME = 100;
+  readonly FORECAST_CONFIDENCE = 0.99;
   isCameraReady = false;
   // source: MediaProvider;
   model: CustomPoseNet;
@@ -79,12 +80,11 @@ export class CameraComponent implements OnInit {
 
   forecast(output: { className: string; probability: number }[]): void {
     const [LEFT, RIGHT] = ['Left', 'Right'];
-    const FORECAST_CONFIDENCE = 0.95;
     const leftForecast = output.find((entry) => entry.className === LEFT);
     const rightForecast = output.find((entry) => entry.className === RIGHT);
-    if (leftForecast.probability > FORECAST_CONFIDENCE) {
+    if (leftForecast.probability > this.FORECAST_CONFIDENCE) {
       this.scrolling.emit(false);
-    } else if (rightForecast.probability > FORECAST_CONFIDENCE) {
+    } else if (rightForecast.probability > this.FORECAST_CONFIDENCE) {
       this.scrolling.emit(true);
     }
   }
