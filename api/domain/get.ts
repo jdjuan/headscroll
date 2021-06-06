@@ -1,11 +1,15 @@
 import { NowRequest, NowResponse } from '@vercel/node';
-import { DomainMap, DomainRepository } from '../../db/index';
+import { DomainMap, RepositoryFactory } from '../../db/index';
 
 export const handler = async (req: NowRequest, res: NowResponse) => {
-  const repo = new DomainRepository();
-  const query = getQuery(req);
-  const domains = (await repo.list(query)).map((d) => ({ ...d, url: `${d.protocol}//${d.domain}` }));
-  res.send(domains);
+  const repo = RepositoryFactory.createRepoConnection();
+  try {
+    const query = getQuery(req);
+    const domains = (await repo.list(query)).map((d) => ({ ...d, url: `${d.protocol}//${d.domain}` }));
+    res.send(domains);
+  } finally {
+    repo.dispose();
+  }
 };
 
 const getQuery = (req: NowRequest) => {

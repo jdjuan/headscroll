@@ -1,3 +1,5 @@
+import { v4 } from 'uuid';
+
 export interface DomainMap {
   domain: string;
   protocol: string;
@@ -15,7 +17,7 @@ export class DomainMap {
   }
 
   private constructor(data: Partial<DomainMap>) {
-    this.id = data.id;
+    this.id = data.id ?? v4();
     this.domain = data.domain;
     this.protocol = data.protocol ?? 'https';
     this.state = data.state ?? DomainState.Pending;

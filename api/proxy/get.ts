@@ -1,4 +1,4 @@
-import { DomainRepository, DomainState } from '../../db/index';
+import { RepositoryFactory, DomainState } from '../../db/index';
 import { NowRequest, NowResponse } from '@vercel/node';
 import axios, { AxiosResponse } from 'axios';
 import * as cheerio from 'cheerio';
@@ -7,24 +7,29 @@ export const handler = async (req: NowRequest, res: NowResponse) => {
   const domainId = req.query.domainId as string;
   const targetPath = req.query.targetPath ?? '';
 
-  const repo = new DomainRepository();
-  const domainMap = await repo.get(domainId);
+  const repo =  RepositoryFactory.createRepoConnection();
+  try{
+    const domainMap = await repo.get(domainId);
 
-  if (domainMap.state === DomainState.Denied) {
-    res.statusCode = 423;
-    return res.send({ error: 'This website is blocked' });
+    if (domainMap.state === DomainState.Denied) {
+      res.statusCode = 423;
+      return res.send({ error: 'This website is blocked' });
+    }
+
+    const targetUrl = `${domainMap.protocol}//${domainMap.domain}/${targetPath}`;
+
+    const response = await axios.get(targetUrl);
+
+    const parsedResponse = await parseResponse(response);
+    for (const [key, value] of parsedResponse.headers) {
+      res.setHeader(key, value);
+    }
+
+    return res.send(parsedResponse.body);
   }
-
-  const targetUrl = `${domainMap.protocol}//${domainMap.domain}/${targetPath}`;
-
-  const response = await axios.get(targetUrl);
-
-  const parsedResponse = await parseResponse(response);
-  for (const [key, value] of parsedResponse.headers) {
-    res.setHeader(key, value);
+  finally{
+    repo.dispose();
   }
-
-  return res.send(parsedResponse.body);
 };
 
 const parseResponse = async (response: AxiosResponse): Promise<{ body: string; headers: Map<string, string> }> => {
