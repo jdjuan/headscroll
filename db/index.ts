@@ -1,2 +1,3 @@
 export * from './domain.model';
-export * from './domain.repository';
+export * from './repository.factory';
+export * from './migration';

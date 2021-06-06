@@ -1,41 +1,45 @@
 import { NowRequest, NowResponse } from '@vercel/node';
-import { DomainMap, DomainRepository, DomainState } from '../../db/index';
+import { DomainMap, RepositoryFactory, DomainState } from '../../db/index';
 
 export const handler = async (req: NowRequest, res: NowResponse) => {
-  const repo = new DomainRepository();
-  const requestUrl = new URL(req.body.url);
+  const repo = RepositoryFactory.createRepoConnection();
 
-  const data = {
-    domain: requestUrl.host,
-    protocol: requestUrl.protocol,
-    state: DomainState[req.body.state],
-  };
+  try {
+    const requestUrl = new URL(req.body.url);
 
-  if (!data.state) {
-    res.statusCode = 400;
-    res.send({
-      error: `State not defined '${req.body.state}', options are ${Object.entries(DomainState)
-        .map(([_, value]) => value)
-        .join(', ')}.`,
-    });
-  }
+    const data = {
+      domain: requestUrl.host,
+      protocol: requestUrl.protocol,
+      state: DomainState[req.body.state],
+    };
 
-  if (process.env.VERCEL_ENV !== 'development' && process.env.AUTH_CODE !== req.headers.authorization) {
-    res.statusCode = 401;
-    res.send({ error: `Authorization required` });
-    return;
-  }
+    if (!data.state) {
+      res.statusCode = 400;
+      res.send({
+        error: `State not defined '${req.body.state}', options are ${Object.entries(DomainState)
+          .map(([_, value]) => value)
+          .join(', ')}.`,
+      });
+    }
 
-  const existingRecord = await repo.findByDomain(data);
-  if (!existingRecord) {
-    const newDomain = DomainMap.Create(data);
-    const stored = await repo.save(newDomain);
-    res.send({ ...stored });
-  } else {
-    existingRecord.update(data);
-    console.log(existingRecord);
-    const stored = await await repo.save(existingRecord);
-    res.send({ ...stored });
+    if (process.env.VERCEL_ENV !== 'development' && process.env.AUTH_CODE !== req.headers.authorization) {
+      res.statusCode = 401;
+      res.send({ error: `Authorization required` });
+      return;
+    }
+
+    const existingRecord = await repo.findByDomain(data);
+    if (!existingRecord) {
+      const newDomain = DomainMap.Create(data);
+      const stored = await repo.save(newDomain);
+      res.send({ ...stored });
+    } else {
+      existingRecord.update(data);
+      const stored = await await repo.save(existingRecord);
+      res.send({ ...stored });
+    }
+  } finally {
+    repo.dispose();
   }
 };
 
