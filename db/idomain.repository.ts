@@ -5,5 +5,5 @@ export interface IDomainRepository {
   save(domainMap: DomainMap): Promise<DomainMap>;
   list(query?: Partial<DomainMap>): Promise<DomainMap[]>;
   findByDomain(domainMap: Pick<DomainMap, 'domain' | 'protocol'>): Promise<DomainMap>;
-  dispose(): void;
+  dispose(): Promise<void>;
 }

@@ -14,8 +14,14 @@ export class MongoDomainRepository implements IDomainRepository {
     useUnifiedTopology: true,
   });
 
-  dispose(): void {
-    this.client.close();
+  async dispose(): Promise<void> {
+    try {
+      if (this.client && this.client.isConnected()) {
+        await this.client.close();
+      }
+    } catch (error) {
+      console.error(`Error closing the db ${error}`);
+    }
   }
 
   private getDb = async () => {
@@ -37,7 +43,7 @@ export class MongoDomainRepository implements IDomainRepository {
 
   async save(domainMap: DomainMap) {
     const collection = await this.getCollection();
-    await collection.updateOne({ id: domainMap.id }, {$set:domainMap } , { upsert: true });
+    await collection.updateOne({ id: domainMap.id }, { $set: domainMap }, { upsert: true });
     return domainMap;
   }
 
