@@ -8,7 +8,7 @@ export const handler = async (req: NowRequest, res: NowResponse) => {
     const domains = (await repo.list(query)).map((d) => ({ ...d, url: `${d.protocol}//${d.domain}` }));
     res.send(domains);
   } finally {
-    repo.dispose();
+    await repo.dispose();
   }
 };
 

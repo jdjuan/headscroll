@@ -2,7 +2,7 @@ import { CosmosClient, Database } from '@azure/cosmos';
 import { DomainMap } from '../domain.model';
 import { IDomainRepository } from '../idomain.repository';
 
-export class CosmosDomainRepository implements IDomainRepository{
+export class CosmosDomainRepository implements IDomainRepository {
   private endpoint = process.env.DB_ENDPOINT;
   private key = process.env.DB_KEY;
   private dbName = process.env.DB_NAME;
@@ -23,8 +23,8 @@ export class CosmosDomainRepository implements IDomainRepository{
     this.db = client.database(this.dbName);
   }
 
-  dispose(): void {
-
+  dispose(): Promise<void> {
+    return Promise.resolve();
   }
 
   async get(id: string) {

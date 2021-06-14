@@ -39,7 +39,7 @@ export const handler = async (req: NowRequest, res: NowResponse) => {
       res.send({ ...stored });
     }
   } finally {
-    repo.dispose();
+    await repo.dispose();
   }
 };
 

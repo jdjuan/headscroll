@@ -7,8 +7,8 @@ export const handler = async (req: NowRequest, res: NowResponse) => {
   const domainId = req.query.domainId as string;
   const targetPath = req.query.targetPath ?? '';
 
-  const repo =  RepositoryFactory.createRepoConnection();
-  try{
+  const repo = RepositoryFactory.createRepoConnection();
+  try {
     const domainMap = await repo.get(domainId);
 
     if (domainMap.state === DomainState.Denied) {
@@ -26,9 +26,8 @@ export const handler = async (req: NowRequest, res: NowResponse) => {
     }
 
     return res.send(parsedResponse.body);
-  }
-  finally{
-    repo.dispose();
+  } finally {
+    await repo.dispose();
   }
 };
 

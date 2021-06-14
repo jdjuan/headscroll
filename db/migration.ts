@@ -8,8 +8,8 @@ export class DbMigration {
       const domains = await sourceDatabase.list();
       await Promise.all(domains.map((d) => targetDatabase.save(d)));
     } finally {
-      sourceDatabase.dispose();
-      targetDatabase.dispose();
+      await sourceDatabase.dispose();
+      await targetDatabase.dispose();
     }
   }
 }
