@@ -21,10 +21,18 @@ export class MongoDomainRepository implements IDomainRepository {
       }
     } catch (error) {
       console.error(`Error closing the db ${error}`);
+    } finally {
+      this.client = null;
     }
   }
 
   private getDb = async () => {
+    if (!this.client) {
+      this.client = new MongoClient(this.connectionString, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
+    }
     if (!this.client.isConnected()) {
       await this.client.connect();
     }
